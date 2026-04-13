@@ -13,16 +13,20 @@ class PROJECT_GODOFWEAPON_API UInventoryComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UInventoryComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	int32 Columns;
+
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	int32 Rows;
+
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	float TileSize;
+
+protected:
+	virtual void BeginPlay() override;
+
 };
