@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "InventoryData.h"
 #include "InventoryGridWidget.generated.h"
 
 class UCanvasPanel;
 class UBorder;
-struct FLines;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryGridWidget : public UUserWidget
@@ -21,19 +21,19 @@ protected:
 	virtual int32 NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	UCanvasPanel* CanvasPanel;
+	TObjectPtr<UCanvasPanel> CanvasPanel;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	UCanvasPanel* GridCanvasPanel;
+	TObjectPtr<UCanvasPanel> GridCanvasPanel;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	UBorder* GridBorder;
+	TObjectPtr<UBorder> GridBorder;
 
 	int32 Columns;
 	int32 Rows;
 	float TileSize;
 
-	FLines* LineStruct;
+	FLines LineStruct;
 
 	TArray<float> StartX;
 	TArray<float> StartY;
@@ -41,4 +41,5 @@ protected:
 	TArray<float> EndY;
 
 	void UpdateGridSize();
+	void CreateLineSegments();
 };

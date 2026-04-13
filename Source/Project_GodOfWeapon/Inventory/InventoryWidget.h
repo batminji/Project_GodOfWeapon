@@ -16,10 +16,10 @@ class PROJECT_GODOFWEAPON_API UInventoryWidget : public UUserWidget
 	
 public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	UCanvasPanel* CanvasPanel;
+	TObjectPtr<UCanvasPanel> CanvasPanel;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	UImage* BackGroundImage;
+	TObjectPtr<UImage> BackGroundImage;
 
 protected:
 	virtual void NativeConstruct() override;
