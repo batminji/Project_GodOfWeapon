@@ -32,19 +32,7 @@ int32 UInventoryGridWidget::NativePaint(const FPaintArgs& Args, const FGeometry&
 
 	FPaintContext PaintContext(AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 
-	FLinearColor LineColor(0.5f, 0.5f, 0.5f, 1.0f); // Gray Color
-	
-	FVector2D GridTopLeftPos = GridBorder->GetCachedGeometry().GetLocalPositionAtCoordinates(FVector2D(0.0f, 0.0f));
-
-	int32 k = 0;
-	for (int32 i = 0; i < LineStruct.XLines.Num(); ++i)
-	{
-		for (int j = 0; j < LineStruct.YLines.Num(); ++j)
-		{
-			k = i;
-		}
-		UWidgetBlueprintLibrary::DrawLine(PaintContext, FVector2D(StartX[i], StartY[k]) + GridTopLeftPos, FVector2D(EndX[i], EndY[k]) + GridTopLeftPos, LineColor, 1.0f);
-	}
+	RenderGridLines(PaintContext);
 
 	return int32();
 }
@@ -102,5 +90,18 @@ void UInventoryGridWidget::SetGridData()
 		Columns = InventoryComponent->Columns;
 		Rows = InventoryComponent->Rows;
 		TileSize = InventoryComponent->TileSize;
+	}
+}
+
+void UInventoryGridWidget::RenderGridLines(FPaintContext& InPaintContext) const
+{
+	FLinearColor LineColor(0.5f, 0.5f, 0.5f, 1.0f); // Gray Color
+
+	FVector2D GridTopLeftPos = GridBorder->GetCachedGeometry().GetLocalPositionAtCoordinates(FVector2D(0.0f, 0.0f));
+
+	int32 k = 0;
+	for (int32 i = 0; i < LineStruct.XLines.Num(); ++i)
+	{
+		UWidgetBlueprintLibrary::DrawLine(InPaintContext, FVector2D(StartX[i], StartY[i]) + GridTopLeftPos, FVector2D(EndX[i], EndY[i]) + GridTopLeftPos, LineColor, 1.0f);
 	}
 }

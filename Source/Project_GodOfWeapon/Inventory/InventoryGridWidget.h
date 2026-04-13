@@ -43,4 +43,5 @@ protected:
 	void UpdateGridSize();
 	void CreateLineSegments();
 	void SetGridData();
+	void RenderGridLines(FPaintContext& InPaintContext) const;
 };
