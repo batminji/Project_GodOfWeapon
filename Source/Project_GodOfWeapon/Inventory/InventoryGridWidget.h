@@ -42,4 +42,5 @@ protected:
 
 	void UpdateGridSize();
 	void CreateLineSegments();
+	void SetGridData();
 };

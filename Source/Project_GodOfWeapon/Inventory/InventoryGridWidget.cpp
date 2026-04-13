@@ -4,6 +4,7 @@
 #include "InventoryGridWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/Border.h"
 #include "Components/CanvasPanelSlot.h"
@@ -20,21 +21,7 @@ void UInventoryGridWidget::NativeConstruct()
 	EndX = {};
 	EndY = {};
 	
-	TObjectPtr<AInventoryController> InventoryController = Cast<AInventoryController>(GetOwningPlayer());
-	if (!InventoryController)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("InventoryController is null"));
-		return;
-	}
-
-	TObjectPtr<UInventoryComponent> InventoryComponent = InventoryController->InventoryComponent;
-	if (InventoryComponent)
-	{
-		Columns = InventoryComponent->Columns;
-		Rows = InventoryComponent->Rows;
-		TileSize = InventoryComponent->TileSize;
-	}
-
+	SetGridData();
 	UpdateGridSize();
 	CreateLineSegments();
 }
@@ -43,7 +30,21 @@ int32 UInventoryGridWidget::NativePaint(const FPaintArgs& Args, const FGeometry&
 {
 	Super::NativePaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 
+	FPaintContext PaintContext(AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 
+	FLinearColor LineColor(0.5f, 0.5f, 0.5f, 1.0f); // Gray Color
+	
+	FVector2D GridTopLeftPos = GridBorder->GetCachedGeometry().GetLocalPositionAtCoordinates(FVector2D(0.0f, 0.0f));
+
+	int32 k = 0;
+	for (int32 i = 0; i < LineStruct.XLines.Num(); ++i)
+	{
+		for (int j = 0; j < LineStruct.YLines.Num(); ++j)
+		{
+			k = i;
+		}
+		UWidgetBlueprintLibrary::DrawLine(PaintContext, FVector2D(StartX[i], StartY[k]) + GridTopLeftPos, FVector2D(EndX[i], EndY[k]) + GridTopLeftPos, LineColor, 1.0f);
+	}
 
 	return int32();
 }
@@ -69,8 +70,8 @@ void UInventoryGridWidget::CreateLineSegments()
 	for (int32 i = 0; i < Rows + 1; i++)
 	{
 		float Y{ i * TileSize };
-		LineStruct.XLines.Add(FVector2D(Y, Y));
-		LineStruct.YLines.Add(FVector2D(0.0f, Columns * TileSize));
+		LineStruct.YLines.Add(FVector2D(Y, Y));
+		LineStruct.XLines.Add(FVector2D(0.0f, Columns * TileSize));
 	}
 
 	for(const FVector2D& Line : LineStruct.XLines)
@@ -83,5 +84,23 @@ void UInventoryGridWidget::CreateLineSegments()
 	{
 		StartY.Add(Line.X);
 		EndY.Add(Line.Y);
+	}
+}
+
+void UInventoryGridWidget::SetGridData()
+{
+	TObjectPtr<AInventoryController> InventoryController = Cast<AInventoryController>(GetOwningPlayer());
+	if (!InventoryController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InventoryController is null"));
+		return;
+	}
+
+	TObjectPtr<UInventoryComponent> InventoryComponent = InventoryController->InventoryComponent;
+	if (InventoryComponent)
+	{
+		Columns = InventoryComponent->Columns;
+		Rows = InventoryComponent->Rows;
+		TileSize = InventoryComponent->TileSize;
 	}
 }
