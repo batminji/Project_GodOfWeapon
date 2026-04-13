@@ -14,12 +14,6 @@
 void UInventoryGridWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	LineStruct = FLines();
-	StartX = {};
-	StartY = {};
-	EndX = {};
-	EndY = {};
 	
 	SetGridData();
 	UpdateGridSize();
@@ -48,30 +42,21 @@ void UInventoryGridWidget::UpdateGridSize()
 
 void UInventoryGridWidget::CreateLineSegments()
 {
-	for(int32 i = 0; i < Columns + 1; i++)
+	StartPoints.Empty();
+	EndPoints.Empty();
+
+	for (int32 i = 0; i <= Columns; i++)
 	{
-		float X{ i * TileSize };
-		LineStruct.XLines.Add(FVector2D(X, X));
-		LineStruct.YLines.Add(FVector2D(0.0f, Rows * TileSize));
+		float XPos = i * TileSize;
+		StartPoints.Add(FVector2D(XPos, 0.0f));
+		EndPoints.Add(FVector2D(XPos, Rows * TileSize));
 	}
 
-	for (int32 i = 0; i < Rows + 1; i++)
+	for (int32 i = 0; i <= Rows; i++)
 	{
-		float Y{ i * TileSize };
-		LineStruct.YLines.Add(FVector2D(Y, Y));
-		LineStruct.XLines.Add(FVector2D(0.0f, Columns * TileSize));
-	}
-
-	for(const FVector2D& Line : LineStruct.XLines)
-	{
-		StartX.Add(Line.X);
-		EndX.Add(Line.Y);
-	}
-
-	for(const FVector2D& Line : LineStruct.YLines)
-	{
-		StartY.Add(Line.X);
-		EndY.Add(Line.Y);
+		float YPos = i * TileSize;
+		StartPoints.Add(FVector2D(0.0f, YPos));
+		EndPoints.Add(FVector2D(Columns * TileSize, YPos));
 	}
 }
 
@@ -99,9 +84,12 @@ void UInventoryGridWidget::RenderGridLines(FPaintContext& InPaintContext) const
 
 	FVector2D GridTopLeftPos = GridBorder->GetCachedGeometry().GetLocalPositionAtCoordinates(FVector2D(0.0f, 0.0f));
 
-	int32 k = 0;
-	for (int32 i = 0; i < LineStruct.XLines.Num(); ++i)
+	for (int32 i = 0; i < StartPoints.Num(); ++i)
 	{
-		UWidgetBlueprintLibrary::DrawLine(InPaintContext, FVector2D(StartX[i], StartY[i]) + GridTopLeftPos, FVector2D(EndX[i], EndY[i]) + GridTopLeftPos, LineColor, 1.0f);
+		UWidgetBlueprintLibrary::DrawLine(
+			InPaintContext,
+			StartPoints[i] + GridTopLeftPos,
+			EndPoints[i] + GridTopLeftPos,
+			LineColor, 1.0f);
 	}
 }

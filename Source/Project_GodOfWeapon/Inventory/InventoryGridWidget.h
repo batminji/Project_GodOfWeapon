@@ -35,10 +35,8 @@ protected:
 
 	FLines LineStruct;
 
-	TArray<float> StartX;
-	TArray<float> StartY;
-	TArray<float> EndX;
-	TArray<float> EndY;
+	TArray<FVector2D> StartPoints;
+	TArray<FVector2D> EndPoints;
 
 	void UpdateGridSize();
 	void CreateLineSegments();
