@@ -44,7 +44,15 @@ protected:
 
 	virtual void NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
+	virtual void NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
 	FIntPoint DraggedItemTopLeftTile;
+
+	bool bDrawDropLocation;
+
+	void DrawBackGroundBox(UItemWidget* InItemWidget, FLinearColor InColor, const FGeometry& InGeometry, FVector2D InTopLeftCorner, FSlateWindowElementList& OutDrawElements, int32 LayedId) const;
+
+	TObjectPtr<UObject> DraggedPayload;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UCanvasPanel> CanvasPanel;

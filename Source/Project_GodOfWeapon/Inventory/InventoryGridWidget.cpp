@@ -42,6 +42,21 @@ int32 UInventoryGridWidget::NativePaint(const FPaintArgs& Args, const FGeometry&
 
 	RenderGridLines(PaintContext);
 
+	FVector2D GridTopLeftPos = GridBorder->GetCachedGeometry().GetLocalPositionAtCoordinates(FVector2D(0.0f, 0.0f));
+
+	if (bDrawDropLocation)
+	{
+		UItemWidget* ItemWidget = Cast<UItemWidget>(DraggedPayload);
+		if (IsRoomAvailableForPayload(ItemWidget))
+		{
+			DrawBackGroundBox(ItemWidget, FLinearColor(0.0f, 1.0f, 0.0f, 0.2f), AllottedGeometry, GridTopLeftPos, OutDrawElements, LayerId);
+		}
+		else
+		{
+			DrawBackGroundBox(ItemWidget, FLinearColor(1.0f, 0.0f, 0.0f, 0.2f), AllottedGeometry, GridTopLeftPos, OutDrawElements, LayerId);
+		}
+	}
+
 	return int32();
 }
 
@@ -61,6 +76,7 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 		{
 			InventoryComponent->TryAddItemAt(DroppedItem, DroppedItem->OriginalTopLeftIndex);
 		}
+		bDrawDropLocation = false;
 		return true;
 	}
 	return false;
@@ -96,6 +112,7 @@ bool UInventoryGridWidget::NativeOnDragOver(const FGeometry& InGeometry, const F
 
 		DraggedItemTopLeftTile = FIntPoint(TargetTopLeftX, TargetTopLeftY);
 
+		bDrawDropLocation = true;
 		return true;
 	}
 	return false;
@@ -144,7 +161,10 @@ void UInventoryGridWidget::NativeOnDragEnter(const FGeometry& InGeometry, const 
 {
 	Super::NativeOnDragEnter(InGeometry, InDragDropEvent, InOperation);
 	
+	DraggedPayload = InOperation->Payload;
+
 	SetKeyboardFocus();
+	bDrawDropLocation = true;
 
 	UDragDropOperation* DraggedOperation = Cast<UDragDropOperation>(InOperation);
 	if (DraggedOperation)
@@ -152,6 +172,29 @@ void UInventoryGridWidget::NativeOnDragEnter(const FGeometry& InGeometry, const 
 		CurrentDragDropOperation = DraggedOperation;
 	}
 }
+
+void UInventoryGridWidget::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDragLeave(InDragDropEvent, InOperation);
+
+	DraggedPayload = nullptr;
+
+	bDrawDropLocation = false;
+}
+
+void UInventoryGridWidget::DrawBackGroundBox(UItemWidget* InItemWidget, FLinearColor InColor, const FGeometry& InGeometry, FVector2D InTopLeftCorner, FSlateWindowElementList& OutDrawElements, int32 LayedId) const
+{
+	FSlateBrush BoxBrush;
+	BoxBrush.DrawAs = ESlateBrushDrawType::Box;
+
+	FVector2D BoxSize(InItemWidget->GetDimensions().X * InventoryComponent->TileSize, InItemWidget->GetDimensions().Y * InventoryComponent->TileSize);
+	FIntPoint BoxPosition(DraggedItemTopLeftTile.X * InventoryComponent->TileSize, DraggedItemTopLeftTile.Y * InventoryComponent->TileSize);
+
+	FPaintGeometry PaintGeometry = InGeometry.ToPaintGeometry(BoxSize, FSlateLayoutTransform(InTopLeftCorner + BoxPosition));
+
+	FSlateDrawElement::MakeBox(OutDrawElements, LayedId, PaintGeometry, &BoxBrush, ESlateDrawEffect::None, InColor);
+}
+
 
 void UInventoryGridWidget::UpdateGridSize()
 {
