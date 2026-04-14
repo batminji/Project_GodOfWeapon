@@ -47,23 +47,70 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	UItemDragDropOperation* ItemDropOp = Cast<UItemDragDropOperation>(InOperation);
-	if (!ItemDropOp || !ItemDropOp->DraggedItemWidget) return false;
-
-	FVector2D LocalMousePos = InGeometry.AbsoluteToLocal(InDragDropEvent.GetScreenSpacePosition());
-
-	int32 TileColumn = FMath::FloorToInt(LocalMousePos.X / TileSize);
-	int32 TileRow = FMath::FloorToInt(LocalMousePos.Y / TileSize);
-
-	int32 TopLeftIndex = InventoryComponent->TileToIndex(FIntPoint(TileColumn, TileRow));
-
-	if (InventoryComponent->TryAddItemAt(ItemDropOp->DraggedItemWidget, TopLeftIndex))
+	if (InOperation->Payload)
 	{
-		Refresh();
+		UItemWidget* DroppedItem = Cast<UItemWidget>(InOperation->Payload);
+		if (IsRoomAvailableForPayload(DroppedItem))
+		{
+			InventoryComponent->RefreshAllItems();
+			InventoryComponent->TryAddItemAt(DroppedItem, InventoryComponent->TileToIndex(DraggedItemTopLeftTile));
+		}
+		bDropped = true;
 		return true;
 	}
-
 	return false;
+}
+
+bool UInventoryGridWidget::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDragOver(InGeometry, InDragDropEvent, InOperation);
+
+	if (InOperation->Payload)
+	{
+		UItemWidget* DraggedItem = Cast<UItemWidget>(InOperation->Payload);
+
+		FVector2D AbsolutePosition = InDragDropEvent.GetScreenSpacePosition();
+		FVector2D LocalGridPosition = GridBorder->GetCachedGeometry().AbsoluteToLocal(AbsolutePosition);
+
+		int32 MouseTileX = FMath::TruncToInt32(LocalGridPosition.X / InventoryComponent->TileSize);
+		int32 MouseTileY = FMath::TruncToInt32(LocalGridPosition.Y / InventoryComponent->TileSize);
+
+		bool bIsRight = GetMousePositionInTile(LocalGridPosition).Right;
+		bool bIsDown = GetMousePositionInTile(LocalGridPosition).Down;
+
+		FIntPoint Dimensions = DraggedItem->GetDimensions();
+
+		int32 OffsetX = bIsRight ? (Dimensions.X - 1) / 2 : Dimensions.X / 2;
+		int32 OffsetY = bIsDown ? (Dimensions.Y - 1) / 2 : Dimensions.Y / 2;
+
+		int32 TargetTopLeftX = MouseTileX - OffsetX;
+		int32 TargetTopLeftY = MouseTileY - OffsetY;
+
+		TargetTopLeftX = FMath::Clamp(TargetTopLeftX, 0, Columns - Dimensions.X);
+		TargetTopLeftY = FMath::Clamp(TargetTopLeftY, 0, Rows - Dimensions.Y);
+
+		DraggedItemTopLeftTile = FIntPoint(TargetTopLeftX, TargetTopLeftY);
+
+		return true;
+	}
+	return false;
+}
+
+bool UInventoryGridWidget::IsRoomAvailableForPayload(UItemWidget* InItemWidget) const
+{
+	if (InItemWidget)
+	{
+		return InventoryComponent->IsRoomAvailable(InItemWidget, InventoryComponent->TileToIndex(DraggedItemTopLeftTile));
+	}
+	return false;
+}
+
+FMousePositionInTile UInventoryGridWidget::GetMousePositionInTile(FVector2D InMousePosition)
+{
+	MousePositionInTile.Right = fmod(InMousePosition.X, InventoryComponent->TileSize) > (InventoryComponent->TileSize / 2);
+	MousePositionInTile.Down = fmod(InMousePosition.Y, InventoryComponent->TileSize) > (InventoryComponent->TileSize / 2);
+
+	return MousePositionInTile;
 }
 
 void UInventoryGridWidget::UpdateGridSize()
@@ -127,19 +174,20 @@ void UInventoryGridWidget::Refresh()
 	TArray<UItemWidget*> Keys;
 	InventoryComponent->GetAllItemWidgets().GetKeys(Keys);
 
-	if (InventoryController->ItemWidgetClass)
+	for (UItemWidget* AddedItem : Keys)
 	{
-		InventoryController->ItemWidget = CreateWidget(GetWorld(), InventoryController->ItemWidgetClass);
-
-		for(UItemWidget* AddedItem : Keys)
+		if (AddedItem)
 		{
-			InventoryController->ItemWidget->SetOwningPlayer(GetOwningPlayer());
 			int32 X = InventoryComponent->GetAllItemWidgets()[AddedItem].X * InventoryComponent->TileSize;
 			int32 Y = InventoryComponent->GetAllItemWidgets()[AddedItem].Y * InventoryComponent->TileSize;
 
-			PanelSlot = GridCanvasPanel->AddChild(InventoryController->ItemWidget);
-			Cast<UCanvasPanelSlot>(PanelSlot)->SetAutoSize(true);
-			Cast<UCanvasPanelSlot>(PanelSlot)->SetPosition(FVector2D(X, Y));
+			PanelSlot = GridCanvasPanel->AddChild(AddedItem);
+
+			if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(PanelSlot))
+			{
+				CanvasSlot->SetAutoSize(true);
+				CanvasSlot->SetPosition(FVector2D(X, Y));
+			}
 		}
 	}
 }

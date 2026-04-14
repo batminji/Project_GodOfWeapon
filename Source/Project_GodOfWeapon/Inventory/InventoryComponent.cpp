@@ -25,31 +25,12 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	}
 }
 
-bool UInventoryComponent::TryAddItem(UItemWidget* InItemWidget)
-{
-	if (InItemWidget)
-	{
-		for(int32 i = 0; i < ItemWidgets.Num(); ++i)
-		{
-			if(IsRoomAvailable(InItemWidget, i))
-			{
-				AddItemWidget(InItemWidget, i);
-				return true;
-			}
-		}
-		return false;
-	}
-	return false;
-}
-
 bool UInventoryComponent::TryAddItemAt(UItemWidget* InItemWidget, int32 TopLeftindex)
 {
 	if (InItemWidget)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Trying to add item widget at index %d"), TopLeftindex);
 		if (IsRoomAvailable(InItemWidget, TopLeftindex))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Room is available for item widget at index %d"), TopLeftindex);
 			AddItemWidget(InItemWidget, TopLeftindex);
 			return true;
 		}
@@ -135,6 +116,8 @@ void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeft
 	FIntPoint Dimensions = InItemWidget->GetDimensions();
 	FIntPoint Tile = IndexToTile(TopLeftIndex);
 
+	UE_LOG(LogTemp, Warning, TEXT("Adding item widget at index %d with dimensions (%d, %d)"), TopLeftIndex, Dimensions.X, Dimensions.Y);
+
 	for (int32 i = Tile.X; i < Tile.X + Dimensions.X; ++i)
 	{
 		for (int32 j = Tile.Y; j < Tile.Y + Dimensions.Y; ++j)
@@ -153,7 +136,10 @@ TMap<UItemWidget*, FIntPoint> UInventoryComponent::GetAllItemWidgets()
 	{
 		if(ItemWidgets[i])
 		{
-			AllItemWidgets.Add(ItemWidgets[i], IndexToTile(i));
+			if (!AllItemWidgets.Contains(ItemWidgets[i]))
+			{
+				AllItemWidgets.Add(ItemWidgets[i], IndexToTile(i));
+			}
 		}
 	}
 	return AllItemWidgets;
@@ -173,6 +159,22 @@ void UInventoryComponent::RemoveItemWidget(UItemWidget* InItemWidget)
 			if(ItemWidgets[i] == InItemWidget)
 			{
 				ItemWidgets[i] = nullptr;
+			}
+		}
+	}
+}
+
+void UInventoryComponent::RefreshAllItems()
+{
+	AllItemWidgets.Empty();
+
+	for (int32 i = 0; i < ItemWidgets.Num(); ++i)
+	{
+		if (ItemWidgets[i])
+		{
+			if (!AllItemWidgets.Contains(ItemWidgets[i]))
+			{
+				AllItemWidgets.Add(ItemWidgets[i], IndexToTile(i));
 			}
 		}
 	}

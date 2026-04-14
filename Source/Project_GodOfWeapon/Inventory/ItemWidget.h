@@ -19,7 +19,7 @@ class PROJECT_GODOFWEAPON_API UItemWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	FIntPoint GetDimensions() const { return Dimensions; }
+	FIntPoint GetDimensions() const { return ItemData.Dimension; }
 
 	UPROPERTY(BlueprintReadOnly, Category = "Item")
 	FItemStructure ItemData;
@@ -46,7 +46,6 @@ protected:
 
 	TObjectPtr<AInventoryController> InventoryController;
 
-	FIntPoint Dimensions;
 	FVector2D Size;
 	float TileSize;
 

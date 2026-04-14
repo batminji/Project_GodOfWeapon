@@ -6,3 +6,7 @@
 FLines::FLines()
 {
 }
+
+FMousePositionInTile::FMousePositionInTile()
+{
+}

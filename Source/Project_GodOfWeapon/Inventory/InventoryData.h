@@ -10,10 +10,25 @@ struct FLines
 {
 	GENERATED_USTRUCT_BODY();
 
+public:
+
 	FLines();
 
 	TArray<FVector2D> XLines;
 	TArray<FVector2D> YLines;
+};
+
+USTRUCT(BlueprintType)
+struct FMousePositionInTile
+{
+	GENERATED_USTRUCT_BODY();
+
+public:
+
+	FMousePositionInTile();
+
+	bool Right;
+	bool Down;
 };
 
 class PROJECT_GODOFWEAPON_API InventoryData

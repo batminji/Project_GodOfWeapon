@@ -34,7 +34,6 @@ public:
 
 	TObjectPtr<UInventoryGridWidget> InventoryGridWidgetReference;
 
-	bool TryAddItem(UItemWidget* InItemWidget);
 	bool TryAddItemAt(UItemWidget* InItemWidget, int32 TopLeftindex);
 	bool IsRoomAvailable(UItemWidget* InItemWidget, int32 TopLeftIndex) const;
 
@@ -54,6 +53,8 @@ public:
 	void SetInventoryGridWidget(UInventoryGridWidget* InInventoryGridWidget);
 
 	void RemoveItemWidget(UItemWidget* InItemWidget);
+
+	void RefreshAllItems();
 
 protected:
 	virtual void BeginPlay() override;

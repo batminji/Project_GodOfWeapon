@@ -5,6 +5,7 @@
 #include "ItemWidget.h"
 #include "Components/PanelWidget.h"
 #include "Engine/DataTable.h"
+#include "Blueprint/DragDropOperation.h"
 
 void UInventoryWidget::SpawnItem()
 {
