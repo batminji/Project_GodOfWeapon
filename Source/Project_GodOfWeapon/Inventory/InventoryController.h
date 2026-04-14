@@ -18,6 +18,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInventoryComponent> InventoryComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
+	TSubclassOf<UUserWidget> ItemWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> ItemWidget;
 	
 protected:
 	virtual void BeginPlay() override;

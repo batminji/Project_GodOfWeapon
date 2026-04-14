@@ -33,6 +33,20 @@ bool UInventoryComponent::TryAddItem(UItemWidget* InItemWidget)
 	return false;
 }
 
+bool UInventoryComponent::TryAddItemAt(UItemWidget* InItemWidget, int32 TopLeftindex)
+{
+	if (InItemWidget)
+	{
+		if (IsRoomAvailable(InItemWidget, TopLeftindex))
+		{
+			AddItemWidget(InItemWidget, TopLeftindex);
+			return true;
+		}
+		return false;
+	}
+	return false;
+}
+
 bool UInventoryComponent::IsRoomAvailable(UItemWidget* InItemWidget, int32 TopLeftIndex) const
 {
 	FIntPoint Dimensions = InItemWidget->GetDimensions();
@@ -117,6 +131,19 @@ void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeft
 			ItemWidgets[TileToIndex(FIntPoint(i, j))] = InItemWidget;
 		}
 	}
+}
+
+TMap<UItemWidget*, FIntPoint> UInventoryComponent::GetAllItemWidgets()
+{
+	for(int32 i = 0; i < ItemWidgets.Num(); ++i)
+	{
+		if(ItemWidgets[i])
+		{
+			FIntPoint Tile = IndexToTile(i);
+			AllItemWidgets.Add(ItemWidgets[i], Tile);
+		}
+	}
+	return AllItemWidgets;
 }
 
 // Called when the game starts

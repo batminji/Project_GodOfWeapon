@@ -30,6 +30,7 @@ public:
 	TArray<UItemWidget*> ItemWidgets;
 
 	bool TryAddItem(UItemWidget* InItemWidget);
+	bool TryAddItemAt(UItemWidget* InItemWidget, int32 TopLeftindex);
 	bool IsRoomAvailable(UItemWidget* InItemWidget, int32 TopLeftIndex) const;
 
 	FIntPoint IndexToTile(int32 InIndex) const;
@@ -43,8 +44,10 @@ public:
 
 	void AddItemWidget(UItemWidget* InItemWidget, int32 TopLeftIndex);
 
+	TMap<UItemWidget*, FIntPoint> GetAllItemWidgets();
+
 protected:
 	virtual void BeginPlay() override;
 
-
+	TMap<UItemWidget*, FIntPoint> AllItemWidgets;
 };

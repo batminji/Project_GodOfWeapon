@@ -20,6 +20,8 @@ public:
 	FIntPoint GetDimensions() const { return Dimensions; }
 	
 protected:
+	virtual void NativeConstruct() override;
+
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UCanvasPanel> CanvasPanel;
 
@@ -33,5 +35,11 @@ protected:
 	TObjectPtr<UImage> ItemImage;
 
 	FIntPoint Dimensions;
+	FVector2D TileSize;
 
+	void OnItemUpdated();
+
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
 };

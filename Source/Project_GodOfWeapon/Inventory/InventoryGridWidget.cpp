@@ -10,11 +10,20 @@
 #include "Components/CanvasPanelSlot.h"
 #include "InventoryController.h"
 #include "InventoryComponent.h"
+#include "ItemDragDropOperation.h"
 
 void UInventoryGridWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
+	InventoryController = Cast<AInventoryController>(GetOwningPlayer());
+	
+	if(!InventoryController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InventoryController is null"));
+		return;
+	}
+
 	SetGridData();
 	UpdateGridSize();
 	CreateLineSegments();
@@ -29,6 +38,29 @@ int32 UInventoryGridWidget::NativePaint(const FPaintArgs& Args, const FGeometry&
 	RenderGridLines(PaintContext);
 
 	return int32();
+}
+
+bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+
+	UItemDragDropOperation* ItemDropOp = Cast<UItemDragDropOperation>(InOperation);
+	if (!ItemDropOp || !ItemDropOp->DraggedItemWidget) return false;
+
+	FVector2D LocalMousePos = InGeometry.AbsoluteToLocal(InDragDropEvent.GetScreenSpacePosition());
+
+	int32 TileColumn = FMath::FloorToInt(LocalMousePos.X / TileSize);
+	int32 TileRow = FMath::FloorToInt(LocalMousePos.Y / TileSize);
+
+	int32 TopLeftIndex = InventoryComponent->TileToIndex(FIntPoint(TileColumn, TileRow));
+
+	if (InventoryComponent->TryAddItemAt(ItemDropOp->DraggedItemWidget, TopLeftIndex))
+	{
+		OnInventoryUpdated();
+		return true;
+	}
+
+	return false;
 }
 
 void UInventoryGridWidget::UpdateGridSize()
@@ -62,14 +94,7 @@ void UInventoryGridWidget::CreateLineSegments()
 
 void UInventoryGridWidget::SetGridData()
 {
-	TObjectPtr<AInventoryController> InventoryController = Cast<AInventoryController>(GetOwningPlayer());
-	if (!InventoryController)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("InventoryController is null"));
-		return;
-	}
-
-	TObjectPtr<UInventoryComponent> InventoryComponent = InventoryController->InventoryComponent;
+	InventoryComponent = InventoryController->InventoryComponent;
 	if (InventoryComponent)
 	{
 		Columns = InventoryComponent->Columns;
@@ -91,5 +116,26 @@ void UInventoryGridWidget::RenderGridLines(FPaintContext& InPaintContext) const
 			StartPoints[i] + GridTopLeftPos,
 			EndPoints[i] + GridTopLeftPos,
 			LineColor, 1.0f);
+	}
+}
+
+void UInventoryGridWidget::OnInventoryUpdated()
+{
+	TArray<UItemWidget*> Keys;
+	InventoryComponent->GetAllItemWidgets().GetKeys(Keys);
+
+	if (InventoryController->ItemWidgetClass)
+	{
+		InventoryController->ItemWidget = CreateWidget(GetWorld(), InventoryController->ItemWidgetClass);
+		for (UItemWidget* AddedItem : Keys)
+		{
+			InventoryController->ItemWidget->SetOwningPlayer(GetOwningPlayer());
+			int32 X = InventoryComponent->GetAllItemWidgets()[AddedItem].X * InventoryComponent->TileSize;
+			int32 Y = InventoryComponent->GetAllItemWidgets()[AddedItem].Y * InventoryComponent->TileSize;
+
+			PanelSlot = GridCanvasPanel->AddChild(InventoryController->ItemWidget);
+			Cast<UCanvasPanelSlot>(PanelSlot)->SetAutoSize(true);
+			Cast<UCanvasPanelSlot>(PanelSlot)->SetPosition(FVector2D(X, Y));
+		}
 	}
 }
