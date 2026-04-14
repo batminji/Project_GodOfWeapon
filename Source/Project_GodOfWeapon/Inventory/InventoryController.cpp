@@ -8,6 +8,8 @@
 AInventoryController::AInventoryController()
 {
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+
+	InventoryComponent->ItemWidgets.SetNum(InventoryComponent->Columns * InventoryComponent->Rows);
 }
 
 void AInventoryController::BeginPlay()

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
+class UItemWidget;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_GODOFWEAPON_API UInventoryComponent : public UActorComponent
@@ -26,7 +27,24 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	float TileSize;
 
+	TArray<UItemWidget*> ItemWidgets;
+
+	bool TryAddItem(UItemWidget* InItemWidget);
+	bool IsRoomAvailable(UItemWidget* InItemWidget, int32 TopLeftIndex) const;
+
+	FIntPoint IndexToTile(int32 InIndex) const;
+	int32 TileToIndex(FIntPoint InTile) const;
+
+	bool IsTileValid(FIntPoint InTile) const;
+
+	bool GetResultAtIndex(int32 InIndex) const;
+
+	UItemWidget* GetItemWidgetAtIndex(int32 InIndex) const;
+
+	void AddItemWidget(UItemWidget* InItemWidget, int32 TopLeftIndex);
+
 protected:
 	virtual void BeginPlay() override;
+
 
 };

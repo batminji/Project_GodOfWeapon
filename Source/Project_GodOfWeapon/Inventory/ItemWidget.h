@@ -6,12 +6,32 @@
 #include "Blueprint/UserWidget.h"
 #include "ItemWidget.generated.h"
 
-/**
- * 
- */
+class UCanvasPanel;
+class USizeBox;
+class UBorder;
+class UImage;
+
 UCLASS()
 class PROJECT_GODOFWEAPON_API UItemWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	FIntPoint GetDimensions() const { return Dimensions; }
 	
+protected:
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<UCanvasPanel> CanvasPanel;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<USizeBox> BackGroundSizeBox;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<UBorder> BackGroundBorder;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<UImage> ItemImage;
+
+	FIntPoint Dimensions;
+
 };
