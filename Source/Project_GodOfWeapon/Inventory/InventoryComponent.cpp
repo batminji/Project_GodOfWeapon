@@ -3,6 +3,7 @@
 
 #include "InventoryComponent.h"
 #include "ItemWidget.h"
+#include "InventoryGridWidget.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -14,7 +15,14 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-
+	if (AddedItem)
+	{
+		if (InventoryGridWidgetReference)
+		{
+			InventoryGridWidgetReference->Refresh();
+		}
+		AddedItem = false;
+	}
 }
 
 bool UInventoryComponent::TryAddItem(UItemWidget* InItemWidget)
@@ -125,7 +133,6 @@ UItemWidget* UInventoryComponent::GetItemWidgetAtIndex(int32 InIndex) const
 void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeftIndex)
 {
 	FIntPoint Dimensions = InItemWidget->GetDimensions();
-	UE_LOG(LogTemp, Warning, TEXT("Adding item widget at index %d with dimensions (%d, %d)"), TopLeftIndex, Dimensions.X, Dimensions.Y);
 	FIntPoint Tile = IndexToTile(TopLeftIndex);
 
 	for (int32 i = Tile.X; i < Tile.X + Dimensions.X; ++i)
@@ -136,12 +143,12 @@ void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeft
 			UE_LOG(LogTemp, Warning, TEXT("Setting ItemWidgets[%d] to %s"), TileToIndex(FIntPoint(i, j)), *InItemWidget->GetName());
 		}
 	}
+
+	AddedItem = true;
 }
 
 TMap<UItemWidget*, FIntPoint> UInventoryComponent::GetAllItemWidgets()
 {
-	// AllItemWidgets.Empty();
-
 	for(int32 i = 0; i < ItemWidgets.Num(); ++i)
 	{
 		if(ItemWidgets[i])
@@ -150,6 +157,25 @@ TMap<UItemWidget*, FIntPoint> UInventoryComponent::GetAllItemWidgets()
 		}
 	}
 	return AllItemWidgets;
+}
+
+void UInventoryComponent::SetInventoryGridWidget(UInventoryGridWidget* InInventoryGridWidget)
+{
+	InventoryGridWidgetReference = InInventoryGridWidget;
+}
+
+void UInventoryComponent::RemoveItemWidget(UItemWidget* InItemWidget)
+{
+	if (InItemWidget)
+	{
+		for(int32 i = 0; i < ItemWidgets.Num(); ++i)
+		{
+			if(ItemWidgets[i] == InItemWidget)
+			{
+				ItemWidgets[i] = nullptr;
+			}
+		}
+	}
 }
 
 // Called when the game starts

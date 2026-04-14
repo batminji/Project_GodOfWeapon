@@ -17,6 +17,9 @@ UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryGridWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	void Refresh();
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -52,6 +55,4 @@ protected:
 	void CreateLineSegments();
 	void SetGridData();
 	void RenderGridLines(FPaintContext& InPaintContext) const;
-
-	void OnInventoryUpdated();
 };

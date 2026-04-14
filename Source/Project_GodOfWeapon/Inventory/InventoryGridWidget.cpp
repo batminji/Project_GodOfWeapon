@@ -28,6 +28,8 @@ void UInventoryGridWidget::NativeConstruct()
 	SetGridData();
 	UpdateGridSize();
 	CreateLineSegments();
+
+	InventoryComponent->SetInventoryGridWidget(this);
 }
 
 int32 UInventoryGridWidget::NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
@@ -57,7 +59,7 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 
 	if (InventoryComponent->TryAddItemAt(ItemDropOp->DraggedItemWidget, TopLeftIndex))
 	{
-		OnInventoryUpdated();
+		Refresh();
 		return true;
 	}
 
@@ -120,23 +122,24 @@ void UInventoryGridWidget::RenderGridLines(FPaintContext& InPaintContext) const
 	}
 }
 
-void UInventoryGridWidget::OnInventoryUpdated()
+void UInventoryGridWidget::Refresh()
 {
-	GridCanvasPanel->ClearChildren();
+	TArray<UItemWidget*> Keys;
+	InventoryComponent->GetAllItemWidgets().GetKeys(Keys);
 
-	TMap<UItemWidget*, FIntPoint> AllItems = InventoryComponent->GetAllItemWidgets();
-
-	for (auto& Pair : AllItems)
+	if (InventoryController->ItemWidgetClass)
 	{
-		UItemWidget* ItemWidget = Pair.Key;
-		FIntPoint TilePos = Pair.Value;
+		InventoryController->ItemWidget = CreateWidget(GetWorld(), InventoryController->ItemWidgetClass);
 
-		UPanelSlot* NewSlot = GridCanvasPanel->AddChild(ItemWidget);
-		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(NewSlot);
-		if (CanvasSlot)
+		for(UItemWidget* AddedItem : Keys)
 		{
-			CanvasSlot->SetAutoSize(true);
-			CanvasSlot->SetPosition(FVector2D(TilePos.X * TileSize, TilePos.Y * TileSize));
+			InventoryController->ItemWidget->SetOwningPlayer(GetOwningPlayer());
+			int32 X = InventoryComponent->GetAllItemWidgets()[AddedItem].X * InventoryComponent->TileSize;
+			int32 Y = InventoryComponent->GetAllItemWidgets()[AddedItem].Y * InventoryComponent->TileSize;
+
+			PanelSlot = GridCanvasPanel->AddChild(InventoryController->ItemWidget);
+			Cast<UCanvasPanelSlot>(PanelSlot)->SetAutoSize(true);
+			Cast<UCanvasPanelSlot>(PanelSlot)->SetPosition(FVector2D(X, Y));
 		}
 	}
 }

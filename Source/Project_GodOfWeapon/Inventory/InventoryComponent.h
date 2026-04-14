@@ -7,6 +7,7 @@
 #include "InventoryComponent.generated.h"
 
 class UItemWidget;
+class UInventoryGridWidget;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_GODOFWEAPON_API UInventoryComponent : public UActorComponent
@@ -29,6 +30,10 @@ public:
 
 	TArray<UItemWidget*> ItemWidgets;
 
+	bool AddedItem = false;
+
+	TObjectPtr<UInventoryGridWidget> InventoryGridWidgetReference;
+
 	bool TryAddItem(UItemWidget* InItemWidget);
 	bool TryAddItemAt(UItemWidget* InItemWidget, int32 TopLeftindex);
 	bool IsRoomAvailable(UItemWidget* InItemWidget, int32 TopLeftIndex) const;
@@ -45,6 +50,10 @@ public:
 	void AddItemWidget(UItemWidget* InItemWidget, int32 TopLeftIndex);
 
 	TMap<UItemWidget*, FIntPoint> GetAllItemWidgets();
+
+	void SetInventoryGridWidget(UInventoryGridWidget* InInventoryGridWidget);
+
+	void RemoveItemWidget(UItemWidget* InItemWidget);
 
 protected:
 	virtual void BeginPlay() override;

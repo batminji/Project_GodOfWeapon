@@ -2,7 +2,7 @@
 
 
 #include "ItemWidget.h"
-#include "ItemDragDropOperation.h"
+#include "Blueprint/DragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
@@ -46,7 +46,8 @@ void UItemWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	
+	InventoryController = Cast<AInventoryController>(GetOwningPlayer());
+
 }
 
 void UItemWidget::SetTileSize()
@@ -58,37 +59,44 @@ void UItemWidget::SetTileSize()
 	TileSize = InventoryController->InventoryComponent->TileSize;
 }
 
+void UItemWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+
+	BackGroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.2f));
+}
+
+void UItemWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseLeave(InMouseEvent);
+
+	BackGroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
+}
+
 FReply UItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
-	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
-	{
-		return FReply::Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
-	}
-
-	return FReply::Unhandled();
+	return FReply::Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
 }
 
 void UItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
-	UItemDragDropOperation* DragOp = Cast<UItemDragDropOperation>(UWidgetBlueprintLibrary::CreateDragDropOperation(UItemDragDropOperation::StaticClass()));
+	BackGroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
 
-	if (DragOp)
+	UDragDropOperation* DragOperation = NewObject<UDragDropOperation>();
+
+	if (DragOperation)
 	{
-		DragOp->DraggedItemWidget = this;
+		DragOperation->DefaultDragVisual = this;
 
-		UItemWidget* DragVisualWidget = CreateWidget<UItemWidget>(InventoryController, GetClass());
-		if (DragVisualWidget)
-		{
-			DragVisualWidget->InitializeItem(ItemData);
-		}
+		DragOperation->Payload = this;
 
-		DragOp->DefaultDragVisual = DragVisualWidget;
-		DragOp->Pivot = EDragPivot::MouseDown;
+		InventoryController->InventoryComponent->RemoveItemWidget(this);
+		OutOperation = DragOperation;
 
-		OutOperation = DragOp;
+		this->RemoveFromParent();
 	}
 }
