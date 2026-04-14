@@ -17,6 +17,25 @@ enum class EItemType : uint8
 };
 
 USTRUCT(BlueprintType)
+struct FItemStatStructure
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Damage = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackRange = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackSpeed = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CooldownTime = 0.0f;
+};
+
+USTRUCT(BlueprintType)
 struct FItemStructure : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();
@@ -38,21 +57,11 @@ public:
 	FIntPoint Dimension;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float Damage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float AttackRange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float AttackSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float CooldownTime;
+	FItemStatStructure Stat;
 	
 	FItemStructure()
 		: Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()), 
-		Icon(nullptr), Dimension(FIntPoint(0, 0)), 
-		Damage(0.f), AttackRange(0.f), AttackSpeed(0.f), CooldownTime(0.f)
+		Icon(nullptr), Dimension(FIntPoint(0, 0))
 	{
 	}
 };

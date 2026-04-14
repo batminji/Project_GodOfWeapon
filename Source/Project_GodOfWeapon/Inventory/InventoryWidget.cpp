@@ -24,12 +24,6 @@ void UInventoryWidget::SpawnItem()
         {
             NewItem->InitializeItem(*AllItems[RandomIndex]);
             ItemPanel->AddChild(NewItem);
-
-            UE_LOG(LogTemp, Log, TEXT("Spawned Item % d / 5: [% s] (DataTable Index : % d)"), i + 1, *NewItem->ItemData.Name.ToString(), RandomIndex);
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("SpawnItem Error: Failed to create UItemWidget at iteration %d"), i);
         }
     }
 }
