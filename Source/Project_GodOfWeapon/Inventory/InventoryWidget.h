@@ -13,6 +13,7 @@ class UButton;
 class UItemWidget;
 class UPanelWidget;
 class UDataTable;
+class UOverlay;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryWidget : public UUserWidget
@@ -26,8 +27,20 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UImage> BackGroundImage;
 
-	UPROPERTY(VisibleAnywhere,meta = (BindWidget))
-	TObjectPtr<UPanelWidget> ItemPanel;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOverlay> SlotOverlay_0;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOverlay> SlotOverlay_1;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOverlay> SlotOverlay_2;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOverlay> SlotOverlay_3;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOverlay> SlotOverlay_4;
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UButton> SpawnItemButton;
@@ -43,4 +56,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TSubclassOf<UItemWidget> ItemWidgetClass;
+
+	TArray<UOverlay*> ItemSlots;
 };
