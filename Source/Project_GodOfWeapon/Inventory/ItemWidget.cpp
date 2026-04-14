@@ -4,12 +4,43 @@
 #include "ItemWidget.h"
 #include "ItemDragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Components/CanvasPanel.h"
+#include "Components/SizeBox.h"
+#include "Components/Border.h"
+#include "Components/Image.h"
 
-void UItemWidget::NativeConstruct()
+void UItemWidget::InitializeItem(const FItemStructure& InItemData)
 {
+	ItemData = InItemData;
+	Dimensions = ItemData.Dimension;
+
+	float CurrentTileX = (TileSize.X > 0.f) ? TileSize.X : 50.0f;
+	float CurrentTileY = (TileSize.Y > 0.f) ? TileSize.Y : 50.0f;
+
+	if (BackGroundSizeBox)
+	{
+		BackGroundSizeBox->SetWidthOverride(Dimensions.X * CurrentTileX);
+		BackGroundSizeBox->SetHeightOverride(Dimensions.Y * CurrentTileY);
+	}
+
+	if (ItemImage)
+	{
+		UObject* LoadedObject = ItemData.Icon.LoadSynchronous();
+		UMaterialInterface* LoadedMaterial = Cast<UMaterialInterface>(LoadedObject);
+
+		if (LoadedMaterial)
+		{
+			ItemImage->SetBrushFromMaterial(LoadedMaterial);
+			ItemImage->SetOpacity(1.0f);
+		}
+		else
+		{
+			ItemImage->SetOpacity(0.0f);
+		}
+	}
 }
 
-void UItemWidget::OnItemUpdated()
+void UItemWidget::NativeConstruct()
 {
 }
 

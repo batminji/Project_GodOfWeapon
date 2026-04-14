@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "InventoryData.h"
+#include "Project_GodOfWeapon/Item/ItemStructure.h"
 #include "InventoryGridWidget.generated.h"
 
 class UCanvasPanel;

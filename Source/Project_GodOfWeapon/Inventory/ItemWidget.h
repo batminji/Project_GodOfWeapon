@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Project_GodOfWeapon/Item/ItemStructure.h"
 #include "ItemWidget.generated.h"
 
 class UCanvasPanel;
@@ -18,6 +19,12 @@ class PROJECT_GODOFWEAPON_API UItemWidget : public UUserWidget
 
 public:
 	FIntPoint GetDimensions() const { return Dimensions; }
+
+	UPROPERTY(BlueprintReadOnly, Category = "Item")
+	FItemStructure ItemData;
+
+	UFUNCTION(BlueprintCallable, Category = "Item")
+	void InitializeItem(const FItemStructure& InItemData);
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -35,9 +42,7 @@ protected:
 	TObjectPtr<UImage> ItemImage;
 
 	FIntPoint Dimensions;
-	FVector2D TileSize;
-
-	void OnItemUpdated();
+	FVector2D TileSize = FVector2D(50.0f, 50.0f);
 
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
