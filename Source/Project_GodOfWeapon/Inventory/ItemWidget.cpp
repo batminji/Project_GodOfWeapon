@@ -16,9 +16,9 @@
 void UItemWidget::InitializeItem(const FItemStructure& InItemData)
 {
 	ItemData = InItemData;
-	Dimensions = ItemData.Dimension;
+	SetTileSize();
 
-	Size = FVector2D(InItemData.Dimension.X * TileSize, InItemData.Dimension.Y * TileSize);
+	Size = FVector2D(ItemData.Dimension.X * TileSize, ItemData.Dimension.Y * TileSize);
 
 	if (BackGroundSizeBox)
 	{
@@ -46,12 +46,16 @@ void UItemWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	InventoryController = Cast<AInventoryController>(GetOwningPlayer());
-	if(InventoryController)
-	{
-		TileSize = InventoryController->InventoryComponent->TileSize;
-	}
 	
+}
+
+void UItemWidget::SetTileSize()
+{
+	if (!InventoryController)
+	{
+		InventoryController = Cast<AInventoryController>(GetOwningPlayer());
+	}
+	TileSize = InventoryController->InventoryComponent->TileSize;
 }
 
 FReply UItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -76,8 +80,11 @@ void UItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPoint
 	{
 		DragOp->DraggedItemWidget = this;
 
-		UUserWidget* DragVisualWidget = CreateWidget<UUserWidget>(GetWorld(), GetClass());
-
+		UItemWidget* DragVisualWidget = CreateWidget<UItemWidget>(InventoryController, GetClass());
+		if (DragVisualWidget)
+		{
+			DragVisualWidget->InitializeItem(ItemData);
+		}
 
 		DragOp->DefaultDragVisual = DragVisualWidget;
 		DragOp->Pivot = EDragPivot::MouseDown;

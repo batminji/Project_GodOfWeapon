@@ -30,6 +30,8 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	void SetTileSize();
+
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UCanvasPanel> CanvasPanel;
 
@@ -46,7 +48,7 @@ protected:
 
 	FIntPoint Dimensions;
 	FVector2D Size;
-	float TileSize = 50.0f;
+	float TileSize;
 
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 

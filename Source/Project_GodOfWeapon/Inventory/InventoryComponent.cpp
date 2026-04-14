@@ -14,6 +14,7 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+
 }
 
 bool UInventoryComponent::TryAddItem(UItemWidget* InItemWidget)
