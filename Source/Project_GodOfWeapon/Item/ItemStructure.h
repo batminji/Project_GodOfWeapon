@@ -32,7 +32,7 @@ public:
 	FText Desc;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TSoftClassPtr<UMaterialInterface> Icon;
+	TSoftObjectPtr<UMaterialInterface> Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FIntPoint Dimension;

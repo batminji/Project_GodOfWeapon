@@ -4,23 +4,26 @@
 #include "ItemWidget.h"
 #include "ItemDragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Components/SizeBox.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
+#include "InventoryController.h"
+#include "InventoryComponent.h"
 
 void UItemWidget::InitializeItem(const FItemStructure& InItemData)
 {
 	ItemData = InItemData;
 	Dimensions = ItemData.Dimension;
 
-	float CurrentTileX = (TileSize.X > 0.f) ? TileSize.X : 50.0f;
-	float CurrentTileY = (TileSize.Y > 0.f) ? TileSize.Y : 50.0f;
+	Size = FVector2D(InItemData.Dimension.X * TileSize, InItemData.Dimension.Y * TileSize);
 
 	if (BackGroundSizeBox)
 	{
-		BackGroundSizeBox->SetWidthOverride(Dimensions.X * CurrentTileX);
-		BackGroundSizeBox->SetHeightOverride(Dimensions.Y * CurrentTileY);
+		BackGroundSizeBox->SetWidthOverride(Size.X);
+		BackGroundSizeBox->SetHeightOverride(Size.Y);
 	}
 
 	if (ItemImage)
@@ -33,15 +36,22 @@ void UItemWidget::InitializeItem(const FItemStructure& InItemData)
 			ItemImage->SetBrushFromMaterial(LoadedMaterial);
 			ItemImage->SetOpacity(1.0f);
 		}
-		else
-		{
-			ItemImage->SetOpacity(0.0f);
-		}
 	}
+
+	UCanvasPanelSlot* ImageAsCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(ItemImage);
+	ImageAsCanvasSlot->SetSize(Size);
 }
 
 void UItemWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
+
+	InventoryController = Cast<AInventoryController>(GetOwningPlayer());
+	if(InventoryController)
+	{
+		TileSize = InventoryController->InventoryComponent->TileSize;
+	}
+	
 }
 
 FReply UItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

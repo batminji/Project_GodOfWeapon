@@ -11,6 +11,7 @@ class UCanvasPanel;
 class USizeBox;
 class UBorder;
 class UImage;
+class AInventoryController;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UItemWidget : public UUserWidget
@@ -41,8 +42,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UImage> ItemImage;
 
+	TObjectPtr<AInventoryController> InventoryController;
+
 	FIntPoint Dimensions;
-	FVector2D TileSize = FVector2D(50.0f, 50.0f);
+	FVector2D Size;
+	float TileSize = 50.0f;
 
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
