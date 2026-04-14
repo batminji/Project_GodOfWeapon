@@ -38,8 +38,10 @@ bool UInventoryComponent::TryAddItemAt(UItemWidget* InItemWidget, int32 TopLefti
 {
 	if (InItemWidget)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Trying to add item widget at index %d"), TopLeftindex);
 		if (IsRoomAvailable(InItemWidget, TopLeftindex))
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Room is available for item widget at index %d"), TopLeftindex);
 			AddItemWidget(InItemWidget, TopLeftindex);
 			return true;
 		}
@@ -123,6 +125,7 @@ UItemWidget* UInventoryComponent::GetItemWidgetAtIndex(int32 InIndex) const
 void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeftIndex)
 {
 	FIntPoint Dimensions = InItemWidget->GetDimensions();
+	UE_LOG(LogTemp, Warning, TEXT("Adding item widget at index %d with dimensions (%d, %d)"), TopLeftIndex, Dimensions.X, Dimensions.Y);
 	FIntPoint Tile = IndexToTile(TopLeftIndex);
 
 	for (int32 i = Tile.X; i < Tile.X + Dimensions.X; ++i)
@@ -130,18 +133,20 @@ void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeft
 		for (int32 j = Tile.Y; j < Tile.Y + Dimensions.Y; ++j)
 		{
 			ItemWidgets[TileToIndex(FIntPoint(i, j))] = InItemWidget;
+			UE_LOG(LogTemp, Warning, TEXT("Setting ItemWidgets[%d] to %s"), TileToIndex(FIntPoint(i, j)), *InItemWidget->GetName());
 		}
 	}
 }
 
 TMap<UItemWidget*, FIntPoint> UInventoryComponent::GetAllItemWidgets()
 {
+	// AllItemWidgets.Empty();
+
 	for(int32 i = 0; i < ItemWidgets.Num(); ++i)
 	{
 		if(ItemWidgets[i])
 		{
-			FIntPoint Tile = IndexToTile(i);
-			AllItemWidgets.Add(ItemWidgets[i], Tile);
+			AllItemWidgets.Add(ItemWidgets[i], IndexToTile(i));
 		}
 	}
 	return AllItemWidgets;

@@ -8,6 +8,7 @@
 
 class UCanvasPanel;
 class UImage;
+class UButton;
 
 class UItemWidget;
 class UPanelWidget;
@@ -27,6 +28,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere,meta = (BindWidget))
 	TObjectPtr<UPanelWidget> ItemPanel;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<UButton> SpawnItemButton;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SpawnItem();

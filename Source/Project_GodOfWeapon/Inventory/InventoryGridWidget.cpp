@@ -11,6 +11,7 @@
 #include "InventoryController.h"
 #include "InventoryComponent.h"
 #include "ItemDragDropOperation.h"
+#include "ItemWidget.h"
 
 void UInventoryGridWidget::NativeConstruct()
 {
@@ -105,7 +106,7 @@ void UInventoryGridWidget::SetGridData()
 
 void UInventoryGridWidget::RenderGridLines(FPaintContext& InPaintContext) const
 {
-	FLinearColor LineColor(0.5f, 0.5f, 0.5f, 1.0f); // Gray Color
+	FLinearColor LineColor(0.117f, 0.058f, 0.160f, 1.0f);
 
 	FVector2D GridTopLeftPos = GridBorder->GetCachedGeometry().GetLocalPositionAtCoordinates(FVector2D(0.0f, 0.0f));
 
@@ -115,27 +116,27 @@ void UInventoryGridWidget::RenderGridLines(FPaintContext& InPaintContext) const
 			InPaintContext,
 			StartPoints[i] + GridTopLeftPos,
 			EndPoints[i] + GridTopLeftPos,
-			LineColor, 1.0f);
+			LineColor, true, 5.0f);
 	}
 }
 
 void UInventoryGridWidget::OnInventoryUpdated()
 {
-	TArray<UItemWidget*> Keys;
-	InventoryComponent->GetAllItemWidgets().GetKeys(Keys);
+	GridCanvasPanel->ClearChildren();
 
-	if (InventoryController->ItemWidgetClass)
+	TMap<UItemWidget*, FIntPoint> AllItems = InventoryComponent->GetAllItemWidgets();
+
+	for (auto& Pair : AllItems)
 	{
-		InventoryController->ItemWidget = CreateWidget(GetWorld(), InventoryController->ItemWidgetClass);
-		for (UItemWidget* AddedItem : Keys)
-		{
-			InventoryController->ItemWidget->SetOwningPlayer(GetOwningPlayer());
-			int32 X = InventoryComponent->GetAllItemWidgets()[AddedItem].X * InventoryComponent->TileSize;
-			int32 Y = InventoryComponent->GetAllItemWidgets()[AddedItem].Y * InventoryComponent->TileSize;
+		UItemWidget* ItemWidget = Pair.Key;
+		FIntPoint TilePos = Pair.Value;
 
-			PanelSlot = GridCanvasPanel->AddChild(InventoryController->ItemWidget);
-			Cast<UCanvasPanelSlot>(PanelSlot)->SetAutoSize(true);
-			Cast<UCanvasPanelSlot>(PanelSlot)->SetPosition(FVector2D(X, Y));
+		UPanelSlot* NewSlot = GridCanvasPanel->AddChild(ItemWidget);
+		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(NewSlot);
+		if (CanvasSlot)
+		{
+			CanvasSlot->SetAutoSize(true);
+			CanvasSlot->SetPosition(FVector2D(TilePos.X * TileSize, TilePos.Y * TileSize));
 		}
 	}
 }
