@@ -26,6 +26,9 @@ protected:
 	virtual void NativeConstruct() override;
 
 	virtual int32 NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
+	
+	TObjectPtr<UItemWidget> DraggedItem;
+	TObjectPtr<UDragDropOperation> CurrentDragDropOperation;
 
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
@@ -36,6 +39,10 @@ protected:
 	FMousePositionInTile MousePositionInTile;
 
 	FMousePositionInTile GetMousePositionInTile(FVector2D InMousePosition);
+
+	virtual FReply NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+	virtual void NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
 	FIntPoint DraggedItemTopLeftTile;
 

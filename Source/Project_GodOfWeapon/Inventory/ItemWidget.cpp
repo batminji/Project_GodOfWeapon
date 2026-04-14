@@ -13,12 +13,36 @@
 #include "InventoryController.h"
 #include "InventoryComponent.h"
 
+FIntPoint UItemWidget::GetDimensions() const
+{
+	if (bIsRotated)
+	{
+		return FIntPoint(ItemData.Dimension.Y, ItemData.Dimension.X);
+	}
+	else
+	{
+		return ItemData.Dimension;
+	}
+}
+
+void UItemWidget::RotateItem()
+{
+	if (bIsRotated)
+	{
+		bIsRotated = false;
+	}
+	else
+	{
+		bIsRotated = true;
+	}
+}
+
 void UItemWidget::InitializeItem(const FItemStructure& InItemData)
 {
 	ItemData = InItemData;
 	SetTileSize();
 
-	Size = FVector2D(ItemData.Dimension.X * TileSize, ItemData.Dimension.Y * TileSize);
+	Size = FVector2D(GetDimensions().X * TileSize, GetDimensions().Y * TileSize);
 
 	if (BackGroundSizeBox)
 	{
@@ -28,8 +52,17 @@ void UItemWidget::InitializeItem(const FItemStructure& InItemData)
 
 	if (ItemImage)
 	{
-		UObject* LoadedObject = ItemData.Icon.LoadSynchronous();
-		UMaterialInterface* LoadedMaterial = Cast<UMaterialInterface>(LoadedObject);
+		UMaterialInterface* LoadedMaterial;
+		if (bIsRotated)
+		{
+			UObject* LoadedObject = ItemData.RotateIcon.LoadSynchronous();
+			LoadedMaterial = Cast<UMaterialInterface>(LoadedObject);
+		}
+		else
+		{
+			UObject* LoadedObject = ItemData.Icon.LoadSynchronous();
+			LoadedMaterial = Cast<UMaterialInterface>(LoadedObject);
+		}
 
 		if (LoadedMaterial)
 		{

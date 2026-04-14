@@ -16,6 +16,8 @@
 void UInventoryGridWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	SetIsFocusable(true);
 	
 	InventoryController = Cast<AInventoryController>(GetOwningPlayer());
 	
@@ -70,7 +72,7 @@ bool UInventoryGridWidget::NativeOnDragOver(const FGeometry& InGeometry, const F
 
 	if (InOperation->Payload)
 	{
-		UItemWidget* DraggedItem = Cast<UItemWidget>(InOperation->Payload);
+		DraggedItem = Cast<UItemWidget>(InOperation->Payload);
 
 		FVector2D AbsolutePosition = InDragDropEvent.GetScreenSpacePosition();
 		FVector2D LocalGridPosition = GridBorder->GetCachedGeometry().AbsoluteToLocal(AbsolutePosition);
@@ -114,6 +116,41 @@ FMousePositionInTile UInventoryGridWidget::GetMousePositionInTile(FVector2D InMo
 	MousePositionInTile.Down = fmod(InMousePosition.Y, InventoryComponent->TileSize) > (InventoryComponent->TileSize / 2);
 
 	return MousePositionInTile;
+}
+
+FReply UInventoryGridWidget::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	if (InKeyEvent.GetKey() == EKeys::R)
+	{
+		if (DraggedItem)
+		{
+			DraggedItem->RotateItem();
+			if (CurrentDragDropOperation)
+			{
+				UItemWidget* VisualDraggedItem = Cast<UItemWidget>(CurrentDragDropOperation->DefaultDragVisual);
+				if(VisualDraggedItem)
+				{
+					VisualDraggedItem->InitializeItem(DraggedItem->ItemData);
+				}
+				return FReply::Handled();
+			}
+		}
+	}
+
+	return Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
+}
+
+void UInventoryGridWidget::NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDragEnter(InGeometry, InDragDropEvent, InOperation);
+	
+	SetKeyboardFocus();
+
+	UDragDropOperation* DraggedOperation = Cast<UDragDropOperation>(InOperation);
+	if (DraggedOperation)
+	{
+		CurrentDragDropOperation = DraggedOperation;
+	}
 }
 
 void UInventoryGridWidget::UpdateGridSize()

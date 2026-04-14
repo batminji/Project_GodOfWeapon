@@ -12,6 +12,7 @@ class USizeBox;
 class UBorder;
 class UImage;
 class AInventoryController;
+class UMaterialInterface;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UItemWidget : public UUserWidget
@@ -19,7 +20,11 @@ class PROJECT_GODOFWEAPON_API UItemWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	FIntPoint GetDimensions() const { return ItemData.Dimension; }
+	FIntPoint GetDimensions() const;
+	UMaterialInterface* GetIcon() const { return ItemData.Icon.Get(); }
+	bool GetIsRotated() const { return bIsRotated; }
+
+	void RotateItem();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Item")
 	FItemStructure ItemData;
@@ -50,6 +55,7 @@ protected:
 
 	FVector2D Size;
 	float TileSize;
+	bool bIsRotated = false;
 
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;

@@ -54,6 +54,9 @@ public:
 	TSoftObjectPtr<UMaterialInterface> Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TSoftObjectPtr<UMaterialInterface> RotateIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FIntPoint Dimension;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
