@@ -86,6 +86,8 @@ void UItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPoint
 
 	BackGroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
 
+	UpdateOriginalPosition();
+
 	UDragDropOperation* DragOperation = NewObject<UDragDropOperation>();
 
 	if (DragOperation)
@@ -98,5 +100,17 @@ void UItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPoint
 		OutOperation = DragOperation;
 
 		this->RemoveFromParent();
+	}
+}
+
+void UItemWidget::UpdateOriginalPosition()
+{
+	if (InventoryController && InventoryController->InventoryComponent)
+	{
+		FIntPoint* OriginalTile = InventoryController->InventoryComponent->GetAllItemWidgets().Find(this);
+		if (OriginalTile)
+		{
+			OriginalTopLeftIndex = InventoryController->InventoryComponent->TileToIndex(*OriginalTile);
+		}
 	}
 }

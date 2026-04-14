@@ -55,7 +55,10 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 			InventoryComponent->RefreshAllItems();
 			InventoryComponent->TryAddItemAt(DroppedItem, InventoryComponent->TileToIndex(DraggedItemTopLeftTile));
 		}
-		bDropped = true;
+		else
+		{
+			InventoryComponent->TryAddItemAt(DroppedItem, DroppedItem->OriginalTopLeftIndex);
+		}
 		return true;
 	}
 	return false;

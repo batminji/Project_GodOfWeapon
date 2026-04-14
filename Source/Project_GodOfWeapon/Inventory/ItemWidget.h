@@ -26,6 +26,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void InitializeItem(const FItemStructure& InItemData);
+
+	int32 OriginalTopLeftIndex;
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -55,4 +57,6 @@ protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+
+	void UpdateOriginalPosition();
 };

@@ -21,8 +21,6 @@ class PROJECT_GODOFWEAPON_API UInventoryGridWidget : public UUserWidget
 
 public:
 	void Refresh();
-
-	bool bDropped = false;
 	
 protected:
 	virtual void NativeConstruct() override;
