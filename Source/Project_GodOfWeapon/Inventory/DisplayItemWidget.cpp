@@ -22,23 +22,10 @@ void UDisplayItemWidget::InitializeItem(const FItemStructure& InItemData)
 	ItemData = InItemData;
 	SetTileSize();
 
-	Size = FVector2D(ItemData.Dimension.X * TileSize, ItemData.Dimension.Y * TileSize);
+	UpdateWidgetSize();
+	UpdatePriceDisplay();
 
-	if (ItemCoinText)
-	{
-		FText PriceText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(ItemData.Price));
-		ItemCoinText->SetText(PriceText);
-	}
-
-	if (ItemImage)
-	{
-		UObject* LoadedObject = ItemData.Icon.LoadSynchronous();
-		if (UMaterialInterface* LoadedMaterial = Cast<UMaterialInterface>(LoadedObject))
-		{
-			ItemImage->SetBrushFromMaterial(LoadedMaterial);
-			ItemImage->SetOpacity(1.0f);
-		}
-	}
+	UpdateIconDisplay();
 
 	UCanvasPanelSlot* ImageAsCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(ItemImage);
 	ImageAsCanvasSlot->SetSize(Size);
@@ -55,12 +42,9 @@ FReply UDisplayItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, 
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
-	if (UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
+	if (!IsCanBuy())
 	{
-		if (!GI->HasEnoughMoney(ItemData.Price))
-		{
-			return FReply::Unhandled();
-		}
+		return FReply::Unhandled();
 	}
 
 	return FReply::Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
@@ -70,22 +54,18 @@ void UDisplayItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
-	if (ItemWidgetClass)
+	if (UItemWidget* DraggedItemWidget = CreateDragVisualWidget())
 	{
-		UItemWidget* DraggedItemWidget = CreateWidget<UItemWidget>(GetWorld(), ItemWidgetClass);
-		if (DraggedItemWidget)
-		{
-			DraggedItemWidget->InitializeItem(ItemData);
-			DraggedItemWidget->bIsFromShop = true;
+		DraggedItemWidget->InitializeItem(ItemData);
+		DraggedItemWidget->bIsFromShop = true;
 
-			UDragDropOperation* DragOperation = NewObject<UDragDropOperation>();
-			DragOperation->DefaultDragVisual = DraggedItemWidget;
-			DragOperation->Payload = DraggedItemWidget;
+		UDragDropOperation* DragOperation = NewObject<UDragDropOperation>();
+		DragOperation->DefaultDragVisual = DraggedItemWidget;
+		DragOperation->Payload = DraggedItemWidget;
 
-			OutOperation = DragOperation;
+		OutOperation = DragOperation;
 
-			this->RemoveFromParent();
-		}
+		this->RemoveFromParent();
 	}
 }
 
@@ -96,4 +76,65 @@ void UDisplayItemWidget::SetTileSize()
 		InventoryController = Cast<AInventoryController>(GetOwningPlayer());
 	}
 	TileSize = InventoryController->InventoryComponent->TileSize;
+}
+
+void UDisplayItemWidget::UpdateWidgetSize()
+{
+	Size = FVector2D(ItemData.Dimension.X * TileSize, ItemData.Dimension.Y * TileSize);
+
+	if (ItemImage)
+	{
+		if (UCanvasPanelSlot* ImageAsCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(ItemImage))
+		{
+			ImageAsCanvasSlot->SetSize(Size);
+		}
+	}
+}
+
+void UDisplayItemWidget::UpdatePriceDisplay()
+{
+	if (ItemCoinText)
+	{
+		FText PriceText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(ItemData.Price));
+		ItemCoinText->SetText(PriceText);
+	}
+}
+
+void UDisplayItemWidget::UpdateIconDisplay()
+{
+	if (ItemImage)
+	{
+		UObject* LoadedObject = ItemData.Icon.LoadSynchronous();
+		if (UMaterialInterface* LoadedMaterial = Cast<UMaterialInterface>(LoadedObject))
+		{
+			ItemImage->SetBrushFromMaterial(LoadedMaterial);
+			ItemImage->SetOpacity(1.0f);
+		}
+	}
+}
+
+bool UDisplayItemWidget::IsCanBuy() const
+{
+	if (UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
+	{
+		return GI->HasEnoughMoney(ItemData.Price);
+	}
+	return false;
+}
+
+UItemWidget* UDisplayItemWidget::CreateDragVisualWidget()
+{
+	if (!ItemWidgetClass)
+	{
+		return nullptr;
+	}
+
+	UItemWidget* DraggedItemWidget = CreateWidget<UItemWidget>(GetWorld(), ItemWidgetClass);
+	if (DraggedItemWidget)
+	{
+		DraggedItemWidget->InitializeItem(ItemData);
+		DraggedItemWidget->bIsFromShop = true;
+	}
+
+	return DraggedItemWidget;
 }

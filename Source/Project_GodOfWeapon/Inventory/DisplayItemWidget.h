@@ -47,4 +47,12 @@ protected:
 	float TileSize;
 
 	void SetTileSize();
+
+	void UpdateWidgetSize();
+	void UpdatePriceDisplay();
+	void UpdateIconDisplay();
+
+	bool IsCanBuy() const;
+
+	class UItemWidget* CreateDragVisualWidget();
 };

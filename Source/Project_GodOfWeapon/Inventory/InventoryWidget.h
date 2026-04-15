@@ -48,6 +48,9 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UButton> SpawnItemButton;
 
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<UButton> NextStageButton;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget));
 	TObjectPtr<UTextBlock> PlayerGoldText;
 
