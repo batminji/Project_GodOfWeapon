@@ -52,7 +52,7 @@ public:
 	TObjectPtr<UTextBlock> PlayerGoldText;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void SpawnItem();
+	void SpawnItem(bool bIsReroll);
 
 protected:
 	virtual void NativeConstruct() override;

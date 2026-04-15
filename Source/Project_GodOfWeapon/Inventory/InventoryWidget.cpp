@@ -11,8 +11,21 @@
 #include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
-void UInventoryWidget::SpawnItem()
+void UInventoryWidget::SpawnItem(bool bIsReroll)
 {
+    if (bIsReroll)
+    {
+        if (GameInstance && GameInstance->PlayerMoney >= 5)
+        {
+            GameInstance->PlayerMoney -= 5;
+        }
+        else
+        {
+            // Not enough money to spawn an item
+            return;
+        }
+    }
+
     TArray<FItemStructure*> AllItems;
     ItemDataTable->GetAllRows<FItemStructure>(TEXT("Context"), AllItems);
 
@@ -41,6 +54,8 @@ void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+    GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
     ItemSlots.Empty();
     ItemSlots.Add(SlotOverlay_0);
     ItemSlots.Add(SlotOverlay_1);
@@ -48,9 +63,7 @@ void UInventoryWidget::NativeConstruct()
     ItemSlots.Add(SlotOverlay_3);
     ItemSlots.Add(SlotOverlay_4);
 
-    SpawnItem();
-
-	GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+    SpawnItem(false);
 }
 
 void UInventoryWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
