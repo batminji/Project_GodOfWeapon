@@ -60,12 +60,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UCanvasPanel> GridCanvasPanel;
 
-	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UBorder> GridBorder;
 
 	UPanelSlot* PanelSlot;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<AInventoryController> InventoryController;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 
 	int32 Columns;

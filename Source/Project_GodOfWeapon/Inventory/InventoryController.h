@@ -16,7 +16,7 @@ class PROJECT_GODOFWEAPON_API AInventoryController : public APlayerController
 public:
 	AInventoryController();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
