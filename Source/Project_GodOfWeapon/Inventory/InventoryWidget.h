@@ -10,7 +10,7 @@ class UCanvasPanel;
 class UImage;
 class UButton;
 
-class UItemWidget;
+class UDisplayItemWidget;
 class UPanelWidget;
 class UDataTable;
 class UOverlay;
@@ -54,8 +54,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TObjectPtr<UDataTable> ItemDataTable;
 
-	UPROPERTY(EditAnywhere, Category = "Data")
-	TSubclassOf<UItemWidget> ItemWidgetClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<class UDisplayItemWidget> DisplayItemWidgetClass;
 
 	TArray<UOverlay*> ItemSlots;
 };

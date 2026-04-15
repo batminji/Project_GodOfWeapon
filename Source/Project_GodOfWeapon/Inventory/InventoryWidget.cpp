@@ -2,7 +2,7 @@
 
 
 #include "InventoryWidget.h"
-#include "ItemWidget.h"
+#include "DisplayItemWidget.h"
 #include "Engine/DataTable.h"
 #include "Blueprint/DragDropOperation.h"
 #include "Components/Overlay.h"
@@ -23,7 +23,7 @@ void UInventoryWidget::SpawnItem()
 
             int32 RandomIndex = FMath::RandRange(0, AllItems.Num() - 1);
 
-            UItemWidget* NewItem = CreateWidget<UItemWidget>(this, ItemWidgetClass);
+            UDisplayItemWidget* NewItem = CreateWidget<UDisplayItemWidget>(this, DisplayItemWidgetClass);
             if (NewItem)
             {
                 NewItem->InitializeItem(*AllItems[RandomIndex]);

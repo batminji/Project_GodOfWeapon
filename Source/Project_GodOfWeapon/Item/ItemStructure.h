@@ -51,6 +51,9 @@ public:
 	FText Desc;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	int Price;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TSoftObjectPtr<UMaterialInterface> Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
