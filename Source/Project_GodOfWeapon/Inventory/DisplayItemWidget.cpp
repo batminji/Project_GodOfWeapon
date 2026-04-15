@@ -21,13 +21,10 @@ void UDisplayItemWidget::InitializeItem(const FItemStructure& InItemData)
 
 	Size = FVector2D(ItemData.Dimension.X * TileSize, ItemData.Dimension.Y * TileSize);
 
-	if (ItemNameText)
-	{
-		ItemNameText->SetText(ItemData.Name);
-	}
 	if (ItemCoinText)
 	{
-		ItemCoinText->SetText(FText::AsNumber(ItemData.Price));
+		FText PriceText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(ItemData.Price));
+		ItemCoinText->SetText(PriceText);
 	}
 
 	if (ItemImage)

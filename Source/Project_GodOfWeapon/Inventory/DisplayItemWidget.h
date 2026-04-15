@@ -33,15 +33,12 @@ protected:
 	UImage* ItemImage;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* ItemNameText;
-
-	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemCoinText;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Item")
 	TSubclassOf<UItemWidget> ItemWidgetClass;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
 	FItemStructure ItemData;
 
 	TObjectPtr<AInventoryController> InventoryController;
