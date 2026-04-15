@@ -33,6 +33,8 @@ public:
 	void InitializeItem(const FItemStructure& InItemData);
 
 	int32 OriginalTopLeftIndex;
+
+	bool bIsFromShop = false;
 	
 protected:
 	virtual void NativeConstruct() override;

@@ -6,6 +6,10 @@
 #include "Engine/DataTable.h"
 #include "Blueprint/DragDropOperation.h"
 #include "Components/Overlay.h"
+#include "Components/TextBlock.h"
+
+#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 void UInventoryWidget::SpawnItem()
 {
@@ -45,4 +49,22 @@ void UInventoryWidget::NativeConstruct()
     ItemSlots.Add(SlotOverlay_4);
 
     SpawnItem();
+
+	GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+}
+
+void UInventoryWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+
+    UpdatePlayerGoldText();
+}
+
+void UInventoryWidget::UpdatePlayerGoldText()
+{
+    if (GameInstance)
+    {
+        FText GoldText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(GameInstance->PlayerMoney));
+        PlayerGoldText->SetText(GoldText);
+    }
 }

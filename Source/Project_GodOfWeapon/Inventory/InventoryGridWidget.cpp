@@ -13,6 +13,9 @@
 #include "ItemDragDropOperation.h"
 #include "ItemWidget.h"
 
+#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+
 void UInventoryGridWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -67,15 +70,36 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 	if (InOperation->Payload)
 	{
 		UItemWidget* DroppedItem = Cast<UItemWidget>(InOperation->Payload);
-		if (IsRoomAvailableForPayload(DroppedItem))
+		if (!DroppedItem) return false;
+
+		if (DroppedItem->bIsFromShop)
 		{
-			InventoryComponent->RefreshAllItems();
-			InventoryComponent->TryAddItemAt(DroppedItem, InventoryComponent->TileToIndex(DraggedItemTopLeftTile));
+			UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+			if (GI && GI->PlayerMoney >= DroppedItem->ItemData.Price)
+			{
+				if (IsRoomAvailableForPayload(DroppedItem))
+				{
+					GI->DeductMoney(DroppedItem->ItemData.Price);
+					DroppedItem->bIsFromShop = false;
+
+					InventoryComponent->RefreshAllItems();
+					InventoryComponent->TryAddItemAt(DroppedItem, InventoryComponent->TileToIndex(DraggedItemTopLeftTile));
+				}
+			}
 		}
 		else
 		{
-			InventoryComponent->TryAddItemAt(DroppedItem, DroppedItem->OriginalTopLeftIndex);
-		}
+			if (IsRoomAvailableForPayload(DroppedItem))
+			{
+				InventoryComponent->RefreshAllItems();
+				InventoryComponent->TryAddItemAt(DroppedItem, InventoryComponent->TileToIndex(DraggedItemTopLeftTile));
+			}
+			else
+			{
+				InventoryComponent->TryAddItemAt(DroppedItem, DroppedItem->OriginalTopLeftIndex);
+			}
+		}		
 		bDrawDropLocation = false;
 		return true;
 	}

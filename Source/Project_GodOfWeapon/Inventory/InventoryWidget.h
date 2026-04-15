@@ -9,11 +9,14 @@
 class UCanvasPanel;
 class UImage;
 class UButton;
+class UTextBlock;
 
 class UDisplayItemWidget;
 class UPanelWidget;
 class UDataTable;
 class UOverlay;
+
+class UGodOfWeaponGameInstance;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryWidget : public UUserWidget
@@ -45,11 +48,15 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UButton> SpawnItemButton;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget));
+	TObjectPtr<UTextBlock> PlayerGoldText;
+
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SpawnItem();
 
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TObjectPtr<UDataTable> ItemDataTable;
@@ -58,4 +65,8 @@ protected:
 	TSubclassOf<class UDisplayItemWidget> DisplayItemWidgetClass;
 
 	TArray<UOverlay*> ItemSlots;
+
+	TObjectPtr< UGodOfWeaponGameInstance> GameInstance;
+
+	void UpdatePlayerGoldText();
 };

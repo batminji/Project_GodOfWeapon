@@ -14,6 +14,9 @@
 #include "InventoryController.h"
 #include "InventoryComponent.h"
 
+#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+
 void UDisplayItemWidget::InitializeItem(const FItemStructure& InItemData)
 {
 	ItemData = InItemData;
@@ -52,6 +55,14 @@ FReply UDisplayItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, 
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
+	if (UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
+	{
+		if (!GI->HasEnoughMoney(ItemData.Price))
+		{
+			return FReply::Unhandled();
+		}
+	}
+
 	return FReply::Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
 }
 
@@ -65,6 +76,7 @@ void UDisplayItemWidget::NativeOnDragDetected(const FGeometry& InGeometry, const
 		if (DraggedItemWidget)
 		{
 			DraggedItemWidget->InitializeItem(ItemData);
+			DraggedItemWidget->bIsFromShop = true;
 
 			UDragDropOperation* DragOperation = NewObject<UDragDropOperation>();
 			DragOperation->DefaultDragVisual = DraggedItemWidget;
