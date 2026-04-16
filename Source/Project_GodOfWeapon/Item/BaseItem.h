@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ItemStructure.h"
 #include "BaseItem.generated.h"
+
+class UStaticMeshComponent;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ABaseItem : public AActor
@@ -12,15 +15,21 @@ class PROJECT_GODOFWEAPON_API ABaseItem : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ABaseItem();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TObjectPtr<UStaticMeshComponent> ItemMesh;
+
+	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
+	EItemType ItemType;
+
+	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
+	FItemStatStructure ItemStat;
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 };

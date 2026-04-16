@@ -2,6 +2,7 @@
 
 
 #include "BaseItem.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 ABaseItem::ABaseItem()
@@ -9,6 +10,8 @@ ABaseItem::ABaseItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
+	RootComponent = ItemMesh;
 }
 
 // Called when the game starts or when spawned
