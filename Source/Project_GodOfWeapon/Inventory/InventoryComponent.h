@@ -56,6 +56,7 @@ public:
 
 	void RefreshAllItems();
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SaveInventoryToGameInstance();
 
 protected:

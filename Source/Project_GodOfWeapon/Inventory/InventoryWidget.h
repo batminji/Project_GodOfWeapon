@@ -17,6 +17,8 @@ class UDataTable;
 class UOverlay;
 
 class UGodOfWeaponGameInstance;
+class AInventoryController;
+class UInventoryComponent;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryWidget : public UUserWidget
@@ -51,6 +53,9 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UButton> NextStageButton;
 
+	UFUNCTION()
+	void OnNextStageClicked();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget));
 	TObjectPtr<UTextBlock> PlayerGoldText;
 
@@ -69,7 +74,9 @@ protected:
 
 	TArray<UOverlay*> ItemSlots;
 
-	TObjectPtr< UGodOfWeaponGameInstance> GameInstance;
+	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
+	TObjectPtr<AInventoryController> InventoryController;
+	TObjectPtr<UInventoryComponent> InventoryComponent;
 
 	void UpdatePlayerGoldText();
 };

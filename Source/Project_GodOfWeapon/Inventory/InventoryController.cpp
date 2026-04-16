@@ -8,7 +8,6 @@
 AInventoryController::AInventoryController()
 {
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
-
 }
 
 void AInventoryController::BeginPlay()

@@ -203,9 +203,11 @@ void UInventoryComponent::SaveInventoryToGameInstance()
 		if (ItemWidget)
 		{
 			FSavedItemData Data;
-			Data.ItemRowName = FName(*ItemWidget->ItemData.Name.ToString());
+			Data.ItemRowName = ItemWidget->ItemData.ItemID;
 			Data.TopLeftIndex = TileToIndex(TopLeftTile);
 			Data.bIsRotated = ItemWidget->GetIsRotated();
+
+			// UE_LOG(LogTemp, Warning, TEXT("Saving item %s at index %d with rotation %s"), *Data.ItemRowName.ToString(), Data.TopLeftIndex, Data.bIsRotated ? TEXT("true") : TEXT("false"));
 
 			GameInstance->InventoryData.Add(Data);
 		}

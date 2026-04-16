@@ -7,9 +7,27 @@
 #include "Blueprint/DragDropOperation.h"
 #include "Components/Overlay.h"
 #include "Components/TextBlock.h"
+#include "Components/Button.h"
 
 #include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+
+#include "InventoryController.h"
+#include "InventoryComponent.h"
+
+void UInventoryWidget::OnNextStageClicked()
+{
+	InventoryController = Cast<AInventoryController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	InventoryComponent = InventoryController ? InventoryController->InventoryComponent : nullptr;
+
+    if (InventoryComponent)
+    {
+        InventoryComponent->SaveInventoryToGameInstance();
+
+		// Load the next level
+        UGameplayStatics::OpenLevel(GetWorld(), FName("TestMap"));
+	}
+}
 
 void UInventoryWidget::SpawnItem(bool bIsReroll)
 {
@@ -55,6 +73,11 @@ void UInventoryWidget::NativeConstruct()
 	Super::NativeConstruct();
 
     GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+    if (NextStageButton)
+    {
+        NextStageButton->OnClicked.AddDynamic(this, &UInventoryWidget::OnNextStageClicked);
+    }
 
     ItemSlots.Empty();
     ItemSlots.Add(SlotOverlay_0);
