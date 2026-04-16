@@ -6,7 +6,7 @@
 #include "Engine/DataTable.h"
 #include "ItemStructure.generated.h"
 
-class ABaseItem;
+class UBaseItemComponent;
 
 UENUM(BlueprintType)
 enum class EItemType : uint8
@@ -59,7 +59,7 @@ public:
 	int Price;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftClassPtr<ABaseItem> ItemActorClass;
+	TSoftClassPtr<UBaseItemComponent> ItemComponentClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<UMaterialInterface> Icon;
@@ -75,7 +75,7 @@ public:
 	
 	FItemStructure()
 		: Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()), 
-		ItemActorClass(nullptr), Icon(nullptr), Dimension(FIntPoint(0, 0))
+		ItemComponentClass(nullptr), Icon(nullptr), Dimension(FIntPoint(0, 0))
 	{
 	}
 };

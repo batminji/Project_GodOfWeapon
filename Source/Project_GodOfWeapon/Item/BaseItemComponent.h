@@ -3,19 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
 #include "ItemStructure.h"
-#include "BaseItem.generated.h"
-
-class UStaticMeshComponent;
+#include "BaseItemComponent.generated.h"
 
 UCLASS()
-class PROJECT_GODOFWEAPON_API ABaseItem : public AActor
+class PROJECT_GODOFWEAPON_API UBaseItemComponent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
-	
-public:	
-	ABaseItem();
+
+public:
+	UBaseItemComponent();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TObjectPtr<UStaticMeshComponent> ItemMesh;
@@ -25,11 +23,5 @@ public:
 
 	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
 	FItemStatStructure ItemStat;
-
-protected:
-	virtual void BeginPlay() override;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
-
+	
 };
