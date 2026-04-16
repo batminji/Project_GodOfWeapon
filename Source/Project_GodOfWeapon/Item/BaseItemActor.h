@@ -8,7 +8,6 @@
 #include "BaseItemActor.generated.h"
 
 class UStaticMeshComponent;
-class UBoxComponent;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ABaseItemActor : public AActor
@@ -17,9 +16,6 @@ class PROJECT_GODOFWEAPON_API ABaseItemActor : public AActor
 	
 public:	
 	ABaseItemActor();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TObjectPtr<UBoxComponent> ItemCollision;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TObjectPtr<UStaticMeshComponent> ItemMesh;
