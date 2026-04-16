@@ -76,11 +76,11 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 		{
 			UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-			if (GI && GI->PlayerMoney >= DroppedItem->ItemData.Price)
+			if (GI && GI->PlayerCoin >= DroppedItem->ItemData.Price)
 			{
 				if (IsRoomAvailableForPayload(DroppedItem))
 				{
-					GI->DeductMoney(DroppedItem->ItemData.Price);
+					GI->DeductCoin(DroppedItem->ItemData.Price);
 					DroppedItem->bIsFromShop = false;
 
 					InventoryComponent->RefreshAllItems();

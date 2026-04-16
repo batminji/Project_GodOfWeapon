@@ -33,9 +33,9 @@ void UInventoryWidget::SpawnItem(bool bIsReroll)
 {
     if (bIsReroll)
     {
-        if (GameInstance && GameInstance->PlayerMoney >= 5)
+        if (GameInstance && GameInstance->PlayerCoin >= 5)
         {
-            GameInstance->PlayerMoney -= 5;
+            GameInstance->PlayerCoin -= 5;
         }
         else
         {
@@ -100,7 +100,7 @@ void UInventoryWidget::UpdatePlayerGoldText()
 {
     if (GameInstance)
     {
-        FText GoldText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(GameInstance->PlayerMoney));
+        FText GoldText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(GameInstance->PlayerCoin));
         PlayerGoldText->SetText(GoldText);
     }
 }

@@ -119,14 +119,14 @@ void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeft
 	FIntPoint Dimensions = InItemWidget->GetDimensions();
 	FIntPoint Tile = IndexToTile(TopLeftIndex);
 
-	UE_LOG(LogTemp, Warning, TEXT("Adding item widget at index %d with dimensions (%d, %d)"), TopLeftIndex, Dimensions.X, Dimensions.Y);
+	// UE_LOG(LogTemp, Warning, TEXT("Adding item widget at index %d with dimensions (%d, %d)"), TopLeftIndex, Dimensions.X, Dimensions.Y);
 
 	for (int32 i = Tile.X; i < Tile.X + Dimensions.X; ++i)
 	{
 		for (int32 j = Tile.Y; j < Tile.Y + Dimensions.Y; ++j)
 		{
 			ItemWidgets[TileToIndex(FIntPoint(i, j))] = InItemWidget;
-			UE_LOG(LogTemp, Warning, TEXT("Setting ItemWidgets[%d] to %s"), TileToIndex(FIntPoint(i, j)), *InItemWidget->GetName());
+			// UE_LOG(LogTemp, Warning, TEXT("Setting ItemWidgets[%d] to %s"), TileToIndex(FIntPoint(i, j)), *InItemWidget->GetName());
 		}
 	}
 

@@ -7,15 +7,15 @@ UGodOfWeaponGameInstance::UGodOfWeaponGameInstance()
 {
 }
 
-bool UGodOfWeaponGameInstance::HasEnoughMoney(int32 InAmount) const
+bool UGodOfWeaponGameInstance::HasEnoughCoin(int32 InAmount) const
 {
-	return PlayerMoney >= InAmount;
+	return PlayerCoin >= InAmount;
 }
 
-void UGodOfWeaponGameInstance::DeductMoney(int32 InAmount)
+void UGodOfWeaponGameInstance::DeductCoin(int32 InAmount)
 {
-	if (HasEnoughMoney(InAmount))
+	if (HasEnoughCoin(InAmount))
 	{
-		PlayerMoney -= InAmount;
+		PlayerCoin -= InAmount;
 	}
 }

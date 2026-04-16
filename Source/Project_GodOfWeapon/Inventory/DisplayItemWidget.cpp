@@ -117,7 +117,7 @@ bool UDisplayItemWidget::IsCanBuy() const
 {
 	if (UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
 	{
-		return GI->HasEnoughMoney(ItemData.Price);
+		return GI->HasEnoughCoin(ItemData.Price);
 	}
 	return false;
 }
