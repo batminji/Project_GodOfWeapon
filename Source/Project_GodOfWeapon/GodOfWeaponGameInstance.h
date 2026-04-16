@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Player/PlayerStatStructure.h"
 #include "GodOfWeaponGameInstance.generated.h"
 
 /**
@@ -25,4 +26,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Economy")
 	void DeductMoney(int32 InAmount);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Stat")
+	FPlayerStatStructure PlayerStat;
 };
