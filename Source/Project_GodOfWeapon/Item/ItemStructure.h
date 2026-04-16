@@ -41,33 +41,39 @@ struct FItemStructure : public FTableRowBase
 	GENERATED_USTRUCT_BODY();
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName ItemID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EItemType Type;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FText Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText Desc;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Price;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftClassPtr<AActor> ItemActorClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<UMaterialInterface> Icon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<UMaterialInterface> RotateIcon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FIntPoint Dimension;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FItemStatStructure Stat;
 	
 	FItemStructure()
 		: Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()), 
-		Icon(nullptr), Dimension(FIntPoint(0, 0))
+		ItemActorClass(nullptr), Icon(nullptr), Dimension(FIntPoint(0, 0))
 	{
 	}
 };

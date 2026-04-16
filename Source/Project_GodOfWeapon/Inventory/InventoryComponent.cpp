@@ -5,6 +5,9 @@
 #include "ItemWidget.h"
 #include "InventoryGridWidget.h"
 
+#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+
 UInventoryComponent::UInventoryComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -176,6 +179,35 @@ void UInventoryComponent::RefreshAllItems()
 			{
 				AllItemWidgets.Add(ItemWidgets[i], IndexToTile(i));
 			}
+		}
+	}
+}
+
+void UInventoryComponent::SaveInventoryToGameInstance()
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetWorld()->GetGameInstance());
+	if (!GameInstance)
+	{
+		return;
+	}
+
+	GameInstance->InventoryData.Empty();
+
+	TMap<UItemWidget*, FIntPoint> AllItems = GetAllItemWidgets();
+
+	for (auto& Item : AllItems)
+	{
+		UItemWidget* ItemWidget = Item.Key;
+		FIntPoint TopLeftTile = Item.Value;
+
+		if (ItemWidget)
+		{
+			FSavedItemData Data;
+			Data.ItemRowName = FName(*ItemWidget->ItemData.Name.ToString());
+			Data.TopLeftIndex = TileToIndex(TopLeftTile);
+			Data.bIsRotated = ItemWidget->GetIsRotated();
+
+			GameInstance->InventoryData.Add(Data);
 		}
 	}
 }

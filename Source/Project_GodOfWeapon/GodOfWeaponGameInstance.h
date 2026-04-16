@@ -7,9 +7,21 @@
 #include "Player/PlayerStatStructure.h"
 #include "GodOfWeaponGameInstance.generated.h"
 
-/**
- * 
- */
+USTRUCT(BlueprintType)
+struct FSavedItemData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite)
+	FName ItemRowName;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 TopLeftIndex;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsRotated;
+};
+
 UCLASS()
 class PROJECT_GODOFWEAPON_API UGodOfWeaponGameInstance : public UGameInstance
 {
@@ -29,4 +41,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Stat")
 	FPlayerStatStructure PlayerStat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Data")
+	TArray<FSavedItemData> InventoryData;
 };

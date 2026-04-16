@@ -56,6 +56,8 @@ public:
 
 	void RefreshAllItems();
 
+	void SaveInventoryToGameInstance();
+
 protected:
 	virtual void BeginPlay() override;
 
