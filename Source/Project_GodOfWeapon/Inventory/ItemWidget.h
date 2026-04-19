@@ -23,6 +23,7 @@ public:
 	FIntPoint GetDimensions() const;
 	UMaterialInterface* GetIcon() const { return ItemData.Icon.Get(); }
 	bool GetIsRotated() const { return bIsRotated; }
+	void SetIsRotated(bool InIsRotated) { bIsRotated = InIsRotated; }
 
 	void RotateItem();
 

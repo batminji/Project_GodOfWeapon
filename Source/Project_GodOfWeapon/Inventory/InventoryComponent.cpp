@@ -2,11 +2,15 @@
 
 
 #include "InventoryComponent.h"
-#include "ItemWidget.h"
-#include "InventoryGridWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/DataTable.h"
+#include "Blueprint/UserWidget.h"
 
 #include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
-#include "Kismet/GameplayStatics.h"
+#include "Project_GodOfWeapon/Item/ItemStructure.h"
+
+#include "ItemWidget.h"
+#include "InventoryGridWidget.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -211,6 +215,44 @@ void UInventoryComponent::SaveInventoryToGameInstance()
 
 			GameInstance->InventoryData.Add(Data);
 		}
+	}
+}
+
+void UInventoryComponent::LoadInventoryFromGameInstance()
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (!GameInstance || !ItemWidgetClass || !ItemDataTable)
+	{
+		return;
+	}
+
+	ItemWidgets.Init(nullptr, Columns * Rows);
+	AllItemWidgets.Empty();
+
+	for (const FSavedItemData& Data : GameInstance->InventoryData)
+	{
+		static const FString ContextString(TEXT("ItemLoadContext"));
+		FItemStructure* FoundData = ItemDataTable->FindRow<FItemStructure>(Data.ItemRowName, ContextString);
+
+		if (FoundData)
+		{
+			UItemWidget* NewItemWidget = CreateWidget<UItemWidget>(GetWorld(), ItemWidgetClass);
+			if (NewItemWidget)
+			{
+				NewItemWidget->SetIsRotated(Data.bIsRotated);
+				NewItemWidget->InitializeItem(*FoundData);
+
+				if (!TryAddItemAt(NewItemWidget, Data.TopLeftIndex))
+				{
+					NewItemWidget->ConditionalBeginDestroy();
+				}
+			}
+		}
+	}
+
+	if (InventoryGridWidgetReference)
+	{
+		InventoryGridWidgetReference->Refresh();
 	}
 }
 

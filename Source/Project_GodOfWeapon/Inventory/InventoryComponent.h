@@ -15,7 +15,7 @@ class PROJECT_GODOFWEAPON_API UInventoryComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UInventoryComponent();
+	UInventoryComponent();	
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -58,6 +58,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SaveInventoryToGameInstance();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void LoadInventoryFromGameInstance();
+
+	UPROPERTY(EditAnywhere, Category = "Data")
+	TObjectPtr<UDataTable> ItemDataTable;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Item")
+	TSubclassOf<UItemWidget> ItemWidgetClass;
 
 protected:
 	virtual void BeginPlay() override;
