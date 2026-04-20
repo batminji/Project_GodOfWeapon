@@ -25,7 +25,8 @@ void UInventoryWidget::OnNextStageClicked()
         InventoryComponent->SaveInventoryToGameInstance();
 
 		// Load the next level
-        UGameplayStatics::OpenLevel(GetWorld(), FName("TestMap"));
+        // UGameplayStatics::OpenLevel(GetWorld(), FName("TestMap"));
+        UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
 	}
 }
 
