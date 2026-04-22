@@ -17,7 +17,7 @@ public:
 	FName ItemRowName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 TopLeftIndex;
+	FIntPoint TopLeftTile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsRotated;
