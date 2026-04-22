@@ -81,6 +81,10 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 			{
 				if (IsRoomAvailableForPayload(DroppedItem))
 				{
+					if (DroppedItem->ItemData.Type == EItemType::Consume)
+					{
+						ApplyConsumeItem(GI, DroppedItem->ItemData.ItemID);
+					}
 					GI->DeductCoin(DroppedItem->ItemData.Price);
 					DroppedItem->bIsFromShop = false;
 
@@ -150,6 +154,26 @@ bool UInventoryGridWidget::IsRoomAvailableForPayload(UItemWidget* InItemWidget) 
 		return InventoryComponent->IsRoomAvailable(InItemWidget, InventoryComponent->TileToIndex(DraggedItemTopLeftTile));
 	}
 	return false;
+}
+
+void UInventoryGridWidget::ApplyConsumeItem(UGodOfWeaponGameInstance* GI, FName ItemID)
+{
+	if (ItemID == FName("Consume01")) // 초당 회복 +0.5 (10초당 5 증가)
+	{
+		GI->PlayerStat.Recovery += 5;
+	}
+	else if (ItemID == FName("Consume02")) // 플레이어 속도 증가
+	{
+		GI->PlayerStat.MoveSpeedMultifier += 0.2f;
+	}
+	else if(ItemID == FName("Consume03")) // 근거리 공격력 증가
+	{
+		GI->PlayerStat.ShortRangeAttackForce += 10.0f;
+	}
+	else if (ItemID == FName("Consume04")) // 원거리 공격력 증가
+	{
+		GI->PlayerStat.LongRangeAttackForce += 10.0f;
+	}
 }
 
 FMousePositionInTile UInventoryGridWidget::GetMousePositionInTile(FVector2D InMousePosition)

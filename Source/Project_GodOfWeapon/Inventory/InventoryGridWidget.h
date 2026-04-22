@@ -13,6 +13,7 @@ class UBorder;
 class AInventoryController;
 class UInventoryComponent;
 class UItemWidget;
+class UGodOfWeaponGameInstance;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryGridWidget : public UUserWidget
@@ -35,6 +36,8 @@ protected:
 	virtual bool NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
 	bool IsRoomAvailableForPayload(UItemWidget* InItemWidget) const;
+
+	void ApplyConsumeItem(UGodOfWeaponGameInstance* GI, FName ItemID);
 
 	FMousePositionInTile MousePositionInTile;
 

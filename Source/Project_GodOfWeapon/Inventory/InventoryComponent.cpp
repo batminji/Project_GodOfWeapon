@@ -41,8 +41,8 @@ bool UInventoryComponent::TryAddItemAt(UItemWidget* InItemWidget, int32 TopLefti
 			AddItemWidget(InItemWidget, TopLeftindex);
 			return true;
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Rows : %d, Columns: %d, TileSize: %f"), Rows, Columns, TileSize);
-		UE_LOG(LogTemp, Warning, TEXT("Not enough room to add item %s at index %d"), *InItemWidget->GetName(), TopLeftindex);
+		// UE_LOG(LogTemp, Warning, TEXT("Rows : %d, Columns: %d, TileSize: %f"), Rows, Columns, TileSize);
+		// UE_LOG(LogTemp, Warning, TEXT("Not enough room to add item %s at index %d"), *InItemWidget->GetName(), TopLeftindex);
 		return false;
 	}
 	return false;
@@ -125,7 +125,7 @@ void UInventoryComponent::AddItemWidget(UItemWidget* InItemWidget, int32 TopLeft
 	FIntPoint Dimensions = InItemWidget->GetDimensions();
 	FIntPoint Tile = IndexToTile(TopLeftIndex);
 
-	UE_LOG(LogTemp, Warning, TEXT("Adding item widget at index %d with dimensions (%d, %d)"), TopLeftIndex, Dimensions.X, Dimensions.Y);
+	// UE_LOG(LogTemp, Warning, TEXT("Adding item widget at index %d with dimensions (%d, %d)"), TopLeftIndex, Dimensions.X, Dimensions.Y);
 
 	for (int32 i = Tile.X; i < Tile.X + Dimensions.X; ++i)
 	{
