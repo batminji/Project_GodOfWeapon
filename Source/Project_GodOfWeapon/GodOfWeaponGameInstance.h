@@ -12,13 +12,14 @@ struct FSavedItemData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite)
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName ItemRowName;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 TopLeftIndex;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsRotated;
 };
 
@@ -42,6 +43,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Stat")
 	FPlayerStatStructure PlayerStat;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory Data")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Data")
 	TArray<FSavedItemData> InventoryData;
 };
