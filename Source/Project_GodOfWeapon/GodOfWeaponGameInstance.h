@@ -31,18 +31,18 @@ class PROJECT_GODOFWEAPON_API UGodOfWeaponGameInstance : public UGameInstance
 public:
 	UGodOfWeaponGameInstance();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Economy")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int32 PlayerCoin = 30;
 
-	UFUNCTION(BlueprintPure, Category = "Economy")
+	UFUNCTION(BlueprintPure, Category = "Coin")
 	bool HasEnoughCoin(int32 InAmount) const;
 
-	UFUNCTION(BlueprintCallable, Category = "Economy")
+	UFUNCTION(BlueprintCallable, Category = "Coin")
 	void DeductCoin(int32 InAmount);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Stat")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	FPlayerStatStructure PlayerStat;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Data")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TArray<FSavedItemData> InventoryData;
 };
