@@ -24,12 +24,26 @@ void UGodOfWeaponGameInstance::LevelUpPlayer()
 	}
 }
 
-bool UGodOfWeaponGameInstance::HasEnoughCoin(int32 InAmount) const
+void UGodOfWeaponGameInstance::UpdatePlayerCustomData(const FCustomData& InCustomData)
+{
+	PlayerCustomData = InCustomData;
+}
+
+void UGodOfWeaponGameInstance::UpdateStageClear(const FPlayerStatStructure& InPlayerStat, const int32& InPlayerCoin, const int32& InPlayerEarnedCoin, const int32& InTotalDamage, const int32& InTotalMonsterDefeated)
+{
+	PlayerStat = InPlayerStat;
+	PlayerCoin = InPlayerCoin;
+	PlayerEarnedCoin += InPlayerEarnedCoin;
+	TotalDamage += InTotalDamage;
+	TotalMonsterDefeated += InTotalMonsterDefeated;
+}
+
+bool UGodOfWeaponGameInstance::HasEnoughCoin(const int32& InAmount) const
 {
 	return PlayerCoin >= InAmount;
 }
 
-void UGodOfWeaponGameInstance::DeductCoin(int32 InAmount)
+void UGodOfWeaponGameInstance::DeductCoin(const int32& InAmount)
 {
 	if (HasEnoughCoin(InAmount))
 	{

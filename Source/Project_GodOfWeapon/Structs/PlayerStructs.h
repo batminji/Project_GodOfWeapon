@@ -6,11 +6,11 @@
 #include "PlayerStructs.generated.h"
 
 USTRUCT(BlueprintType)
-struct FCustomizeData
+struct FCustomData
 {
     GENERATED_BODY()
 
-    FCustomizeData() 
+    FCustomData()
         : HeadNumber(15), ChestNumber(1), HandsNumber(1), LegsNumber(5), FootNumber(1)
     {}
 

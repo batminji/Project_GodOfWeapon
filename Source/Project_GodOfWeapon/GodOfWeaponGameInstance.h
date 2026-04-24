@@ -37,12 +37,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void LevelUpPlayer();
 
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void UpdatePlayerCustomData(const FCustomData& InCustomData);
+
+	// Stage
+	UFUNCTION(BlueprintCallable, Category = "Stage")
+	void UpdateStageClear(const FPlayerStatStructure& InPlayerStat, const int32& InPlayerCoin, const int32& InPlayerEarnedCoin, const int32& InTotalDamage, const int32& InTotalMonsterDefeated);
+
 	// Coin
 	UFUNCTION(BlueprintPure, Category = "Coin")
-	bool HasEnoughCoin(int32 InAmount) const;
+	bool HasEnoughCoin(const int32& InAmount) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Coin")
-	void DeductCoin(int32 InAmount);
+	void DeductCoin(const int32& InAmount);
 
 	// Gettters
 	TArray<FSavedItemData>& GetInventoryData() { return InventoryData; }
@@ -54,7 +61,7 @@ public:
 protected:
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
-	FCustomizeData PlayerCustomData;
+	FCustomData PlayerCustomData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
 	FPlayerStatStructure PlayerStat;
