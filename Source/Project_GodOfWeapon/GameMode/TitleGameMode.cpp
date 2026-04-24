@@ -6,7 +6,7 @@
 #include "../Controller/TitleController.h"
 #include "../UI/Title/TitleWidget.h"
 #include "../UI/Custom/CustomWidget.h"
-#include "../GodOfWeaponGameInstance.h"
+#include "../UI/Custom/LevelSettingWidget.h"
 
 void ATitleGameMode::BeginPlay()
 {
@@ -67,5 +67,26 @@ void ATitleGameMode::HandleCustomFinished(FCustomData InCustomData)
 	if (GI)
 	{
 		GI->UpdatePlayerCustomData(InCustomData);
+	}
+
+	CreateLevelWidget();
+}
+
+void ATitleGameMode::HandleEntry(FSavedItemData InItemData, EDifficulty InDifficulty)
+{
+}
+
+void ATitleGameMode::CreateLevelWidget()
+{
+	if (LevelSettingWidgetClass)
+	{
+		LevelSettingWidget = CreateWidget<ULevelSettingWidget>(GetWorld(), LevelSettingWidgetClass);
+
+		if (LevelSettingWidget)
+		{
+			LevelSettingWidget->AddToViewport();
+
+			// Bind
+		}
 	}
 }

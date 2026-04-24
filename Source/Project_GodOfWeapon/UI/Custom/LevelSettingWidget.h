@@ -6,9 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "LevelSettingWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class PROJECT_GODOFWEAPON_API ULevelSettingWidget : public UUserWidget
 {

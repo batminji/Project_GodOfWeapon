@@ -3,3 +3,10 @@
 
 #include "TitleWidget.h"
 
+void UTitleWidget::CallGameStart()
+{
+	if(OnGameStart.IsBound())
+	{
+		OnGameStart.Broadcast();
+	}
+}

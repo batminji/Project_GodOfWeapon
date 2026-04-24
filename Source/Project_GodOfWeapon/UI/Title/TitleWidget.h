@@ -16,4 +16,7 @@ class PROJECT_GODOFWEAPON_API UTitleWidget : public UUserWidget
 public:
 	UPROPERTY(Blueprintassignable)
 	FOnGameStartSignature OnGameStart;
+
+	UFUNCTION(BlueprintCallable)
+	void CallGameStart();
 };

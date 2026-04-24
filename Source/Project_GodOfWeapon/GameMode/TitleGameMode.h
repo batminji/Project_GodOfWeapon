@@ -5,11 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "../Structs/PlayerStructs.h"
+#include "../GodOfWeaponGameInstance.h"
 #include "TitleGameMode.generated.h"
 
 class ATitleController;
 class UTitleWidget;
 class UCustomWidget;
+class ULevelSettingWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ATitleGameMode : public AGameModeBase
@@ -35,13 +37,25 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
 	TObjectPtr<UCustomWidget> CustomWidget;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widget")
+	TSubclassOf<ULevelSettingWidget> LevelSettingWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	TObjectPtr<ULevelSettingWidget> LevelSettingWidget;
+
 	// Events
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void HandleMoveCameraEnded();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void HandleGameStart();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void HandleCustomFinished(FCustomData InCustomData);
+
+	UFUNCTION(BlueprintCallable)
+	void HandleEntry(FSavedItemData InItemData, EDifficulty InDifficulty);
+
+private:
+	void CreateLevelWidget();
 };
