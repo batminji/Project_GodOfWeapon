@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "../Controller/TitleController.h"
 #include "../UI/Title/TitleWidget.h"
+#include "../UI/Custom/CustomWidget.h"
+#include "../GodOfWeaponGameInstance.h"
 
 void ATitleGameMode::BeginPlay()
 {
@@ -33,6 +35,16 @@ void ATitleGameMode::BeginPlay()
 
 void ATitleGameMode::HandleMoveCameraEnded()
 {
+	if (CustomWidgetClass)
+	{
+		CustomWidget = CreateWidget<UCustomWidget>(GetWorld(), CustomWidgetClass);
+		if (CustomWidget)
+		{
+			CustomWidget->AddToViewport();
+
+			CustomWidget->OnCustomFinished.AddDynamic(this, &ATitleGameMode::HandleCustomFinished);
+		}
+	}
 }
 
 void ATitleGameMode::HandleGameStart()
@@ -46,5 +58,14 @@ void ATitleGameMode::HandleGameStart()
 	if (TitleController)
 	{
 		TitleController->MoveCamera();
+	}
+}
+
+void ATitleGameMode::HandleCustomFinished(FCustomData InCustomData)
+{
+	UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI)
+	{
+		GI->UpdatePlayerCustomData(InCustomData);
 	}
 }

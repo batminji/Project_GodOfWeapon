@@ -32,6 +32,14 @@ void ATitleController::MoveCamera()
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ATitleController::OnTimerDelayEnded, 2.0f, false);
 }
 
+void ATitleController::CallCameraMoveFinished()
+{
+	if(OnCameraMoveFinished.IsBound())
+	{
+		OnCameraMoveFinished.Broadcast();
+	}
+}
+
 AActor* ATitleController::GetCameraByTag(const FName& InTag)
 {
 	TArray<AActor*> FoundActors;
@@ -50,8 +58,5 @@ AActor* ATitleController::GetCameraByTag(const FName& InTag)
 
 void ATitleController::OnTimerDelayEnded()
 {
-	if(OnCameraMoveFinished.IsBound())
-	{
-		OnCameraMoveFinished.Broadcast();
-	}
+	CallCameraMoveFinished();
 }

@@ -22,6 +22,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCameraMoveFinishedSignature OnCameraMoveFinished;
 
+	UFUNCTION(BlueprintCallable)
+	void CallCameraMoveFinished();
+
 private:
 	class AActor* GetCameraByTag(const FName& InTag);
 
