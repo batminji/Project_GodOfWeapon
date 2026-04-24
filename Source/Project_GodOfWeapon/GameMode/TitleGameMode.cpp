@@ -4,6 +4,7 @@
 #include "TitleGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "../Controller/TitleController.h"
+#include "../UI/Title/TitleWidget.h"
 
 void ATitleGameMode::BeginPlay()
 {
@@ -15,10 +16,35 @@ void ATitleGameMode::BeginPlay()
 
 	if (TitleController)
 	{
-		TitleController->OnMoveCameraEnded.AddDynamic(this, &ATitleGameMode::CreateCustomWidget);
+		TitleController->OnCameraMoveFinished.AddDynamic(this, &ATitleGameMode::HandleMoveCameraEnded);
+	}
+
+	if (TitleWidgetClass)
+	{
+		TitleWidget = CreateWidget<UTitleWidget>(GetWorld(), TitleWidgetClass);
+		if (TitleWidget)
+		{
+			TitleWidget->AddToViewport();
+
+			TitleWidget->OnGameStart.AddDynamic(this, &ATitleGameMode::HandleGameStart);
+		}
 	}
 }
 
-void ATitleGameMode::CreateCustomWidget()
+void ATitleGameMode::HandleMoveCameraEnded()
 {
+}
+
+void ATitleGameMode::HandleGameStart()
+{
+	if (TitleWidget)
+	{
+		TitleWidget->RemoveFromParent();
+		TitleWidget = nullptr;
+	}
+
+	if (TitleController)
+	{
+		TitleController->MoveCamera();
+	}
 }

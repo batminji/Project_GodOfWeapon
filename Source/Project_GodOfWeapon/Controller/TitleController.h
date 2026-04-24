@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "TitleController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMoveCameraEndedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCameraMoveFinishedSignature);
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ATitleController : public APlayerController
@@ -14,6 +14,16 @@ class PROJECT_GODOFWEAPON_API ATitleController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void MoveCamera();
+
 	UPROPERTY(BlueprintAssignable)
-	FOnMoveCameraEndedSignature OnMoveCameraEnded;
+	FOnCameraMoveFinishedSignature OnCameraMoveFinished;
+
+private:
+	class AActor* GetCameraByTag(const FName& InTag);
+
+	void OnTimerDelayEnded();
 };

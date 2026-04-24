@@ -7,6 +7,7 @@
 #include "TitleGameMode.generated.h"
 
 class ATitleController;
+class UTitleWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ATitleGameMode : public AGameModeBase
@@ -19,6 +20,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<ATitleController> TitleController;
 
+	// Widget
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widget")
+	TSubclassOf<UTitleWidget> TitleWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	TObjectPtr<UTitleWidget> TitleWidget;
+
+	// Events
 	UFUNCTION()
-	void CreateCustomWidget();
+	void HandleMoveCameraEnded();
+
+	UFUNCTION()
+	void HandleGameStart();
 };

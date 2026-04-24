@@ -6,12 +6,14 @@
 #include "Blueprint/UserWidget.h"
 #include "TitleWidget.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStartSignature);
+
 UCLASS()
 class PROJECT_GODOFWEAPON_API UTitleWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(Blueprintassignable)
+	FOnGameStartSignature OnGameStart;
 };
