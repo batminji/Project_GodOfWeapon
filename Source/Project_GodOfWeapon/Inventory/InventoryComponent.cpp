@@ -197,7 +197,7 @@ void UInventoryComponent::SaveInventoryToGameInstance()
 		return;
 	}
 
-	GameInstance->InventoryData.Empty();
+	GameInstance->GetInventoryData().Empty();
 
 	TMap<UItemWidget*, FIntPoint> AllItems = GetAllItemWidgets();
 
@@ -215,7 +215,7 @@ void UInventoryComponent::SaveInventoryToGameInstance()
 
 			// UE_LOG(LogTemp, Warning, TEXT("Saving item %s at index %d with rotation %s"), *Data.ItemRowName.ToString(), Data.TopLeftIndex, Data.bIsRotated ? TEXT("true") : TEXT("false"));
 
-			GameInstance->InventoryData.Add(Data);
+			GameInstance->GetInventoryData().Add(Data);
 		}
 	}
 }
@@ -231,7 +231,7 @@ void UInventoryComponent::LoadInventoryFromGameInstance()
 	ItemWidgets.Init(nullptr, Columns * Rows);
 	AllItemWidgets.Empty();
 
-	for (const FSavedItemData& Data : GameInstance->InventoryData)
+	for (const FSavedItemData& Data : GameInstance->GetInventoryData())
 	{
 		static const FString ContextString(TEXT("ItemLoadContext"));
 		FItemStructure* FoundData = ItemDataTable->FindRow<FItemStructure>(Data.ItemRowName, ContextString);

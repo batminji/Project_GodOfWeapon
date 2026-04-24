@@ -14,7 +14,7 @@ class PROJECT_GODOFWEAPON_API UPlayerStatWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> CurrentHPText;
 	
@@ -42,6 +42,8 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+	void UpdatePlayerStat();
 
 	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
 };

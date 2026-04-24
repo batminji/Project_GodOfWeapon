@@ -3,42 +3,50 @@
 
 #include "PlayerStatWidget.h"
 #include "Components/TextBlock.h"
-#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "../GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerStatStructure.h"
 
 void UPlayerStatWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
 	GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 }
 
 void UPlayerStatWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-	if(GameInstance)
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	UpdatePlayerStat();
+}
+
+void UPlayerStatWidget::UpdatePlayerStat()
+{
+	if (GameInstance)
 	{
-		FString IntString = FString::Printf(TEXT("%d"), GameInstance->PlayerStat.CurrentHP);
+		FString IntString = FString::Printf(TEXT("%d"), GameInstance->GetPlayerStat().CurrentHP);
 		CurrentHPText->SetText(FText::FromString(IntString));
 
-		IntString = FString::Printf(TEXT("%d"), GameInstance->PlayerStat.MaxHP);
+		IntString = FString::Printf(TEXT("%d"), GameInstance->GetPlayerStat().MaxHP);
 		MaxHPText->SetText(FText::FromString(IntString));
 
-		IntString = FString::Printf(TEXT("%d"), GameInstance->PlayerStat.ShortRangeAttackForce);
+		IntString = FString::Printf(TEXT("%d"), GameInstance->GetPlayerStat().ShortRangeAttackForce);
 		ShortAttackForceText->SetText(FText::FromString(IntString));
 
-		IntString = FString::Printf(TEXT("%d"), GameInstance->PlayerStat.LongRangeAttackForce);
+		IntString = FString::Printf(TEXT("%d"), GameInstance->GetPlayerStat().LongRangeAttackForce);
 		LongAttackForceText->SetText(FText::FromString(IntString));
 
-		FString FloatString = FString::Printf(TEXT("%.1f"), GameInstance->PlayerStat.AttackSpeedMultifier);
+		FString FloatString = FString::Printf(TEXT("%.1f"), GameInstance->GetPlayerStat().AttackSpeedMultifier);
 		AttackSpeedText->SetText(FText::FromString(FloatString));
 
-		FloatString = FString::Printf(TEXT("%.1f"), GameInstance->PlayerStat.MoveSpeedMultifier);
+		FloatString = FString::Printf(TEXT("%.1f"), GameInstance->GetPlayerStat().MoveSpeedMultifier);
 		MoveSpeedText->SetText(FText::FromString(FloatString));
 
-		FloatString = FString::Printf(TEXT("%.1f"), GameInstance->PlayerStat.AttackRangeMultifier);
+		FloatString = FString::Printf(TEXT("%.1f"), GameInstance->GetPlayerStat().AttackRangeMultifier);
 		AttackRangeText->SetText(FText::FromString(FloatString));
 
-		IntString = FString::Printf(TEXT("%d"), GameInstance->PlayerStat.Recovery);
+		IntString = FString::Printf(TEXT("%d"), GameInstance->GetPlayerStat().Recovery);
 		RecoverText->SetText(FText::FromString(IntString));
 	}
 }

@@ -77,7 +77,7 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 		{
 			UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-			if (GI && GI->PlayerCoin >= DroppedItem->ItemData.Price)
+			if (GI && GI->GetPlayerCoin() >= DroppedItem->ItemData.Price)
 			{
 				if (IsRoomAvailableForPayload(DroppedItem))
 				{
@@ -158,21 +158,21 @@ bool UInventoryGridWidget::IsRoomAvailableForPayload(UItemWidget* InItemWidget) 
 
 void UInventoryGridWidget::ApplyConsumeItem(UGodOfWeaponGameInstance* GI, FName ItemID)
 {
-	if (ItemID == FName("Consume01")) // 초당 회복 +0.5 (10초당 5 증가)
+	if (ItemID == FName("Consume01"))
 	{
-		GI->PlayerStat.Recovery += 5;
+		GI->GetPlayerStat().Recovery += 5;
 	}
-	else if (ItemID == FName("Consume02")) // 플레이어 속도 증가
+	else if (ItemID == FName("Consume02"))
 	{
-		GI->PlayerStat.MoveSpeedMultifier += 0.2f;
+		GI->GetPlayerStat().MoveSpeedMultifier += 0.2f;
 	}
-	else if(ItemID == FName("Consume03")) // 근거리 공격력 증가
+	else if(ItemID == FName("Consume03"))
 	{
-		GI->PlayerStat.ShortRangeAttackForce += 10.0f;
+		GI->GetPlayerStat().ShortRangeAttackForce += 10.0f;
 	}
-	else if (ItemID == FName("Consume04")) // 원거리 공격력 증가
+	else if (ItemID == FName("Consume04"))
 	{
-		GI->PlayerStat.LongRangeAttackForce += 10.0f;
+		GI->GetPlayerStat().LongRangeAttackForce += 10.0f;
 	}
 }
 
