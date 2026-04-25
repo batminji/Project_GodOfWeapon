@@ -44,6 +44,10 @@ public:
 
 	FCustomData& GetPlayerCustomData() { return PlayerCustomData; }
 
+	int32 GetCurrentStage() const { return CurrentStage; }
+
+	float GetLevelMultiplier() const { return LevelMultiplier; }
+
 	// Setters
 	void SetDifficulty(const EDifficulty InDifficulty) { Difficulty = InDifficulty; }
 

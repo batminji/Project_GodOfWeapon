@@ -11,6 +11,7 @@ class UWaveManagerComponent;
 class UPoolManagerComponent;
 class UGodOfWeaponGameInstance;
 class AInGamePlayer;
+class UUserWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API AInGameMode : public AGameModeBase
@@ -46,4 +47,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<AInGamePlayer> InGamePlayer;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widget")
+	TSubclassOf<UUserWidget> InGameMainWidgetClass;
+
+	TObjectPtr<UUserWidget> InGameMainWidget;
 };

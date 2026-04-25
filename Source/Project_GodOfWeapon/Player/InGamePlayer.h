@@ -20,12 +20,23 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdatePlayerCustom(const FCustomData& InCustomData); // For Data Table Load
 
+	UFUNCTION(BlueprintCallable, Category = "HP")
+	void RecoverPlayerHP();
+
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	FPlayerStatStructure PlayerStat{};
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int32 CoinCnt{0};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	int32 EarnedCoinCnt{ 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	bool bIsDead{ false };
 
 public:	
 	virtual void Tick(float DeltaTime) override;

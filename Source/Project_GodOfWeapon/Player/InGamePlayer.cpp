@@ -17,6 +17,11 @@ void AInGamePlayer::UpdatePlayerStat(const FPlayerStatStructure& InStat, const i
 	CoinCnt = InCoinCnt;
 }
 
+void AInGamePlayer::RecoverPlayerHP()
+{
+	PlayerStat.CurrentHP = FMath::Min(PlayerStat.CurrentHP + PlayerStat.Recovery, PlayerStat.MaxHP);
+}
+
 // Called when the game starts or when spawned
 void AInGamePlayer::BeginPlay()
 {

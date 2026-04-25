@@ -7,7 +7,7 @@
 #include "PoolManagerComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) , Blueprintable)
 class PROJECT_GODOFWEAPON_API UPoolManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()

@@ -3,6 +3,7 @@
 
 #include "InGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 #include "../Components/WaveManagerComponent.h"
 #include "../Components/PoolManagerComponent.h"
 #include "../GodOfWeaponGameInstance.h"
@@ -21,6 +22,22 @@ void AInGameMode::BeginPlay()
 	Init();
 	UpdatePlayerStat();
 	SpawnItems();
+
+	if (WaveManagerComponent && GameInstance)
+	{
+		WaveManagerComponent->Init(GameInstance->GetCurrentStage(), GameInstance->GetLevelMultiplier(), PoolManagerComponent);
+
+		WaveManagerComponent->StartGame();
+	}
+
+	if (InGameMainWidgetClass)
+	{
+		InGameMainWidget = CreateWidget<UUserWidget>(GetWorld(), InGameMainWidgetClass);
+		if (InGameMainWidget)
+		{
+			InGameMainWidget->AddToViewport();
+		}
+	}
 }
 
 void AInGameMode::Init()

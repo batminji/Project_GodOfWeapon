@@ -2,33 +2,45 @@
 
 
 #include "WaveManagerComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "../GameMode/InGameMode.h"
+#include "../Player/InGamePlayer.h"
 
-// Sets default values for this component's properties
 UWaveManagerComponent::UWaveManagerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
+void UWaveManagerComponent::Init_Implementation(int32 InStage, float InLevelMultiplier, UPoolManagerComponent* InPoolManagerRef)
+{
+	CurrentStage = InStage;
+	LevelMultiplier = InLevelMultiplier;
+	PoolManagerRef = InPoolManagerRef;
+}
 
-// Called when the game starts
 void UWaveManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	SetPlayer();
+	SetGameMode();
+}
+
+void UWaveManagerComponent::SetPlayer_Implementation()
+{
+	Player = Cast<AInGamePlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+}
+
+void UWaveManagerComponent::SetGameMode()
+{
+	InGameMode = Cast<AInGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 
-// Called every frame
 void UWaveManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 }
 
