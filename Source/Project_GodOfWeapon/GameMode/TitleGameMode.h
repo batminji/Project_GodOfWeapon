@@ -57,4 +57,28 @@ protected:
 private:
 	void CreateLevelWidget();
 	void UpdateItemAndLevel(const FSavedItemData& InItemData, const EDifficulty InDifficulty);
+
+	template <typename T>
+	void RemoveWidget(T& InWidget)
+	{
+		if (InWidget)
+		{
+			InWidget->RemoveFromParent();
+			InWidget = nullptr;
+		}
+	}
+
+	template <typename T>
+	T* CreateAndShowWidget(TSubclassOf<T> WidgetClass)
+	{
+		if (WidgetClass)
+		{
+			if (T* CreatedWidget = CreateWidget<T>(GetWorld(), WidgetClass))
+			{
+				CreatedWidget->AddToViewport();
+				return CreatedWidget;
+			}
+		}
+		return nullptr;
+	}
 };

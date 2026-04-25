@@ -22,39 +22,25 @@ void ATitleGameMode::BeginPlay()
 		TitleController->OnCameraMoveFinished.AddDynamic(this, &ATitleGameMode::HandleMoveCameraEnded);
 	}
 
-	if (TitleWidgetClass)
+	TitleWidget = CreateAndShowWidget<UTitleWidget>(TitleWidgetClass);
+	if (TitleWidget)
 	{
-		TitleWidget = CreateWidget<UTitleWidget>(GetWorld(), TitleWidgetClass);
-		if (TitleWidget)
-		{
-			TitleWidget->AddToViewport();
-
-			TitleWidget->OnGameStart.AddDynamic(this, &ATitleGameMode::HandleGameStart);
-		}
+		TitleWidget->OnGameStart.AddDynamic(this, &ATitleGameMode::HandleGameStart);
 	}
 }
 
 void ATitleGameMode::HandleMoveCameraEnded()
 {
-	if (CustomWidgetClass)
+	CustomWidget = CreateAndShowWidget<UCustomWidget>(CustomWidgetClass);
+	if (CustomWidget)
 	{
-		CustomWidget = CreateWidget<UCustomWidget>(GetWorld(), CustomWidgetClass);
-		if (CustomWidget)
-		{
-			CustomWidget->AddToViewport();
-
-			CustomWidget->OnCustomFinished.AddDynamic(this, &ATitleGameMode::HandleCustomFinished);
-		}
+		CustomWidget->OnCustomFinished.AddDynamic(this, &ATitleGameMode::HandleCustomFinished);
 	}
 }
 
 void ATitleGameMode::HandleGameStart()
 {
-	if (TitleWidget)
-	{
-		TitleWidget->RemoveFromParent();
-		TitleWidget = nullptr;
-	}
+	RemoveWidget(TitleWidget);
 
 	if (TitleController)
 	{
@@ -68,8 +54,8 @@ void ATitleGameMode::HandleCustomFinished(FCustomData InCustomData)
 	if (GI)
 	{
 		GI->UpdatePlayerCustomData(InCustomData);
-		// UE_LOG(LogTemp, Log, TEXT("Custom Data Updated: Head: %d, Chest: %d, Hands: %d, Legs: %d, Foot: %d"), InCustomData.HeadNumber, InCustomData.ChestNumber, InCustomData.HandsNumber, InCustomData.LegsNumber, InCustomData.FootNumber);
 	}
+	RemoveWidget(CustomWidget);
 
 	CreateLevelWidget();
 }
@@ -78,21 +64,17 @@ void ATitleGameMode::HandleEntry(const FSavedItemData& InItemData, EDifficulty I
 {
 	UpdateItemAndLevel(InItemData, InDifficulty);
 
+	RemoveWidget(LevelSettingWidget);
+
 	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
 }
 
 void ATitleGameMode::CreateLevelWidget()
 {
-	if (LevelSettingWidgetClass)
+	LevelSettingWidget = CreateAndShowWidget<ULevelSettingWidget>(LevelSettingWidgetClass);
+	if (LevelSettingWidget)
 	{
-		LevelSettingWidget = CreateWidget<ULevelSettingWidget>(GetWorld(), LevelSettingWidgetClass);
-
-		if (LevelSettingWidget)
-		{
-			LevelSettingWidget->AddToViewport();
-			// UE_LOG(LogTemp, Log, TEXT("Level Setting Widget Created"));
-			LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleGameMode::HandleEntry);
-		}
+		LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleGameMode::HandleEntry);
 	}
 }
 
@@ -125,11 +107,5 @@ void ATitleGameMode::UpdateItemAndLevel(const FSavedItemData& InItemData, const 
 		default:
 			break;
 		}
-	}
-
-	if (LevelSettingWidget)
-	{
-		LevelSettingWidget->RemoveFromParent();
-		LevelSettingWidget = nullptr;
 	}
 }
