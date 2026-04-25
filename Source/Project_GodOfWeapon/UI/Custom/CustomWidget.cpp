@@ -5,6 +5,7 @@
 
 void UCustomWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 }
 
 void UCustomWidget::CallCustomFinished()

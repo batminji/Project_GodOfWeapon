@@ -7,23 +7,8 @@
 #include "Player/PlayerStatStructure.h"
 #include "Enums/StageEnums.h"
 #include "Structs/PlayerStructs.h"
+#include "Structs/ItemStructs.h"
 #include "GodOfWeaponGameInstance.generated.h"
-
-USTRUCT(BlueprintType)
-struct FSavedItemData
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ItemRowName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FIntPoint TopLeftTile;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsRotated;
-};
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UGodOfWeaponGameInstance : public UGameInstance
@@ -57,6 +42,11 @@ public:
 	int32 GetPlayerCoin() const { return PlayerCoin; }
 
 	FPlayerStatStructure& GetPlayerStat() { return PlayerStat; }
+
+	// Setters
+	void SetDifficulty(const EDifficulty InDifficulty) { Difficulty = InDifficulty; }
+
+	void SetLevelMultiplier(const float InMultiplier) { LevelMultiplier = InMultiplier; }
 
 protected:
 	// Player Data
