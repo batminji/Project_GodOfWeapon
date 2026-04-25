@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ItemStructure.h"
+#include "../Structs/ItemStructs.h"
 #include "BaseItemActor.generated.h"
 
 class UStaticMeshComponent;
@@ -24,7 +24,7 @@ public:
 	EItemType ItemType;
 
 	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
-	FItemStatStructure ItemStat;
+	FItemStat ItemStat;
 
 protected:
 	virtual void BeginPlay() override;

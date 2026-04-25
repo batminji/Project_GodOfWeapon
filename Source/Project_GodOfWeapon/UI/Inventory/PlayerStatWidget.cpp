@@ -3,9 +3,9 @@
 
 #include "PlayerStatWidget.h"
 #include "Components/TextBlock.h"
-#include "../GodOfWeaponGameInstance.h"
+#include "../../GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerStatStructure.h"
+#include "../../Structs/PlayerStructs.h"
 
 void UPlayerStatWidget::NativeConstruct()
 {

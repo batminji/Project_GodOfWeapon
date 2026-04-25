@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "Player/PlayerStatStructure.h"
 #include "Enums/StageEnums.h"
 #include "Structs/PlayerStructs.h"
 #include "Structs/ItemStructs.h"
@@ -42,6 +41,8 @@ public:
 	int32 GetPlayerCoin() const { return PlayerCoin; }
 
 	FPlayerStatStructure& GetPlayerStat() { return PlayerStat; }
+
+	FCustomData& GetPlayerCustomData() { return PlayerCustomData; }
 
 	// Setters
 	void SetDifficulty(const EDifficulty InDifficulty) { Difficulty = InDifficulty; }

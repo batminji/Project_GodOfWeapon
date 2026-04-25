@@ -1,0 +1,49 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/GameModeBase.h"
+#include "../Item/ItemStructure.h"
+#include "InGameMode.generated.h"
+
+class UWaveManagerComponent;
+class UPoolManagerComponent;
+class UGodOfWeaponGameInstance;
+class AInGamePlayer;
+
+UCLASS()
+class PROJECT_GODOFWEAPON_API AInGameMode : public AGameModeBase
+{
+	GENERATED_BODY()
+
+public:
+	AInGameMode();
+	
+protected:
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void Init();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdatePlayerStat();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
+	void SpawnItems();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
+	bool AttachItemToPlayer(TSubclassOf<AActor> InItemBaseActorClass, EItemType InItemType, FItemStat InItemStat);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UWaveManagerComponent> WaveManagerComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UPoolManagerComponent> PoolManagerComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
+	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
+	TObjectPtr<AInGamePlayer> InGamePlayer;
+};
