@@ -234,7 +234,7 @@ void UInventoryComponent::LoadInventoryFromGameInstance()
 	for (const FSavedItemData& Data : GameInstance->GetInventoryData())
 	{
 		static const FString ContextString(TEXT("ItemLoadContext"));
-		FItemStructure* FoundData = ItemDataTable->FindRow<FItemStructure>(Data.ItemRowName, ContextString);
+		FItemData* FoundData = ItemDataTable->FindRow<FItemData>(Data.ItemRowName, ContextString);
 
 		if (FoundData)
 		{

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Project_GodOfWeapon/Item/ItemStructure.h"
+#include "../Structs/ItemStructs.h"
 #include "DisplayItemWidget.generated.h"
 
 class UTextBlock;
@@ -22,7 +22,7 @@ class PROJECT_GODOFWEAPON_API UDisplayItemWidget : public UUserWidget
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void InitializeItem(const FItemStructure& InItemData);
+	void InitializeItem(const FItemData& InItemData);
 
 protected:
 	virtual void NativeConstruct() override;
@@ -39,7 +39,7 @@ protected:
 	TSubclassOf<UItemWidget> ItemWidgetClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
-	FItemStructure ItemData;
+	FItemData ItemData;
 
 	TObjectPtr<AInventoryController> InventoryController;
 

@@ -60,11 +60,11 @@ struct FItemStat
 };
 
 USTRUCT(BlueprintType)
-struct FItemStructure : public FTableRowBase
+struct FItemData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY();
 
-	FItemStructure()
+	FItemData()
 		: Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()),
 		ItemActorClass(nullptr), Icon(nullptr), Dimension(FIntPoint(0, 0))
 	{

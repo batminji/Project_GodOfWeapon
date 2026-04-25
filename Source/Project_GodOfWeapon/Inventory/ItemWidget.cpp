@@ -37,7 +37,7 @@ void UItemWidget::RotateItem()
 	}
 }
 
-void UItemWidget::InitializeItem(const FItemStructure& InItemData)
+void UItemWidget::InitializeItem(const FItemData& InItemData)
 {
 	ItemData = InItemData;
 	SetTileSize();

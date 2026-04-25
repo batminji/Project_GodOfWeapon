@@ -45,8 +45,8 @@ void UInventoryWidget::SpawnItem(bool bIsReroll)
         }
     }
 
-    TArray<FItemStructure*> AllItems;
-    ItemDataTable->GetAllRows<FItemStructure>(TEXT("Context"), AllItems);
+    TArray<FItemData*> AllItems;
+    ItemDataTable->GetAllRows<FItemData>(TEXT("Context"), AllItems);
 
     if (AllItems.Num() == 0) return;
 

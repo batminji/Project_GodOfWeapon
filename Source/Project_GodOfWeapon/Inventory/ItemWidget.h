@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Project_GodOfWeapon/Item/ItemStructure.h"
+#include "../Structs/ItemStructs.h"
 #include "ItemWidget.generated.h"
 
 class UCanvasPanel;
@@ -28,10 +28,10 @@ public:
 	void RotateItem();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Item")
-	FItemStructure ItemData;
+	FItemData ItemData;
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
-	void InitializeItem(const FItemStructure& InItemData);
+	void InitializeItem(const FItemData& InItemData);
 
 	int32 OriginalTopLeftIndex;
 

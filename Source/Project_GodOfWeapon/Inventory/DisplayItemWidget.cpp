@@ -14,10 +14,10 @@
 #include "InventoryController.h"
 #include "InventoryComponent.h"
 
-#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "../GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
-void UDisplayItemWidget::InitializeItem(const FItemStructure& InItemData)
+void UDisplayItemWidget::InitializeItem(const FItemData& InItemData)
 {
 	ItemData = InItemData;
 	SetTileSize();
