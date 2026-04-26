@@ -3,7 +3,7 @@
 
 #include "InventoryController.h"
 #include "Blueprint/UserWidget.h"
-#include "InventoryComponent.h"
+#include "../Components/InventoryComponent.h"
 
 AInventoryController::AInventoryController()
 {

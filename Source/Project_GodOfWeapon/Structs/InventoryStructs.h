@@ -3,16 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InventoryData.generated.h"
+#include "InventoryStructs.generated.h"
 
 USTRUCT(BlueprintType)
 struct FLines
 {
 	GENERATED_USTRUCT_BODY();
 
-public:
-
-	FLines();
+	FLines()
+	{
+	}
 
 	TArray<FVector2D> XLines;
 	TArray<FVector2D> YLines;
@@ -23,16 +23,10 @@ struct FMousePositionInTile
 {
 	GENERATED_USTRUCT_BODY();
 
-public:
-
-	FMousePositionInTile();
+	FMousePositionInTile()
+	{
+	}
 
 	bool Right;
 	bool Down;
-};
-
-class PROJECT_GODOFWEAPON_API InventoryData
-{
-public:
-	
 };

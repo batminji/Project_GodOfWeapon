@@ -8,8 +8,8 @@
 
 #include "../GodOfWeaponGameInstance.h"
 
-#include "ItemWidget.h"
-#include "InventoryGridWidget.h"
+#include "../UI/Item/ItemWidget.h"
+#include "../UI/Inventory/InventoryGridWidget.h"
 
 UInventoryComponent::UInventoryComponent()
 {

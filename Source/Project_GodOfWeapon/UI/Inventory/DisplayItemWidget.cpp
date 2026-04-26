@@ -2,7 +2,7 @@
 
 
 #include "DisplayItemWidget.h"
-#include "ItemWidget.h"
+#include "../Item/ItemWidget.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/SizeBox.h"
@@ -11,10 +11,10 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Blueprint/DragDropOperation.h"
-#include "InventoryController.h"
-#include "InventoryComponent.h"
+#include "../../Controller/InventoryController.h"
+#include "../../Components/InventoryComponent.h"
 
-#include "../GodOfWeaponGameInstance.h"
+#include "../../GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 void UDisplayItemWidget::InitializeItem(const FItemData& InItemData)

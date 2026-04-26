@@ -10,8 +10,8 @@
 #include "Components/SizeBox.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
-#include "InventoryController.h"
-#include "InventoryComponent.h"
+#include "../../Controller/InventoryController.h"
+#include "../../Components/InventoryComponent.h"
 
 FIntPoint UItemWidget::GetDimensions() const
 {

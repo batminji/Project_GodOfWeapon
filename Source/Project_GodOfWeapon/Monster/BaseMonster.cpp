@@ -2,7 +2,9 @@
 
 
 #include "BaseMonster.h"
+#include "Kismet/GameplayStatics.h"
 #include "../Controller/MonsterAIController.h"
+#include "../GameMode/InGameMode.h"
 
 ABaseMonster::ABaseMonster()
 {
@@ -51,6 +53,17 @@ void ABaseMonster::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	SetGameMode();
+	SetAIController();	
+}
+
+void ABaseMonster::SetGameMode()
+{
+	InGameMode = Cast<AInGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+}
+
+void ABaseMonster::SetAIController()
+{
 	AIController = Cast<AMonsterAIController>(GetController());
 }
 

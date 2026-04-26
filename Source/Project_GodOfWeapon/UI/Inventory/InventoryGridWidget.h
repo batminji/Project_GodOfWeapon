@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "InventoryData.h"
+#include "../../Structs/InventoryStructs.h"
 #include "InventoryGridWidget.generated.h"
 
 class UCanvasPanel;

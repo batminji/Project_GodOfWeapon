@@ -8,12 +8,12 @@
 #include "Components/CanvasPanel.h"
 #include "Components/Border.h"
 #include "Components/CanvasPanelSlot.h"
-#include "InventoryController.h"
-#include "InventoryComponent.h"
-#include "ItemDragDropOperation.h"
-#include "ItemWidget.h"
+#include "../../Controller/InventoryController.h"
+#include "../../Components/InventoryComponent.h"
+#include "../../Item/ItemDragDropOperation.h"
+#include "../Item/ItemWidget.h"
 
-#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "../../GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 void UInventoryGridWidget::NativeConstruct()

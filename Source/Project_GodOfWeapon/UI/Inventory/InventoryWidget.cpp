@@ -12,8 +12,8 @@
 #include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "InventoryController.h"
-#include "InventoryComponent.h"
+#include "../../Controller/InventoryController.h"
+#include "../../Components/InventoryComponent.h"
 
 void UInventoryWidget::OnNextStageClicked()
 {

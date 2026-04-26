@@ -33,6 +33,10 @@ protected:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	void SetGameMode();
+
+	void SetAIController();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	TObjectPtr<AInGameMode> InGameMode;
 

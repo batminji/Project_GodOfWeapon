@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "../Structs/ItemStructs.h"
+#include "../../Structs/ItemStructs.h"
 #include "ItemWidget.generated.h"
 
 class UCanvasPanel;
