@@ -73,11 +73,29 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
 	float LevelMultiplier;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
+	float StatMultiplier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
+	float SpawnInterval;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
+	float WaveTimer;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Monster")
 	int32 MaxAliveCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Monster")
 	int32 CurrentAliveCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
+	FTimerHandle SpawnMonsterTimeHandler;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
+	FTimerHandle EndWaveTimeHandler;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
+	FTimerHandle PlayerRecoverTimerHandler;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
