@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "../GameMode/InGameMode.h"
 #include "../Monster/BaseMonster.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "../Components/WaveManagerComponent.h"
 
 UPoolManagerComponent::UPoolManagerComponent()
 {
@@ -33,7 +35,23 @@ void UPoolManagerComponent::InitPool(const TArray<FName>& InNames, int32 InSpawn
 			}
 		}
 	}
-} 
+}
+
+void UPoolManagerComponent::ReturnToPool(ABaseMonster* InMonster)
+{
+	if (!InMonster)
+	{
+		return;
+	}
+
+	InMonster->GetCharacterMovement()->StopMovementImmediately();
+	InMonster->DisableMonster();
+
+	if (InGameMode)
+	{
+		InGameMode->WaveManagerComp->DecreaseCurrentAliveCount();
+	}
+}
 
 ABaseMonster* UPoolManagerComponent::GetFromPool(FName InName)
 {
@@ -47,10 +65,9 @@ ABaseMonster* UPoolManagerComponent::GetFromPool(FName InName)
 			{
 				return Monster;
 			}
-
 		}
 	}
-
+	
 	return nullptr;
 }
 

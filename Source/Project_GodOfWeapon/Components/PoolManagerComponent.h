@@ -22,7 +22,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pool")
 	void InitPool(const TArray<FName>& InNames, int32 InSpawnCount);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Pool") // Blueprint
+	UFUNCTION(BlueprintCallable, Category = "Pool")
 	void ReturnToPool(ABaseMonster* InMonster);
 
 	UFUNCTION(BlueprintCallable, Category = "Pool")

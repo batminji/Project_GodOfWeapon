@@ -21,6 +21,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Monster")
 	void DisableMonster();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Monster")
+	void EnableMonster(float InStatMultiplier, float InLevelMultiplier);
+	virtual void EnableMonster_Implementation(float InStatMultiplier, float InLevelMultiplier);
+
 	// Setters
 	void SetBaseMonsterStat(const FMonsterStat& InBaseMonsterStat) { BaseMonsterStat = InBaseMonsterStat; }
 

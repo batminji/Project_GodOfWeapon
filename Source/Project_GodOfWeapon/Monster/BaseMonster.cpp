@@ -22,6 +22,25 @@ void ABaseMonster::DisableMonster()
 	}
 }
 
+void ABaseMonster::EnableMonster_Implementation(float InStatMultiplier, float InLevelMultiplier)
+{
+	CurrentMonsterStat.BaseHP = BaseMonsterStat.BaseHP * InStatMultiplier * InLevelMultiplier;
+	CurrentMonsterStat.BaseDamage = BaseMonsterStat.BaseDamage * InStatMultiplier * InLevelMultiplier;
+	CurrentMonsterStat.Reward = FMath::TruncToInt(BaseMonsterStat.Reward * InLevelMultiplier);
+
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	PrimaryActorTick.SetTickFunctionEnable(true);
+
+	bIsDead = false;
+	bIsSpawning = true;
+
+	if (AIController)
+	{
+		AIController->RunAI();
+	}
+}
+
 void ABaseMonster::BeginPlay()
 {
 	Super::BeginPlay();
