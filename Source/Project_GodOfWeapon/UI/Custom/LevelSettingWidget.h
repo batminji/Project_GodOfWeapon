@@ -6,7 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "../../Structs/ItemStructs.h"
 #include "../../Enums/StageEnums.h"
-#include "../../Item/ItemStructure.h"
 #include "LevelSettingWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStartButtonClickedSignature, const FSavedItemData&, OutStartItemData, EDifficulty, OutLevel);

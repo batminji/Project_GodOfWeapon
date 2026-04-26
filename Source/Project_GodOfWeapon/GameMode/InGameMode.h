@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "../Item/ItemStructure.h"
 #include "InGameMode.generated.h"
 
 class UWaveManagerComponent;

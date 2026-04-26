@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "../Structs/PlayerStructs.h"
+#include "InputActionValue.h"
 #include "InGamePlayer.generated.h"
+
+class UInputAction;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API AInGamePlayer : public ACharacter
@@ -44,6 +47,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	bool bIsDead{ false };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Move;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Jump;
+
+	void Move(const FInputActionValue& InValue);
 
 public:	
 	virtual void Tick(float DeltaTime) override;

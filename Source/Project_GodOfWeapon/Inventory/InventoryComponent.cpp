@@ -6,8 +6,7 @@
 #include "Engine/DataTable.h"
 #include "Blueprint/UserWidget.h"
 
-#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
-#include "Project_GodOfWeapon/Item/ItemStructure.h"
+#include "../GodOfWeaponGameInstance.h"
 
 #include "ItemWidget.h"
 #include "InventoryGridWidget.h"
