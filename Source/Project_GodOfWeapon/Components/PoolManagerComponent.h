@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Engine/DataTable.h"
+#include "../Structs/MonsterStructs.h"
 #include "PoolManagerComponent.generated.h"
 
 class ABaseMonster;
@@ -17,19 +19,30 @@ class PROJECT_GODOFWEAPON_API UPoolManagerComponent : public UActorComponent
 public:	
 	UPoolManagerComponent();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Pool") // Blueprint
+	UFUNCTION(BlueprintCallable, Category = "Pool")
 	void InitPool(const TArray<FName>& InNames, int32 InSpawnCount);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Pool") // Blueprint
 	void ReturnToPool(ABaseMonster* InMonster);
+
+	UFUNCTION(BlueprintCallable, Category = "Pool")
+	ABaseMonster* GetFromPool(FName InName);
 
 protected:
 	virtual void BeginPlay() override;
 
 	void SetGameMode();
 
+	void SpawnMonsters(TSubclassOf<AActor> InSpawnClass, FName InMonsterName, FMonsterStat& InStat, int32 InSpawnCount);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	TObjectPtr<AInGameMode> InGameMode;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Data Table")
+	TObjectPtr<UDataTable> MonsterDataTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pool")
+	TMap<FName, FMonsterPool> MonsterPoolMap;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
