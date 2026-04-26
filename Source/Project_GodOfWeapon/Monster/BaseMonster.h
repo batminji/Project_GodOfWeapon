@@ -35,8 +35,6 @@ protected:
 
 	void SetGameMode();
 
-	void SetAIController();
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	TObjectPtr<AInGameMode> InGameMode;
 

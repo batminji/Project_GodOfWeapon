@@ -39,7 +39,12 @@ void ABaseMonster::EnableMonster_Implementation(float InStatMultiplier, float In
 
 	if (AIController)
 	{
+		UE_LOG(LogTemp, Log, TEXT("Running AI for monster: %s"), *GetName());
 		AIController->RunAI();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AIController is null for monster: %s"), *GetName());
 	}
 }
 
@@ -54,17 +59,12 @@ void ABaseMonster::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	SetGameMode();
-	SetAIController();	
+	AIController = Cast<AMonsterAIController>(NewController);
 }
 
 void ABaseMonster::SetGameMode()
 {
 	InGameMode = Cast<AInGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-}
-
-void ABaseMonster::SetAIController()
-{
-	AIController = Cast<AMonsterAIController>(GetController());
 }
 
 void ABaseMonster::Tick(float DeltaTime)
