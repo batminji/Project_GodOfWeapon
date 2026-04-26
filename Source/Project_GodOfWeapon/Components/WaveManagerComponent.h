@@ -10,6 +10,8 @@ class AInGamePlayer;
 class AInGameMode;
 class UPoolManagerComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStageEventSignature);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class PROJECT_GODOFWEAPON_API UWaveManagerComponent : public UActorComponent
 {
@@ -17,6 +19,12 @@ class PROJECT_GODOFWEAPON_API UWaveManagerComponent : public UActorComponent
 
 public:	
 	UWaveManagerComponent();
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Events")
+	FOnStageEventSignature OnStageClear;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Events")
+	FOnStageEventSignature OnStageFailed;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Initialize") // Blueprint
 	void Init(int32 InStage, float InLevelMultiplier, UPoolManagerComponent* InPoolManagerRef);
@@ -27,6 +35,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Wave")
 	void GoNextStage();
+
+	UFUNCTION(BlueprintCallable, Category = "Wave")
+	void GoEnding();
 
 	// Getters
 	UFUNCTION(BlueprintPure, Category = "Monster")

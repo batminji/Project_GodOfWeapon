@@ -51,6 +51,24 @@ void UWaveManagerComponent::GoNextStage()
 	}
 }
 
+void UWaveManagerComponent::GoEnding()
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->UpdateStageClear(
+			InGamePlayer->GetPlayerStat(),
+			InGamePlayer->GetCoinCnt(),
+			InGamePlayer->GetEarnedCoinCnt(),
+			InGameMode->GetTotalDamage(),
+			InGameMode->GetTotalMonsterDefeated()
+		);
+
+		GameInstance->SetIsVictory(false);
+		UGameplayStatics::OpenLevel(GetWorld(), FName("EndingMap"));
+	}
+}
+
 void UWaveManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
