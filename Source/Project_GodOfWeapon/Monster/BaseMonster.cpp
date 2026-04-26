@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "BaseMonster.h"
@@ -51,7 +51,7 @@ void ABaseMonster::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	AIController = Cast<AMonsterAIController>(NewController);
+	AIController = Cast<AMonsterAIController>(GetController());
 }
 
 void ABaseMonster::Tick(float DeltaTime)

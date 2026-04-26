@@ -87,6 +87,8 @@ void UPoolManagerComponent::SpawnMonsters(TSubclassOf<AActor> InSpawnClass, FNam
 {
 	FMonsterPool NewPool;
 
+	// UE_LOG(LogTemp, Log, TEXT("Spawning monsters of type: %s"), *InSpawnClass->GetName());
+
 	for (int32 i = 0; i < InSpawnCount; ++i)
 	{
 		FTransform SpawnTransform = FTransform::Identity;
@@ -102,8 +104,10 @@ void UPoolManagerComponent::SpawnMonsters(TSubclassOf<AActor> InSpawnClass, FNam
 		if (NewMonster)
 		{
 			NewMonster->SetBaseMonsterStat(InStat);
+			UGameplayStatics::FinishSpawningActor(NewMonster, SpawnTransform);
 			NewMonster->DisableMonster();
 			NewPool.PoolList.Add(NewMonster);
+			// UE_LOG(LogTemp, Log, TEXT("Spawned monster: %s"), *NewMonster->GetName());
 		}
 	}
 
