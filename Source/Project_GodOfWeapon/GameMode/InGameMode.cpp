@@ -11,8 +11,8 @@
 
 AInGameMode::AInGameMode()
 {
-	WaveManagerComponent = CreateDefaultSubobject<UWaveManagerComponent>(TEXT("WaveManagerComponent"));
-	PoolManagerComponent = CreateDefaultSubobject<UPoolManagerComponent>(TEXT("PoolManagerComponent"));
+	WaveManagerComp = CreateDefaultSubobject<UWaveManagerComponent>(TEXT("WaveManagerComp"));
+	PoolManagerComp = CreateDefaultSubobject<UPoolManagerComponent>(TEXT("PoolManagerComp"));
 }
 
 void AInGameMode::BeginPlay()
@@ -23,11 +23,11 @@ void AInGameMode::BeginPlay()
 	UpdatePlayerStat();
 	SpawnItems();
 
-	if (WaveManagerComponent && GameInstance)
+	if (WaveManagerComp)
 	{
-		WaveManagerComponent->Init(GameInstance->GetCurrentStage(), GameInstance->GetLevelMultiplier(), PoolManagerComponent);
+		WaveManagerComp->Init(GameInstance->GetCurrentStage(), GameInstance->GetLevelMultiplier(), PoolManagerComp);
 
-		WaveManagerComponent->StartGame();
+		WaveManagerComp->StartGame();
 	}
 
 	if (InGameMainWidgetClass)

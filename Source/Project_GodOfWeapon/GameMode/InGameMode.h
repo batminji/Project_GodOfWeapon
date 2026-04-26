@@ -20,6 +20,12 @@ class PROJECT_GODOFWEAPON_API AInGameMode : public AGameModeBase
 
 public:
 	AInGameMode();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UWaveManagerComponent> WaveManagerComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UPoolManagerComponent> PoolManagerComp;
 	
 	// Gettters
 	int32 GetTotalDamage() const { return TotalDamage; }
@@ -39,12 +45,6 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
 	bool AttachItemToPlayer(TSubclassOf<AActor> InItemBaseActorClass, EItemType InItemType, FItemStat InItemStat);
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UWaveManagerComponent> WaveManagerComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UPoolManagerComponent> PoolManagerComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
