@@ -25,6 +25,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Wave") // Blueprint
 	void StartGame();
 
+	UFUNCTION(BlueprintCallable, Category = "Wave")
+	void GoNextStage();
+
+	// Getters
+	UFUNCTION(BlueprintPure, Category = "Monster")
+	int32 GetCurrentAliveCount() const { return CurrentAliveCount; }
+
+	UFUNCTION(BlueprintCallable, Category = "Monster")
+	void DecreaseCurrentAliveCount() { CurrentAliveCount = FMath::Max(0, CurrentAliveCount - 1); }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -35,7 +45,7 @@ protected:
 	void SetGameMode();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	TObjectPtr<AInGamePlayer> Player;
+	TObjectPtr<AInGamePlayer> InGamePlayer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	TObjectPtr<AInGameMode> InGameMode;
@@ -47,7 +57,16 @@ protected:
 	int32 CurrentStage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
+	int32 MaxWaveCount = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
 	float LevelMultiplier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Monster")
+	int32 MaxAliveCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Monster")
+	int32 CurrentAliveCount;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

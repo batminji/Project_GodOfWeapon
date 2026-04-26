@@ -53,6 +53,10 @@ public:
 
 	void SetLevelMultiplier(const float InMultiplier) { LevelMultiplier = InMultiplier; }
 
+	void SetCurrentStage(const int32 InCurrentStage) { CurrentStage = InCurrentStage; }
+
+	void SetIsVictory(const bool bInIsVictory) { bIsVictory = bInIsVictory; }
+
 protected:
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")

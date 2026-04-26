@@ -23,6 +23,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HP")
 	void RecoverPlayerHP();
 
+	// Getters
+	FPlayerStatStructure& GetPlayerStat() { return PlayerStat; }
+
+	int32 GetCoinCnt() const { return CoinCnt; }
+
+	int32 GetEarnedCoinCnt() const { return EarnedCoinCnt; }
+
 protected:
 	virtual void BeginPlay() override;
 

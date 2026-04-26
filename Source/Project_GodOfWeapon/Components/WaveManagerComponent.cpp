@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "../GameMode/InGameMode.h"
 #include "../Player/InGamePlayer.h"
+#include "../GodOfWeaponGameInstance.h"
 
 UWaveManagerComponent::UWaveManagerComponent()
 {
@@ -19,6 +20,37 @@ void UWaveManagerComponent::Init_Implementation(int32 InStage, float InLevelMult
 	PoolManagerRef = InPoolManagerRef;
 }
 
+void UWaveManagerComponent::GoNextStage()
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->UpdateStageClear(
+			InGamePlayer->GetPlayerStat(), 
+			InGamePlayer->GetCoinCnt(), 
+			InGamePlayer->GetEarnedCoinCnt(),
+			InGameMode->GetTotalDamage(), 
+			InGameMode->GetTotalMonsterDefeated()
+		);
+
+		CurrentStage++;
+		if (CurrentStage > MaxWaveCount)
+		{
+			GameInstance->SetIsVictory(true);
+			UGameplayStatics::OpenLevel(GetWorld(), FName("EndingMap"));
+		}
+		else
+		{
+			GameInstance->SetCurrentStage(CurrentStage);
+			if (CurrentStage % 3 == 0)
+			{
+				GameInstance->LevelUpPlayer();
+			}
+			UGameplayStatics::OpenLevel(GetWorld(), FName("InventoryMap"));
+		}
+	}
+}
+
 void UWaveManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -29,7 +61,7 @@ void UWaveManagerComponent::BeginPlay()
 
 void UWaveManagerComponent::SetPlayer_Implementation()
 {
-	Player = Cast<AInGamePlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	InGamePlayer = Cast<AInGamePlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 }
 
 void UWaveManagerComponent::SetGameMode()

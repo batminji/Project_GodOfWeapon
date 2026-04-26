@@ -21,6 +21,10 @@ class PROJECT_GODOFWEAPON_API AInGameMode : public AGameModeBase
 public:
 	AInGameMode();
 	
+	// Gettters
+	int32 GetTotalDamage() const { return TotalDamage; }
+
+	int32 GetTotalMonsterDefeated() const { return TotalMonsterDefeated; }
 protected:
 	virtual void BeginPlay() override;
 
@@ -45,11 +49,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	TObjectPtr<AInGamePlayer> InGamePlayer;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widget")
 	TSubclassOf<UUserWidget> InGameMainWidgetClass;
 
 	TObjectPtr<UUserWidget> InGameMainWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Total")
+	int32 TotalDamage = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Total")
+	int32 TotalMonsterDefeated = 0;
 };
