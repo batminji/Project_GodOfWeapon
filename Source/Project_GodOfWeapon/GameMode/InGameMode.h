@@ -11,6 +11,8 @@ class UPoolManagerComponent;
 class UGodOfWeaponGameInstance;
 class AInGamePlayer;
 class UUserWidget;
+class UNiagaraSystem;
+class UStaticMesh;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API AInGameMode : public AGameModeBase
@@ -49,7 +51,15 @@ protected:
 	void SpawnItems();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
-	bool AttachItemToPlayer(TSubclassOf<AActor> InItemBaseActorClass, EItemType InItemType, FItemStat InItemStat);
+	bool AttachItemToPlayer(
+		TSubclassOf<AActor> InItemBaseActorClass, 
+		EItemType InItemType, 
+		FItemStat InItemStat,
+		UStaticMesh* InItemMesh,
+		UNiagaraSystem* InItemNiagara,
+		UStaticMesh* InArrowMesh,
+		UNiagaraSystem* InArrowNiagara
+	);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;

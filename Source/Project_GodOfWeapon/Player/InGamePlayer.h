@@ -33,6 +33,8 @@ public:
 
 	int32 GetEarnedCoinCnt() const { return EarnedCoinCnt; }
 
+	FPlayerStatStructure GetCurrentPlayerStat() const { return PlayerStat; }
+
 protected:
 	virtual void BeginPlay() override;
 

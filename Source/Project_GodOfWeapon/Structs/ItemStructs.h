@@ -65,8 +65,9 @@ struct FItemData : public FTableRowBase
 	GENERATED_USTRUCT_BODY();
 
 	FItemData()
-		: ItemID(NAME_None),Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()), Price(0),
+		: ItemID(NAME_None), Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()), Price(0),
 		ItemActorClass(nullptr), Icon(nullptr), RotateIcon(nullptr), Dimension(FIntPoint(0, 0)), Stat()
+		, ItemMesh(nullptr), ItemNiagara(nullptr), ArrowMesh(nullptr), ArrowNiagara(nullptr)
 	{
 	}
 
@@ -99,4 +100,16 @@ struct FItemData : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FItemStat Stat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UStaticMesh> ItemMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<class UNiagaraSystem> ItemNiagara;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Arrow")
+	TSoftObjectPtr<UStaticMesh> ArrowMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Arrow")
+	TSoftObjectPtr<class UNiagaraSystem> ArrowNiagara;
 };
