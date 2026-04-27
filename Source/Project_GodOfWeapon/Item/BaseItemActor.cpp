@@ -3,6 +3,7 @@
 
 #include "BaseItemActor.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 ABaseItemActor::ABaseItemActor()
@@ -12,6 +13,9 @@ ABaseItemActor::ABaseItemActor()
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 	RootComponent = ItemMesh;
+
+	RangeSphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("RangeSphereCollision"));
+	RangeSphereCollision->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

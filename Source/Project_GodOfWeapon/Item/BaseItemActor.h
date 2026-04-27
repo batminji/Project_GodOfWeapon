@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "../Structs/ItemStructs.h"
+#include "../Enums/ItemEnums.h"
 #include "BaseItemActor.generated.h"
 
 class UStaticMeshComponent;
+class USphereComponent;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ABaseItemActor : public AActor
@@ -17,17 +19,20 @@ class PROJECT_GODOFWEAPON_API ABaseItemActor : public AActor
 public:	
 	ABaseItemActor();
 
+protected:
+	virtual void BeginPlay() override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TObjectPtr<UStaticMeshComponent> ItemMesh;
 
-	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TObjectPtr<USphereComponent> RangeSphereCollision;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
 	EItemType ItemType;
 
-	UPROPERTY(EditAnywhere, blueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
 	FItemStat ItemStat;
-
-protected:
-	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
