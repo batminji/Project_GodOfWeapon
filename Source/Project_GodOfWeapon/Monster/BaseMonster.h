@@ -25,6 +25,24 @@ public:
 	void EnableMonster(float InStatMultiplier, float InLevelMultiplier);
 	virtual void EnableMonster_Implementation(float InStatMultiplier, float InLevelMultiplier);
 
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void EndSpawning();
+
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void EndDying();
+
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void DieMonster();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Coin")
+	void CreateCoinActors(int32 InCount);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Damage")
+	void CreateDamageTextWidget(int32 InDamage);
+
+	UFUNCTION(BlueprintCallable, Category = "Damage")
+	void TakeDamage(float InDamage);
+
 	// Setters
 	void SetBaseMonsterStat(const FMonsterStat& InBaseMonsterStat) { BaseMonsterStat = InBaseMonsterStat; }
 
@@ -34,6 +52,10 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 
 	void SetGameMode();
+
+	void UpdateBBSpawning();
+
+	void UpdateMonsterHP(int32 InDamage);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Mode")
 	TObjectPtr<AInGameMode> InGameMode;

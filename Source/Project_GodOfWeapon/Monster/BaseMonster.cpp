@@ -3,8 +3,11 @@
 
 #include "BaseMonster.h"
 #include "Kismet/GameplayStatics.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "../Controller/MonsterAIController.h"
 #include "../GameMode/InGameMode.h"
+#include "../Components/PoolManagerComponent.h"
 
 ABaseMonster::ABaseMonster()
 {
@@ -36,16 +39,60 @@ void ABaseMonster::EnableMonster_Implementation(float InStatMultiplier, float In
 
 	bIsDead = false;
 	bIsSpawning = true;
+	UpdateBBSpawning();
 
 	if (AIController)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Running AI for monster: %s"), *GetName());
 		AIController->RunAI();
 	}
-	else
+}
+
+void ABaseMonster::EndSpawning()
+{
+	bIsSpawning = false;
+	UpdateBBSpawning();
+}
+
+void ABaseMonster::EndDying()
+{
+	bIsDead = false;
+
+	if (InGameMode)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AIController is null for monster: %s"), *GetName());
+		InGameMode->PoolManagerComp->ReturnToPool(this);
 	}
+}
+
+void ABaseMonster::DieMonster()
+{
+	CreateCoinActors(CurrentMonsterStat.Reward);
+
+	bIsDead = true;
+
+	GetCharacterMovement()->StopMovementImmediately();
+	SetActorEnableCollision(false);
+
+	if (AIController)
+	{
+		AIController->StopAI();
+	}
+
+	if (InGameMode)
+	{
+		InGameMode->AddTotalMonsterDefeated(1);
+	}
+}
+
+void ABaseMonster::TakeDamage(float InDamage)
+{
+	int32 Damage = FMath::TruncToInt(InDamage);
+	
+	CreateDamageTextWidget(Damage);
+	if (InGameMode)
+	{
+		InGameMode->AddTotalDamage(Damage);
+	}
+	UpdateMonsterHP(Damage);
 }
 
 void ABaseMonster::BeginPlay()
@@ -65,6 +112,26 @@ void ABaseMonster::PossessedBy(AController* NewController)
 void ABaseMonster::SetGameMode()
 {
 	InGameMode = Cast<AInGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+}
+
+void ABaseMonster::UpdateBBSpawning()
+{
+	if(AIController)
+	{
+		if (AIController->GetBlackboardComponent())
+		{
+			AIController->GetBlackboardComponent()->SetValueAsBool(TEXT("bIsSpawning"), bIsSpawning);
+		}
+	}
+}
+
+void ABaseMonster::UpdateMonsterHP(int32 InDamage)
+{
+	CurrentMonsterStat.BaseHP -= InDamage;
+	if (CurrentMonsterStat.BaseHP <= 0)
+	{
+		DieMonster();
+	}
 }
 
 void ABaseMonster::Tick(float DeltaTime)

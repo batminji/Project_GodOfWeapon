@@ -44,6 +44,12 @@ struct FMonsterData : public FTableRowBase
 {
     GENERATED_BODY()
 
+    FMonsterData()
+        : Class(nullptr), Stat()
+    {
+
+    }
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TSubclassOf<class ABaseMonster> Class;
 

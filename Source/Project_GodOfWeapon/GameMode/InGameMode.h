@@ -30,6 +30,12 @@ public:
 	int32 GetTotalDamage() const { return TotalDamage; }
 
 	int32 GetTotalMonsterDefeated() const { return TotalMonsterDefeated; }
+
+	// Setters
+	void AddTotalMonsterDefeated(int32 InCount) { TotalMonsterDefeated += InCount; }
+
+	void AddTotalDamage(int32 InDamage) { TotalDamage += InDamage; }
+
 protected:
 	virtual void BeginPlay() override;
 
