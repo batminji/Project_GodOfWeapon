@@ -2,8 +2,11 @@
 
 
 #include "BaseItemActor.h"
+#include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "../Player/InGamePlayer.h"
+#include "../Monster/BaseMonster.h"
 
 // Sets default values
 ABaseItemActor::ABaseItemActor()
@@ -23,6 +26,33 @@ void ABaseItemActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetPlayer();
+}
+
+void ABaseItemActor::SetPlayer()
+{
+	InGamePlayer = Cast<AInGamePlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+}
+
+bool ABaseItemActor::IsCanAttack()
+{
+	if(ItemCurrentState == EItemState::Idle || bCanAttack)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool ABaseItemActor::IsMonsterInRange()
+{
+	TArray<AActor*> OverlappingActors;
+	TSubclassOf<AActor> ClassFilter = ABaseMonster::StaticClass();
+	RangeSphereCollision->GetOverlappingActors(OverlappingActors, ClassFilter);
+
+	return OverlappingActors.Num() > 0;
 }
 
 // Called every frame
@@ -30,5 +60,11 @@ void ABaseItemActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	switch (ItemCurrentState)
+	{
+		case EItemState::Idle:
+			// Idle Event
+			break;
+	}
 }
 

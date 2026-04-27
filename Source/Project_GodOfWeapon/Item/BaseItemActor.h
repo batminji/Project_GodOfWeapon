@@ -10,6 +10,7 @@
 
 class UStaticMeshComponent;
 class USphereComponent;
+class AInGamePlayer;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ABaseItemActor : public AActor
@@ -22,6 +23,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void SetPlayer();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check")
+	bool IsCanAttack();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Check")
+	bool IsMonsterInRange();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TObjectPtr<UStaticMeshComponent> ItemMesh;
 
@@ -33,6 +42,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
 	FItemStat ItemStat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	EItemState ItemCurrentState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	TObjectPtr<AInGamePlayer> InGamePlayer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	bool bCanAttack = true;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
