@@ -65,8 +65,8 @@ struct FItemData : public FTableRowBase
 	GENERATED_USTRUCT_BODY();
 
 	FItemData()
-		: Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()),
-		ItemActorClass(nullptr), Icon(nullptr), Dimension(FIntPoint(0, 0))
+		: ItemID(NAME_None),Type(EItemType::Sword), Name(FText::GetEmpty()), Desc(FText::GetEmpty()), Price(0),
+		ItemActorClass(nullptr), Icon(nullptr), RotateIcon(nullptr), Dimension(FIntPoint(0, 0)), Stat()
 	{
 	}
 
@@ -83,7 +83,7 @@ struct FItemData : public FTableRowBase
 	FText Desc;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Price;
+	int32 Price;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftClassPtr<class ABaseItemActor> ItemActorClass;

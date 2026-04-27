@@ -25,7 +25,7 @@ struct FMonsterStat
     GENERATED_BODY()
 
     FMonsterStat()
-        : BaseHP(0.0f), BaseDamage(0.0f)
+		: BaseHP(0.0f), BaseDamage(0.0f), Reward(0)
     {
     }
 
