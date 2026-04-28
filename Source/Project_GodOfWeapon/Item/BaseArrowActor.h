@@ -9,6 +9,7 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 class UNiagaraComponent;
+class UNiagaraSystem;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -37,8 +38,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category = "Damage")
 	float AttackDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category = "Setting")
+	TObjectPtr<UStaticMesh> InArrowStaticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category = "Setting")
+	TObjectPtr<UNiagaraSystem> InArrowNiagaraSystem;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

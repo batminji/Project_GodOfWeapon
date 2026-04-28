@@ -18,7 +18,6 @@ ABaseArrowActor::ABaseArrowActor()
 	ArrowMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ArrowMeshComponent"));
 	ArrowMeshComponent->SetupAttachment(BoxComponent);
 	ArrowMeshComponent->SetWorldRotation(FRotator(-90.0f, 0.0f, 0.0f));
-	ArrowMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(BoxComponent);
@@ -35,6 +34,7 @@ void ABaseArrowActor::BeginPlay()
 	Super::BeginPlay();
 	
 	SetLifeSpan(5.0f);
+	InitArrow(AttackDamage, InArrowStaticMesh, InArrowNiagaraSystem);
 }
 
 void ABaseArrowActor::InitArrow(float InAttackDamage, UStaticMesh* InArrowMesh, UNiagaraSystem* InArrowNiagara)
