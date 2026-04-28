@@ -71,6 +71,7 @@ void ABaseMonster::DieMonster()
 
 	GetCharacterMovement()->StopMovementImmediately();
 	SetActorEnableCollision(false);
+	StopAnimMontage();
 
 	if (AIController)
 	{
