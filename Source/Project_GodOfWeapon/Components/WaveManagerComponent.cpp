@@ -6,6 +6,8 @@
 #include "../GameMode/InGameMode.h"
 #include "../Player/InGamePlayer.h"
 #include "../GodOfWeaponGameInstance.h"
+#include "../Structs/WaveStructs.h"
+#include "../Components/PoolManagerComponent.h"
 
 UWaveManagerComponent::UWaveManagerComponent()
 {
@@ -13,11 +15,28 @@ UWaveManagerComponent::UWaveManagerComponent()
 
 }
 
-void UWaveManagerComponent::Init_Implementation(int32 InStage, float InLevelMultiplier, UPoolManagerComponent* InPoolManagerRef)
+void UWaveManagerComponent::Init(int32 InStage, float InLevelMultiplier, UPoolManagerComponent* InPoolManagerRef)
 {
 	CurrentStage = InStage;
 	LevelMultiplier = InLevelMultiplier;
 	PoolManagerRef = InPoolManagerRef;
+
+	FName RowName = FName(*FString::FromInt(CurrentStage));
+	FWaveData* FindRow = WaveDataTable->FindRow<FWaveData>(RowName, TEXT("WaveData"));
+
+	if(FindRow)
+	{
+		SpawnMonsterNames = FindRow->SpawnMonsters;
+		StatMultiplier = FindRow->StatMultiplier;
+		SpawnInterval = FindRow->SpawnInterval;
+		WaveTimer = FindRow->Time;
+		MaxAliveCount = FindRow->SpawnCount;
+	}
+
+	if(PoolManagerRef)
+	{
+		PoolManagerRef->InitPool(SpawnMonsterNames, MaxAliveCount);
+	}
 }
 
 void UWaveManagerComponent::GoNextStage()

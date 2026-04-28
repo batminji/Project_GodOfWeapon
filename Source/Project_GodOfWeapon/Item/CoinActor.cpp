@@ -23,6 +23,9 @@ void ACoinActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Init();
+
+	MoveToPlayer();
 }
 
 void ACoinActor::Init()

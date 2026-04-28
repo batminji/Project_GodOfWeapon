@@ -11,7 +11,7 @@ struct FWaveData : public FTableRowBase
     GENERATED_BODY()
 
     FWaveData()
-        : StageNum(0), SpawnCount(0), Time(0.0f), SpawnInterval(0.0f), StatMultiplier(0.0f)
+        : StageNum(0), SpawnMonsters(), SpawnCount(0), Time(0.0f), SpawnInterval(0.0f), StatMultiplier(0.0f)
     {
 	}
 

@@ -22,6 +22,7 @@ ABaseArrowActor::ABaseArrowActor()
 
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(BoxComponent);
+	NiagaraComponent->SetWorldRotation(FRotator(0.0f, 180.0f, 0.0f));
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->InitialSpeed = 2000.0f;

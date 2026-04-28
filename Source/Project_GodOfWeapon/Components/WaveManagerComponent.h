@@ -9,6 +9,7 @@
 class AInGamePlayer;
 class AInGameMode;
 class UPoolManagerComponent;
+class UDataTable;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStageEventSignature);
 
@@ -26,9 +27,8 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Events")
 	FOnStageEventSignature OnStageFailed;
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Initialize") // Blueprint
+	UFUNCTION(BlueprintCallable, Category = "Initialize")
 	void Init(int32 InStage, float InLevelMultiplier, UPoolManagerComponent* InPoolManagerRef);
-	void Init_Implementation(int32 InStage, float InLevelMultiplier, UPoolManagerComponent* InPoolManagerRef);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Wave") // Blueprint
 	void StartGame();
@@ -68,6 +68,9 @@ protected:
 	int32 CurrentStage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
+	TArray<FName> SpawnMonsterNames;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
 	int32 MaxWaveCount = 10;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage")
@@ -96,6 +99,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Timer")
 	FTimerHandle PlayerRecoverTimerHandler;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data Table")
+	TObjectPtr<UDataTable> WaveDataTable;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
