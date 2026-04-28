@@ -2,23 +2,36 @@
 
 
 #include "CoinActor.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
+#include "../Player/InGamePlayer.h"
 
-// Sets default values
 ACoinActor::ACoinActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	BoxComponent->SetBoxExtent(FVector(32.0f, 32.0f, 32.0f));
+	RootComponent = BoxComponent;
+
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	WidgetComponent->SetupAttachment(BoxComponent);
 }
 
-// Called when the game starts or when spawned
 void ACoinActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
+void ACoinActor::Init()
+{
+	SpawnLocation = GetActorLocation();
+
+	InGamePlayer = Cast<AInGamePlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+}
+
 void ACoinActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
