@@ -22,6 +22,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Init")
+	void InitArrow(float InAttackDamage, UStaticMesh* InArrowMesh, UNiagaraSystem* InArrowNiagara);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UBoxComponent> BoxComponent;
 
@@ -34,7 +37,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float AttackDamage;
 
 public:	
