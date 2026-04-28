@@ -99,7 +99,7 @@ protected:
 	TObjectPtr<UChildActorComponent> OwnerChildActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
-	UNiagaraComponent* Niagara;
+	TObjectPtr<UNiagaraComponent> Niagara;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Arrow")
 	TObjectPtr<UStaticMesh> ArrowStaticMesh;
