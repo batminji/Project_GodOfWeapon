@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 #include "NiagaraComponent.h"
-#include "Components/SphereComponent.h"
+#include "Engine/OverlapResult.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/ChildActorComponent.h"
 #include "../Player/InGamePlayer.h"
@@ -21,9 +21,6 @@ ABaseItemActor::ABaseItemActor()
 
 	Niagara = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Niagara"));
 	Niagara->SetupAttachment(ItemMesh);
-
-	RangeSphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("RangeSphereCollision"));
-	RangeSphereCollision->SetupAttachment(RootComponent);
 }
 
 void ABaseItemActor::BeginPlay()
@@ -64,11 +61,6 @@ void ABaseItemActor::InitItem(EItemType InItemType, FItemStat InItemStat, USprin
 	{
 		ArrowNiagaraSystem = InArrowNiagara;
 	}
-
-	if (RangeSphereCollision)
-	{
-		RangeSphereCollision->SetSphereRadius(ItemStat.AttackRange);
-	}
 }
 
 void ABaseItemActor::SetPlayer()
@@ -90,10 +82,10 @@ bool ABaseItemActor::IsCanAttack()
 
 bool ABaseItemActor::IsMonsterInRange()
 {
-	TArray<AActor*> OverlappingActors;
-	RangeSphereCollision->GetOverlappingActors(OverlappingActors, ABaseMonster::StaticClass());
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
 
-	return OverlappingActors.Num() > 0;
+	return GetWorld()->OverlapAnyTestByObjectType(GetActorLocation(),FQuat::Identity,ObjectQueryParams,FCollisionShape::MakeSphere(ItemStat.AttackRange),FCollisionQueryParams::DefaultQueryParam);
 }
 
 void ABaseItemActor::FindTargetInRange(AActor*& OutTargetActor, FVector& OutTargetLocation)
@@ -102,20 +94,31 @@ void ABaseItemActor::FindTargetInRange(AActor*& OutTargetActor, FVector& OutTarg
 	OutTargetActor = nullptr;
 	OutTargetLocation = FVector::ZeroVector;
 
-	TArray<AActor*> OverlappingActors;
-	RangeSphereCollision->GetOverlappingActors(OverlappingActors, ABaseMonster::StaticClass());
+	TArray<FOverlapResult> OverlappingResults;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
+	if (InGamePlayer)
+	{
+		CollisionParams.AddIgnoredActor(InGamePlayer);
+	}
+
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
+
+	GetWorld()->OverlapMultiByObjectType(OverlappingResults,GetActorLocation(),FQuat::Identity,ObjectQueryParams,FCollisionShape::MakeSphere(ItemStat.AttackRange),CollisionParams);
 
 	AActor* NearestTargetRef = nullptr;
 
-	for (AActor* Actor : OverlappingActors)
+	for (const FOverlapResult& Result : OverlappingResults)
 	{
-		if (Actor)
+		if (AActor* HitActor = Result.GetActor())
 		{
-			float Distance = GetDistanceTo(Actor);
-			if (Distance < NearestLength)
+			float DistanceSquared = FVector::DistSquared(GetActorLocation(), HitActor->GetActorLocation());
+
+			if (DistanceSquared < NearestLength)
 			{
-				NearestLength = Distance;
-				NearestTargetRef = Actor;
+				NearestLength = DistanceSquared;
+				NearestTargetRef = HitActor;
 			}
 		}
 	}

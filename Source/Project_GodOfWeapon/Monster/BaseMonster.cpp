@@ -83,7 +83,7 @@ void ABaseMonster::DieMonster()
 	}
 }
 
-void ABaseMonster::TakeDamage(float InDamage)
+void ABaseMonster::ApplyMonsterDamage(float InDamage)
 {
 	int32 Damage = FMath::TruncToInt(InDamage);
 	

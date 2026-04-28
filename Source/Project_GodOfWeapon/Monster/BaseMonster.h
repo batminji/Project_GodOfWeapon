@@ -41,7 +41,7 @@ public:
 	void CreateDamageTextWidget(int32 InDamage);
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
-	void TakeDamage(float InDamage);
+	void ApplyMonsterDamage(float InDamage);
 
 	// Setters
 	void SetBaseMonsterStat(const FMonsterStat& InBaseMonsterStat) { BaseMonsterStat = InBaseMonsterStat; }

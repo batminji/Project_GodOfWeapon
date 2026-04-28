@@ -77,9 +77,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TObjectPtr<UStaticMeshComponent> ItemMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TObjectPtr<USphereComponent> RangeSphereCollision;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (ExposeOnSpawn = "true"))
 	EItemType ItemType;
 
