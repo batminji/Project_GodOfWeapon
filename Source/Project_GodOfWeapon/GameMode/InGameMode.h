@@ -24,6 +24,8 @@ public:
 
 	virtual void PostLogin(APlayerController* InNewPlayer) override;
 
+	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWaveManagerComponent> WaveManagerComp;
 

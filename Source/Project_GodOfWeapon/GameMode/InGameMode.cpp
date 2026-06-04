@@ -38,13 +38,20 @@ void AInGameMode::PostLogin(APlayerController* InNewPlayer)
 	}
 
 	PlayerState->CustomData = GameInstance->GetPlayerCustomData();
+}
 
-	AInGamePlayer* Player = Cast<AInGamePlayer>(InNewPlayer->GetPawn());
-	if (Player)
-	{
-		Player->UpdatePlayerStat(PlayerState->PlayerStat, PlayerState->PlayerCoin);
-		Player->UpdatePlayerCustom(PlayerState->CustomData);
-	}
+void AInGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+	APlayerStateBase* PlayerState = NewPlayer->GetPlayerState<APlayerStateBase>();
+	AInGamePlayer* Player = Cast<AInGamePlayer>(NewPlayer->GetPawn());
+	if (!PlayerState || !Player) return;
+
+	Player->UpdatePlayerStat(PlayerState->PlayerStat, PlayerState->PlayerCoin);
+	Player->UpdatePlayerCustom(PlayerState->CustomData);
+
+	InGamePlayer = Player;
 }
 
 void AInGameMode::BeginPlay()
