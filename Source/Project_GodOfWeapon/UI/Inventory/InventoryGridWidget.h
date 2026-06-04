@@ -12,7 +12,7 @@ class UBorder;
 class AInventoryController;
 class UInventoryComponent;
 class UItemWidget;
-class UGodOfWeaponGameInstance;
+class APlayerStateBase;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryGridWidget : public UUserWidget
@@ -36,7 +36,7 @@ protected:
 
 	bool IsRoomAvailableForPayload(UItemWidget* InItemWidget) const;
 
-	void ApplyConsumeItem(UGodOfWeaponGameInstance* GI, FName ItemID);
+	void ApplyConsumeItem(APlayerStateBase* GI, FName ItemID);
 
 	FMousePositionInTile MousePositionInTile;
 

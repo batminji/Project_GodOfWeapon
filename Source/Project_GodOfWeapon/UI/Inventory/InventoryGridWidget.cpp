@@ -12,9 +12,7 @@
 #include "../../Components/InventoryComponent.h"
 #include "../../Item/ItemDragDropOperation.h"
 #include "../Item/ItemWidget.h"
-
-#include "../../GodOfWeaponGameInstance.h"
-#include "Kismet/GameplayStatics.h"
+#include "../../Player/PlayerStateBase.h"
 
 void UInventoryGridWidget::NativeConstruct()
 {
@@ -75,17 +73,17 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 
 		if (DroppedItem->bIsFromShop)
 		{
-			UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			APlayerStateBase* PlayerState = GetOwningPlayer()->GetPlayerState<APlayerStateBase>();
 
-			if (GI && GI->GetPlayerCoin() >= DroppedItem->ItemData.Price)
+			if (PlayerState && PlayerState->HasEnoughCoin(DroppedItem->ItemData.Price))
 			{
 				if (IsRoomAvailableForPayload(DroppedItem))
 				{
 					if (DroppedItem->ItemData.Type == EItemType::Consume)
 					{
-						ApplyConsumeItem(GI, DroppedItem->ItemData.ItemID);
+						ApplyConsumeItem(PlayerState, DroppedItem->ItemData.ItemID);
 					}
-					GI->DeductCoin(DroppedItem->ItemData.Price);
+					PlayerState->DeductCoin(DroppedItem->ItemData.Price);
 					DroppedItem->bIsFromShop = false;
 
 					InventoryComponent->RefreshAllItems();
@@ -156,23 +154,23 @@ bool UInventoryGridWidget::IsRoomAvailableForPayload(UItemWidget* InItemWidget) 
 	return false;
 }
 
-void UInventoryGridWidget::ApplyConsumeItem(UGodOfWeaponGameInstance* GI, FName ItemID)
+void UInventoryGridWidget::ApplyConsumeItem(APlayerStateBase* PlayerState, FName ItemID)
 {
 	if (ItemID == FName("Consume01"))
 	{
-		GI->GetPlayerStat().Recovery += 5;
+		PlayerState->GetPlayerStat().Recovery += 5;
 	}
 	else if (ItemID == FName("Consume02"))
 	{
-		GI->GetPlayerStat().MoveSpeedMultifier += 0.2f;
+		PlayerState->GetPlayerStat().MoveSpeedMultifier += 0.2f;
 	}
 	else if(ItemID == FName("Consume03"))
 	{
-		GI->GetPlayerStat().ShortRangeAttackForce += 10.0f;
+		PlayerState->GetPlayerStat().ShortRangeAttackForce += 10.0f;
 	}
 	else if (ItemID == FName("Consume04"))
 	{
-		GI->GetPlayerStat().LongRangeAttackForce += 10.0f;
+		PlayerState->GetPlayerStat().LongRangeAttackForce += 10.0f;
 	}
 }
 
