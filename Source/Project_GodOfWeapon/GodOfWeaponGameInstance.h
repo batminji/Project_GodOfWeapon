@@ -35,14 +35,21 @@ public:
 
 	float GetLevelMultiplier() const { return LevelMultiplier; }
 
+	bool GetIsVictory() const { return bIsVictory; }
+
 	// Setters
 	void SetDifficulty(const EDifficulty InDifficulty) { Difficulty = InDifficulty; }
 
 	void SetLevelMultiplier(const float InMultiplier) { LevelMultiplier = InMultiplier; }
 
+	void SetIsVictory(const bool bInIsVictory) { bIsVictory = bInIsVictory; }
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
 	float LevelMultiplier = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
+	bool bIsVictory = false;
 
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
@@ -65,6 +72,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Player Level Data Table")
 	TObjectPtr<UDataTable> PlayerLevelDataTable;
 
-private:
+public:
 	void ExpandInventory();
 };

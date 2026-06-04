@@ -5,6 +5,7 @@
 #include "InputAction.h"
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "../GodOfWeaponGameInstance.h"
 
 AInGamePlayer::AInGamePlayer()
 {
@@ -21,6 +22,15 @@ void AInGamePlayer::UpdatePlayerStat(const FPlayerStatStructure& InStat, const i
 void AInGamePlayer::RecoverPlayerHP()
 {
 	PlayerStat.CurrentHP = FMath::Min(PlayerStat.CurrentHP + PlayerStat.Recovery, PlayerStat.MaxHP);
+}
+
+void AInGamePlayer::ClientExpandInventory_Implementation()
+{
+	UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GI)
+	{
+		GI->ExpandInventory();
+	}
 }
 
 void AInGamePlayer::BeginPlay()

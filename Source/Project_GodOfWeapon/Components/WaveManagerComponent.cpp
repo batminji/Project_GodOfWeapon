@@ -106,9 +106,11 @@ void UWaveManagerComponent::GoEnding()
 
 	UpdatePlayerStatForNextStage(GameState);
 
-	// Go Ending
-	GameState->bIsVictory = false;
-	GameState->OnReplicate_bIsVictory();
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->SetIsVictory(false);
+	}
 
 	GetWorld()->ServerTravel("/Game/Maps/EndingMap?listen");
 }
@@ -160,8 +162,11 @@ void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
 
 	if (CurrentStage > MaxWaveCount)
 	{
-		InGameState->bIsVictory = true;
-		InGameState->OnReplicate_bIsVictory();
+		UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (GameInstance)
+		{
+			GameInstance->SetIsVictory(true);
+		}
 	}
 	else
 	{
@@ -170,7 +175,7 @@ void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
 
 		if (CurrentStage % 3 == 0)
 		{
-			// LevelUpAllPlayers(InGameState);
+			LevelUpAllPlayers(InGameState);
 		}
 
 		GetWorld()->ServerTravel("/Game/Maps/InventoryMap?listen");
@@ -201,7 +206,7 @@ void UWaveManagerComponent::LevelUpAllPlayers(AInGameStateBase* InGameState)
 		AInGamePlayer* Player = Cast<AInGamePlayer>(GodPS->GetPawn());
 		if (Player)
 		{
-			// Player->ClientExpandInventory();
+			Player->ClientExpandInventory();
 		}
 	}
 }

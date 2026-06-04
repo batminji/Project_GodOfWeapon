@@ -26,6 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HP")
 	void RecoverPlayerHP();
 
+	UFUNCTION(Client, Reliable)
+	void ClientExpandInventory();
+
 	// Getters
 	FPlayerStatStructure& GetPlayerStat() { return PlayerStat; }
 

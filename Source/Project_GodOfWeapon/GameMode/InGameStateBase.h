@@ -24,13 +24,6 @@ public:
     UPROPERTY(Replicated, BlueprintReadWrite)
     int32 CurrentAliveMonsterCount = 0;
 
-    // Game Over
-    UPROPERTY(ReplicatedUsing = OnReplicate_bIsVictory, BlueprintReadWrite)
-    bool bIsVictory = false;
-
     UFUNCTION()
     void OnReplicate_CurrentStage();
-
-    UFUNCTION()
-    void OnReplicate_bIsVictory();
 };

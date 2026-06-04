@@ -11,13 +11,8 @@ void AInGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
     DOREPLIFETIME(AInGameStateBase, CurrentStage);
     DOREPLIFETIME(AInGameStateBase, LevelMultiplier);
     DOREPLIFETIME(AInGameStateBase, CurrentAliveMonsterCount);
-    DOREPLIFETIME(AInGameStateBase, bIsVictory);
 }
 
 void AInGameStateBase::OnReplicate_CurrentStage()
-{
-}
-
-void AInGameStateBase::OnReplicate_bIsVictory()
 {
 }
