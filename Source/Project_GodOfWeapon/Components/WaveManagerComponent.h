@@ -10,6 +10,7 @@ class AInGamePlayer;
 class AInGameMode;
 class UPoolManagerComponent;
 class UDataTable;
+class AInGameStateBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStageEventSignature);
 
@@ -54,6 +55,10 @@ protected:
 	void SetPlayer_Implementation();
 
 	void SetGameMode();
+
+	void UpdatePlayerStatForNextStage(AInGameStateBase* InGameState);
+	void UpdateStage(AInGameStateBase* InGameState);
+	void LevelUpAllPlayers(AInGameStateBase* InGameState);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	TObjectPtr<AInGamePlayer> InGamePlayer;

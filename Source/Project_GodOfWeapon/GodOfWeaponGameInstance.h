@@ -17,65 +17,29 @@ class PROJECT_GODOFWEAPON_API UGodOfWeaponGameInstance : public UGameInstance
 public:
 	UGodOfWeaponGameInstance();
 
-	// Player
-	UFUNCTION(BlueprintCallable, Category = "Player")
-	void LevelUpPlayer();
-
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void UpdatePlayerCustomData(const FCustomData& InCustomData);
-
-	// Stage
-	UFUNCTION(BlueprintCallable, Category = "Stage")
-	void UpdateStageClear(const FPlayerStatStructure& InPlayerStat, const int32& InPlayerCoin, const int32& InPlayerEarnedCoin, const int32& InTotalDamage, const int32& InTotalMonsterDefeated);
-
-	// Coin
-	UFUNCTION(BlueprintPure, Category = "Coin")
-	bool HasEnoughCoin(const int32& InAmount) const;
-
-	UFUNCTION(BlueprintCallable, Category = "Coin")
-	void DeductCoin(const int32& InAmount);
 
 	// Gettters
 	TArray<FSavedItemData>& GetInventoryData() { return InventoryData; }
 
-	int32 GetPlayerCoin() const { return PlayerCoin; }
-
-	FPlayerStatStructure& GetPlayerStat() { return PlayerStat; }
-
 	FCustomData& GetPlayerCustomData() { return PlayerCustomData; }
 
-	int32 GetCurrentStage() const { return CurrentStage; }
+	int32 GetInventoryColumns() const { return InventoryColumns; }
 
-	float GetLevelMultiplier() const { return LevelMultiplier; }
+	int32 GetInventoryRows() const { return InventoryRows; }
+
+	EDifficulty GetDifficulty() const { return Difficulty; }
+
+	UDataTable* GetPlayerLevelDataTable() const { return PlayerLevelDataTable; }
 
 	// Setters
 	void SetDifficulty(const EDifficulty InDifficulty) { Difficulty = InDifficulty; }
-
-	void SetLevelMultiplier(const float InMultiplier) { LevelMultiplier = InMultiplier; }
-
-	void SetCurrentStage(const int32 InCurrentStage) { CurrentStage = InCurrentStage; }
-
-	void SetIsVictory(const bool bInIsVictory) { bIsVictory = bInIsVictory; }
 
 protected:
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
 	FCustomData PlayerCustomData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
-	FPlayerStatStructure PlayerStat;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
-	int32 PlayerCoin = 30;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
-	int32 PlayerEarnedCoin = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
-	int32 TotalMonsterDefeated = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
-	int32 TotalDamage = 0;
 
 	// Inventory Data
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Data")
@@ -87,24 +51,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Data")
 	int32 InventoryRows = 5;
 
-	// Stage Data
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
-	int32 CurrentStage = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
-	float LevelMultiplier = 0.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
 	EDifficulty Difficulty = EDifficulty::Easy;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
-	bool bIsVictory = false;
 
 	// Data Table
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Player Level Data Table")
 	TObjectPtr<UDataTable> PlayerLevelDataTable;
 
 private:
-	void UpdatePlayerStat(float Multiplier);
 	void ExpandInventory();
 };

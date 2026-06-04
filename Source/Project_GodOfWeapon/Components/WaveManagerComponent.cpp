@@ -4,10 +4,14 @@
 #include "WaveManagerComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "../GameMode/InGameMode.h"
+#include "../GameMode/InGameStateBase.h"
 #include "../Player/InGamePlayer.h"
+#include "../Player/PlayerStateBase.h"
 #include "../GodOfWeaponGameInstance.h"
 #include "../Structs/WaveStructs.h"
 #include "../Components/PoolManagerComponent.h"
+#include "GameFramework/PlayerState.h"
+#include "Engine/DataTable.h"
 
 UWaveManagerComponent::UWaveManagerComponent()
 {
@@ -41,7 +45,12 @@ void UWaveManagerComponent::Init(int32 InStage, float InLevelMultiplier, UPoolMa
 
 void UWaveManagerComponent::GoNextStage()
 {
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (!GetOwner()->HasAuthority())
+	{
+		return;
+	}
+
+	/*UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
 		GameInstance->UpdateStageClear(InGamePlayer->GetPlayerStat(), InGamePlayer->GetCoinCnt(), InGamePlayer->GetEarnedCoinCnt(),InGameMode->GetTotalDamage(), InGameMode->GetTotalMonsterDefeated());
@@ -61,19 +70,47 @@ void UWaveManagerComponent::GoNextStage()
 			}
 			UGameplayStatics::OpenLevel(GetWorld(), FName("InventoryMap"));
 		}
+	}*/
+
+	AInGameStateBase* GameState = Cast<AInGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+	if (GameState)
+	{
+		return;
 	}
+
+	UpdatePlayerStatForNextStage(GameState);
+	UpdateStage(GameState);
 }
 
 void UWaveManagerComponent::GoEnding()
 {
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (!GetOwner()->HasAuthority())
+	{
+		return;
+	}
+
+	/*UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
 		GameInstance->UpdateStageClear(InGamePlayer->GetPlayerStat(), InGamePlayer->GetCoinCnt(), InGamePlayer->GetEarnedCoinCnt(), InGameMode->GetTotalDamage(), InGameMode->GetTotalMonsterDefeated());
 
 		GameInstance->SetIsVictory(false);
 		UGameplayStatics::OpenLevel(GetWorld(), FName("EndingMap"));
+	}*/
+
+	AInGameStateBase* GameState = Cast<AInGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+	if (GameState)
+	{
+		return;
 	}
+
+	UpdatePlayerStatForNextStage(GameState);
+
+	// Go Ending
+	GameState->bIsVictory = false;
+	GameState->OnReplicate_bIsVictory();
+
+	GetWorld()->ServerTravel("/Game/Maps/EndingMap?listen");
 }
 
 void UWaveManagerComponent::BeginPlay()
@@ -92,6 +129,81 @@ void UWaveManagerComponent::SetPlayer_Implementation()
 void UWaveManagerComponent::SetGameMode()
 {
 	InGameMode = Cast<AInGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+}
+
+void UWaveManagerComponent::UpdatePlayerStatForNextStage(AInGameStateBase* InGameState)
+{
+	// Player State Áý°è
+	for (APlayerState* PS : InGameState->PlayerArray)
+	{
+		APlayerStateBase* TempPlayerState = Cast<APlayerStateBase>(PS);
+		if (!TempPlayerState)
+		{
+			continue;
+		}
+
+		AInGamePlayer* Player = Cast<AInGamePlayer>(TempPlayerState->GetPawn());
+		if (!Player)
+		{
+			continue;
+		}
+
+		TempPlayerState->PlayerEarnedCoin += Player->GetEarnedCoinCnt();
+		TempPlayerState->TotalDamage += InGameMode->GetTotalDamage();
+		TempPlayerState->TotalMonsterDefeated += InGameMode->GetTotalMonsterDefeated();
+	}
+}
+
+void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
+{
+	CurrentStage++;
+
+	if (CurrentStage > MaxWaveCount)
+	{
+		InGameState->bIsVictory = true;
+		InGameState->OnReplicate_bIsVictory();
+	}
+	else
+	{
+		InGameState->CurrentStage = CurrentStage;
+		InGameState->OnReplicate_CurrentStage();
+
+		if (CurrentStage % 3 == 0)
+		{
+			// LevelUpAllPlayers(InGameState);
+		}
+
+		GetWorld()->ServerTravel("/Game/Maps/InventoryMap?listen");
+	}
+}
+
+void UWaveManagerComponent::LevelUpAllPlayers(AInGameStateBase* InGameState)
+{
+	if (!InGameState)
+	{
+		return;
+	}
+
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (!GameInstance) return;
+
+	FName RowName = FName(*FString::FromInt(CurrentStage));
+	FPlayerLevel* Row = GameInstance->GetPlayerLevelDataTable()->FindRow<FPlayerLevel>(RowName, TEXT("LevelUpAllPlayers"));
+	if (!Row) return;
+
+	for (APlayerState* PS : InGameState->PlayerArray)
+	{
+		APlayerStateBase* GodPS = Cast<APlayerStateBase>(PS);
+		if (!GodPS) continue;
+
+		GodPS->ApplyStatMultiplier(Row->Multiplier);
+
+		AInGamePlayer* Player = Cast<AInGamePlayer>(GodPS->GetPawn());
+		if (Player)
+		{
+			// Player->ClientExpandInventory();
+		}
+	}
 }
 
 
