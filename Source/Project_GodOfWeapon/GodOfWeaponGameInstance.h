@@ -73,5 +73,19 @@ protected:
 	TObjectPtr<UDataTable> PlayerLevelDataTable;
 
 public:
+	// Result
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Result Data")
+	int32 ResultStage = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Result Data")
+	int32 ResultEarnedCoin = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Result Data")
+	int32 ResultTotalDamage = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Result Data")
+	int32 ResultTotalMonsterDefeated = 0;
+
+public:
 	void ExpandInventory();
 };

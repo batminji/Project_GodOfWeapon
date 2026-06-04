@@ -50,30 +50,8 @@ void UWaveManagerComponent::GoNextStage()
 		return;
 	}
 
-	/*UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GameInstance)
-	{
-		GameInstance->UpdateStageClear(InGamePlayer->GetPlayerStat(), InGamePlayer->GetCoinCnt(), InGamePlayer->GetEarnedCoinCnt(),InGameMode->GetTotalDamage(), InGameMode->GetTotalMonsterDefeated());
-
-		CurrentStage++;
-		if (CurrentStage > MaxWaveCount)
-		{
-			GameInstance->SetIsVictory(true);
-			UGameplayStatics::OpenLevel(GetWorld(), FName("EndingMap"));
-		}
-		else
-		{
-			GameInstance->SetCurrentStage(CurrentStage);
-			if (CurrentStage % 3 == 0)
-			{
-				GameInstance->LevelUpPlayer();
-			}
-			UGameplayStatics::OpenLevel(GetWorld(), FName("InventoryMap"));
-		}
-	}*/
-
 	AInGameStateBase* GameState = Cast<AInGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
-	if (GameState)
+	if (!GameState)
 	{
 		return;
 	}
@@ -89,17 +67,8 @@ void UWaveManagerComponent::GoEnding()
 		return;
 	}
 
-	/*UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GameInstance)
-	{
-		GameInstance->UpdateStageClear(InGamePlayer->GetPlayerStat(), InGamePlayer->GetCoinCnt(), InGamePlayer->GetEarnedCoinCnt(), InGameMode->GetTotalDamage(), InGameMode->GetTotalMonsterDefeated());
-
-		GameInstance->SetIsVictory(false);
-		UGameplayStatics::OpenLevel(GetWorld(), FName("EndingMap"));
-	}*/
-
 	AInGameStateBase* GameState = Cast<AInGameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
-	if (GameState)
+	if (!GameState)
 	{
 		return;
 	}
@@ -110,6 +79,18 @@ void UWaveManagerComponent::GoEnding()
 	if (GameInstance)
 	{
 		GameInstance->SetIsVictory(false);
+		GameInstance->ResultStage = CurrentStage;
+		for (APlayerState* PS : GameState->PlayerArray)
+		{
+			APlayerStateBase* PlayerState = Cast<APlayerStateBase>(PS);
+			if (!PlayerState)
+			{
+				continue;
+			}
+			GameInstance->ResultEarnedCoin += PlayerState->PlayerEarnedCoin;
+			GameInstance->ResultTotalDamage += PlayerState->TotalDamage;
+			GameInstance->ResultTotalMonsterDefeated += PlayerState->TotalMonsterDefeated;
+		}
 	}
 
 	GetWorld()->ServerTravel("/Game/Maps/EndingMap?listen");
@@ -166,6 +147,19 @@ void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
 		if (GameInstance)
 		{
 			GameInstance->SetIsVictory(true);
+			GameInstance->ResultStage = CurrentStage;
+			for (APlayerState* PS : InGameState->PlayerArray)
+			{
+				APlayerStateBase* PlayerState = Cast<APlayerStateBase>(PS);
+				if (!PlayerState)
+				{
+					continue;
+				}
+				GameInstance->ResultEarnedCoin += PlayerState->PlayerEarnedCoin;
+				GameInstance->ResultTotalDamage += PlayerState->TotalDamage;
+				GameInstance->ResultTotalMonsterDefeated += PlayerState->TotalMonsterDefeated;
+			}
+			GetWorld()->ServerTravel("/Game/Maps/EndingMap?listen");
 		}
 	}
 	else
