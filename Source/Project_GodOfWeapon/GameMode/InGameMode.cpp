@@ -4,6 +4,8 @@
 #include "InGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "InGameStateBase.h"
+#include "../Player/PlayerStateBase.h"
 #include "../Components/WaveManagerComponent.h"
 #include "../Components/PoolManagerComponent.h"
 #include "../GodOfWeaponGameInstance.h"
@@ -11,6 +13,9 @@
 
 AInGameMode::AInGameMode()
 {
+	GameStateClass = AInGameStateBase::StaticClass();
+	PlayerStateClass = APlayerStateBase::StaticClass();
+
 	WaveManagerComp = CreateDefaultSubobject<UWaveManagerComponent>(TEXT("WaveManagerComp"));
 	PoolManagerComp = CreateDefaultSubobject<UPoolManagerComponent>(TEXT("PoolManagerComp"));
 }
