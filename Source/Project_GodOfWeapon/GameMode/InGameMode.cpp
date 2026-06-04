@@ -13,6 +13,8 @@
 
 AInGameMode::AInGameMode()
 {
+	bUseSeamlessTravel = true;
+
 	GameStateClass = AInGameStateBase::StaticClass();
 	PlayerStateClass = APlayerStateBase::StaticClass();
 
@@ -20,17 +22,47 @@ AInGameMode::AInGameMode()
 	PoolManagerComp = CreateDefaultSubobject<UPoolManagerComponent>(TEXT("PoolManagerComp"));
 }
 
+void AInGameMode::PostLogin(APlayerController* InNewPlayer)
+{
+	Super::PostLogin(InNewPlayer);
+
+	if (!GameInstance)
+	{
+		return;
+	}
+
+	APlayerStateBase* PlayerState = InNewPlayer->GetPlayerState<APlayerStateBase>();
+	if (!PlayerState)
+	{
+		return;
+	}
+
+	PlayerState->CustomData = GameInstance->GetPlayerCustomData();
+
+	AInGamePlayer* Player = Cast<AInGamePlayer>(InNewPlayer->GetPawn());
+	if (Player)
+	{
+		Player->UpdatePlayerStat(PlayerState->PlayerStat, PlayerState->PlayerCoin);
+		Player->UpdatePlayerCustom(PlayerState->CustomData);
+	}
+}
+
 void AInGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
 	Init();
-	UpdatePlayerStat();
+	// UpdatePlayerStat();
+	// Login 에서 호출할 것
 	SpawnItems();
 
 	if (WaveManagerComp)
 	{
-		WaveManagerComp->Init(GameInstance->GetCurrentStage(), GameInstance->GetLevelMultiplier(), PoolManagerComp);
+		AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
+		if (InGameState)
+		{
+			WaveManagerComp->Init(InGameState->CurrentStage, InGameState->LevelMultiplier, PoolManagerComp);
+		}
 
 		WaveManagerComp->StartGame();
 	}
@@ -48,15 +80,4 @@ void AInGameMode::BeginPlay()
 void AInGameMode::Init()
 {
 	GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	InGamePlayer = Cast<AInGamePlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-}
-
-void AInGameMode::UpdatePlayerStat()
-{
-	if (GameInstance && InGamePlayer)
-	{
-		InGamePlayer->UpdatePlayerStat(GameInstance->GetPlayerStat(), GameInstance->GetPlayerCoin());
-
-		InGamePlayer->UpdatePlayerCustom(GameInstance->GetPlayerCustomData());
-	}
 }

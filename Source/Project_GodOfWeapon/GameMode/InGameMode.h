@@ -22,6 +22,8 @@ class PROJECT_GODOFWEAPON_API AInGameMode : public AGameModeBase
 public:
 	AInGameMode();
 
+	virtual void PostLogin(APlayerController* InNewPlayer) override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWaveManagerComponent> WaveManagerComp;
 
@@ -43,9 +45,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void Init();
-
-	UFUNCTION(BlueprintCallable)
-	void UpdatePlayerStat();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
 	void SpawnItems();
