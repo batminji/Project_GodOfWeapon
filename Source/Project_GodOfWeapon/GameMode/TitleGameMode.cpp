@@ -50,10 +50,10 @@ void ATitleGameMode::HandleGameStart()
 
 void ATitleGameMode::HandleCustomFinished(FCustomData InCustomData)
 {
-	UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GI)
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
 	{
-		GI->UpdatePlayerCustomData(InCustomData);
+		GameInstance->UpdatePlayerCustomData(InCustomData);
 	}
 	RemoveWidget(CustomWidget);
 
@@ -66,7 +66,7 @@ void ATitleGameMode::HandleEntry(const FSavedItemData& InItemData, EDifficulty I
 
 	RemoveWidget(LevelSettingWidget);
 
-	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
+	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap?listen"));
 }
 
 void ATitleGameMode::CreateLevelWidget()
@@ -80,28 +80,28 @@ void ATitleGameMode::CreateLevelWidget()
 
 void ATitleGameMode::UpdateItemAndLevel(const FSavedItemData& InItemData, const EDifficulty InDifficulty)
 {
-	UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GI)
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
 	{
-		GI->GetInventoryData().Add(InItemData);
+		GameInstance->GetInventoryData().Add(InItemData);
 
-		GI->SetDifficulty(InDifficulty);
+		GameInstance->SetDifficulty(InDifficulty);
 
 		switch (InDifficulty)
 		{
 		case EDifficulty::Easy:
 		{
-			GI->SetLevelMultiplier(0.8f);
+			GameInstance->SetLevelMultiplier(0.8f);
 			break;
 		}
 		case EDifficulty::Normal:
 		{
-			GI->SetLevelMultiplier(1.0f);
+			GameInstance->SetLevelMultiplier(1.0f);
 			break;
 		}
 		case EDifficulty::Hard:
 		{
-			GI->SetLevelMultiplier(1.5f);
+			GameInstance->SetLevelMultiplier(1.5f);
 			break;
 		}
 		default:

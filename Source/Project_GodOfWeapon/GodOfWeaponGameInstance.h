@@ -33,10 +33,17 @@ public:
 
 	UDataTable* GetPlayerLevelDataTable() const { return PlayerLevelDataTable; }
 
+	float GetLevelMultiplier() const { return LevelMultiplier; }
+
 	// Setters
 	void SetDifficulty(const EDifficulty InDifficulty) { Difficulty = InDifficulty; }
 
+	void SetLevelMultiplier(const float InMultiplier) { LevelMultiplier = InMultiplier; }
+
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
+	float LevelMultiplier = 0.0f;
+
 	// Player Data
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Data")
 	FCustomData PlayerCustomData;

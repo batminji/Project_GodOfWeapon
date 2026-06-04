@@ -56,9 +56,15 @@ void AInGameMode::BeginPlay()
 	// Login 에서 호출할 것
 	SpawnItems();
 
+	AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
+	if (InGameState && GameInstance)
+	{
+		InGameState->LevelMultiplier = GameInstance->GetLevelMultiplier();
+	}
+
 	if (WaveManagerComp)
 	{
-		AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
+		
 		if (InGameState)
 		{
 			WaveManagerComp->Init(InGameState->CurrentStage, InGameState->LevelMultiplier, PoolManagerComp);

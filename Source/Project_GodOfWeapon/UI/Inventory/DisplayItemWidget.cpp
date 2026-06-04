@@ -13,9 +13,7 @@
 #include "Blueprint/DragDropOperation.h"
 #include "../../Controller/InventoryController.h"
 #include "../../Components/InventoryComponent.h"
-
-#include "../../GodOfWeaponGameInstance.h"
-#include "Kismet/GameplayStatics.h"
+#include "../../Player/PlayerStateBase.h"
 
 void UDisplayItemWidget::InitializeItem(const FItemData& InItemData)
 {
@@ -115,11 +113,24 @@ void UDisplayItemWidget::UpdateIconDisplay()
 
 bool UDisplayItemWidget::IsCanBuy() const
 {
-	if (UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
+	/*if (UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
 	{
 		return GI->HasEnoughCoin(ItemData.Price);
 	}
-	return false;
+	return false;*/
+
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (!PlayerController)
+	{
+		return false;
+	}
+	APlayerStateBase* PlayerState = PlayerController->GetPlayerState<APlayerStateBase>();
+	if (!PlayerState)
+	{
+		return false;
+	}
+
+	return PlayerState->HasEnoughCoin(ItemData.Price);
 }
 
 UItemWidget* UDisplayItemWidget::CreateDragVisualWidget()
