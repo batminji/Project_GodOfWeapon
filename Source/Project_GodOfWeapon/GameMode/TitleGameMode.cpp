@@ -4,108 +4,19 @@
 #include "TitleGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "../Controller/TitleController.h"
-#include "../UI/Title/TitleWidget.h"
-#include "../UI/Custom/CustomWidget.h"
-#include "../UI/Custom/LevelSettingWidget.h"
-#include "../GodOfWeaponGameInstance.h"
 
 void ATitleGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
-	APlayerController* PlayerController =
-		UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	TitleController = Cast<ATitleController>(PlayerController);
-
-	if (TitleController)
-	{
-		TitleController->OnCameraMoveFinished.AddDynamic(this, &ATitleGameMode::HandleMoveCameraEnded);
-	}
-
-	TitleWidget = CreateAndShowWidget<UTitleWidget>(TitleWidgetClass);
-	if (TitleWidget)
-	{
-		TitleWidget->OnGameStart.AddDynamic(this, &ATitleGameMode::HandleGameStart);
-	}
 }
 
-void ATitleGameMode::HandleMoveCameraEnded()
+void ATitleGameMode::PostLogin(APlayerController* NewPlayer)
 {
-	CustomWidget = CreateAndShowWidget<UCustomWidget>(CustomWidgetClass);
-	if (CustomWidget)
-	{
-		CustomWidget->OnCustomFinished.AddDynamic(this, &ATitleGameMode::HandleCustomFinished);
-	}
-}
+    Super::PostLogin(NewPlayer);
 
-void ATitleGameMode::HandleGameStart()
-{
-	RemoveWidget(TitleWidget);
-
-	if (TitleController)
-	{
-		TitleController->MoveCamera();
-	}
-}
-
-void ATitleGameMode::HandleCustomFinished(FCustomData InCustomData)
-{
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GameInstance)
-	{
-		GameInstance->UpdatePlayerCustomData(InCustomData);
-	}
-	RemoveWidget(CustomWidget);
-
-	CreateLevelWidget();
-}
-
-void ATitleGameMode::HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty)
-{
-	UpdateItemAndLevel(InItemData, InDifficulty);
-
-	RemoveWidget(LevelSettingWidget);
-
-	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap?listen"));
-}
-
-void ATitleGameMode::CreateLevelWidget()
-{
-	LevelSettingWidget = CreateAndShowWidget<ULevelSettingWidget>(LevelSettingWidgetClass);
-	if (LevelSettingWidget)
-	{
-		LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleGameMode::HandleEntry);
-	}
-}
-
-void ATitleGameMode::UpdateItemAndLevel(const FSavedItemData& InItemData, const EDifficulty InDifficulty)
-{
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GameInstance)
-	{
-		GameInstance->GetInventoryData().Add(InItemData);
-
-		GameInstance->SetDifficulty(InDifficulty);
-
-		switch (InDifficulty)
-		{
-		case EDifficulty::Easy:
-		{
-			GameInstance->SetLevelMultiplier(0.8f);
-			break;
-		}
-		case EDifficulty::Normal:
-		{
-			GameInstance->SetLevelMultiplier(1.0f);
-			break;
-		}
-		case EDifficulty::Hard:
-		{
-			GameInstance->SetLevelMultiplier(1.5f);
-			break;
-		}
-		default:
-			break;
-		}
-	}
+    ATitleController* TitleController = Cast<ATitleController>(NewPlayer);
+    if (TitleController)
+    {
+        TitleController->ClientShowTitleUI();
+    }
 }

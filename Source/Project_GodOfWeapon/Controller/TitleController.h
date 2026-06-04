@@ -4,9 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "../Structs/PlayerStructs.h"
+#include "../Structs/ItemStructs.h"
+#include "../Enums/StageEnums.h"
 #include "TitleController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCameraMoveFinishedSignature);
+class UTitleWidget;
+class UCustomWidget;
+class ULevelSettingWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ATitleController : public APlayerController
@@ -19,14 +24,85 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MoveCamera();
 
-	UPROPERTY(BlueprintAssignable)
-	FOnCameraMoveFinishedSignature OnCameraMoveFinished;
-
 	UFUNCTION(BlueprintCallable)
 	void CallCameraMoveFinished();
 
+	UFUNCTION(Client, Reliable)
+	void ClientShowTitleUI();
+
+	UFUNCTION(Client, Reliable)
+	void ClientShowCustomUI();
+
+	UFUNCTION(Client, Reliable)
+	void ClientShowLevelSettingUI();
+
+	UFUNCTION(Client, Reliable)
+	void ClientRemoveTitleUI();
+
+	UFUNCTION(Client, Reliable)
+	void ClientRemoveCustomUI();
+
+	UFUNCTION(Client, Reliable)
+	void ClientRemoveLevelSettingUI();
+
+	UFUNCTION(Server, Reliable)
+	void ServerRequestStartGame();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+	TSubclassOf<UTitleWidget> TitleWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+	TSubclassOf<UCustomWidget> CustomWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+	TSubclassOf<ULevelSettingWidget> LevelSettingWidgetClass;
+
 private:
+	UPROPERTY()
+	TObjectPtr<UTitleWidget> TitleWidget;
+
+	UPROPERTY()
+	TObjectPtr<UCustomWidget> CustomWidget;
+
+	UPROPERTY()
+	TObjectPtr<ULevelSettingWidget> LevelSettingWidget;
+
 	class AActor* GetCameraByTag(const FName& InTag);
 
 	void OnTimerDelayEnded();
+
+	UFUNCTION()
+	void HandleGameStart();
+
+	UFUNCTION()
+	void HandleCustomFinished(FCustomData InCustomData);
+
+	UFUNCTION()
+	void HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+
+private:
+	template <typename T>
+	T* CreateAndShowWidget(TSubclassOf<T> WidgetClass)
+	{
+		if (!WidgetClass)
+		{
+			return nullptr;
+		}
+		if (T* CreatedWidget = CreateWidget<T>(this, WidgetClass))
+		{
+			CreatedWidget->AddToViewport();
+			return CreatedWidget;
+		}
+		return nullptr;
+	}
+
+	template <typename T>
+	void RemoveWidget(TObjectPtr<T>& InWidget)
+	{
+		if (InWidget)
+		{
+			InWidget->RemoveFromParent();
+			InWidget = nullptr;
+		}
+	}
 };

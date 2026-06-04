@@ -5,10 +5,20 @@
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraActor.h"
 #include "TimerManager.h"
+#include "../UI/Title/TitleWidget.h"
+#include "../UI/Custom/CustomWidget.h"
+#include "../UI/Custom/LevelSettingWidget.h"
+#include "../GameMode/TitleGameMode.h"
+#include "../GodOfWeaponGameInstance.h"
 
 void ATitleController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!IsLocalController())
+	{
+		return;
+	}
 
 	AActor* TitleCamera = GetCameraByTag(TEXT("TitleCamera"));
 	if (TitleCamera)
@@ -34,10 +44,54 @@ void ATitleController::MoveCamera()
 
 void ATitleController::CallCameraMoveFinished()
 {
-	if(OnCameraMoveFinished.IsBound())
+	ClientShowCustomUI();
+}
+
+void ATitleController::ClientShowTitleUI_Implementation()
+{
+	TitleWidget = CreateAndShowWidget<UTitleWidget>(TitleWidgetClass);
+	if (TitleWidget)
 	{
-		OnCameraMoveFinished.Broadcast();
+		TitleWidget->OnGameStart.AddDynamic(this, &ATitleController::HandleGameStart);
 	}
+}
+
+void ATitleController::ClientShowCustomUI_Implementation()
+{
+	CustomWidget = CreateAndShowWidget<UCustomWidget>(CustomWidgetClass);
+	if (CustomWidget)
+	{
+		CustomWidget->OnCustomFinished.AddDynamic(this, &ATitleController::HandleCustomFinished);
+	}
+}
+
+void ATitleController::ClientShowLevelSettingUI_Implementation()
+{
+	LevelSettingWidget = CreateAndShowWidget<ULevelSettingWidget>(LevelSettingWidgetClass);
+	if (LevelSettingWidget)
+	{
+		LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleController::HandleEntry);
+	}
+}
+
+void ATitleController::ClientRemoveTitleUI_Implementation()
+{
+	RemoveWidget(TitleWidget);
+}
+
+void ATitleController::ClientRemoveCustomUI_Implementation()
+{
+	RemoveWidget(CustomWidget);
+}
+
+void ATitleController::ClientRemoveLevelSettingUI_Implementation()
+{
+	RemoveWidget(LevelSettingWidget);
+}
+
+void ATitleController::ServerRequestStartGame_Implementation()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap?listen"));
 }
 
 AActor* ATitleController::GetCameraByTag(const FName& InTag)
@@ -59,4 +113,54 @@ AActor* ATitleController::GetCameraByTag(const FName& InTag)
 void ATitleController::OnTimerDelayEnded()
 {
 	CallCameraMoveFinished();
+}
+
+void ATitleController::HandleGameStart()
+{
+	ClientRemoveTitleUI();
+	MoveCamera();
+}
+
+void ATitleController::HandleCustomFinished(FCustomData InCustomData)
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->UpdatePlayerCustomData(InCustomData);
+	}
+	ClientRemoveCustomUI();
+	ClientShowLevelSettingUI();
+}
+
+void ATitleController::HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty)
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->GetInventoryData().Add(InItemData);
+		GameInstance->SetDifficulty(InDifficulty);
+		switch (InDifficulty)
+		{
+		case EDifficulty::Easy:
+		{
+			GameInstance->SetLevelMultiplier(0.8f);
+		}
+		break;
+		case EDifficulty::Normal:
+		{
+			GameInstance->SetLevelMultiplier(1.0f);
+		}
+		break;
+		case EDifficulty::Hard:
+		{
+			GameInstance->SetLevelMultiplier(1.5f);
+		}
+		break;
+		default: 
+			break;
+		}
+	}
+	ClientRemoveLevelSettingUI();
+
+	ServerRequestStartGame();
 }
