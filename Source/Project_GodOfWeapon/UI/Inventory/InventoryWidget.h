@@ -16,7 +16,7 @@ class UPanelWidget;
 class UDataTable;
 class UOverlay;
 
-class UGodOfWeaponGameInstance;
+class APlayerStateBase;
 class AInventoryController;
 class UInventoryComponent;
 
@@ -74,7 +74,7 @@ protected:
 
 	TArray<UOverlay*> ItemSlots;
 
-	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
+	TObjectPtr<APlayerStateBase> PlayerState;
 	TObjectPtr<AInventoryController> InventoryController;
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 

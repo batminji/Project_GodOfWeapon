@@ -9,7 +9,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 
-#include "Project_GodOfWeapon/GodOfWeaponGameInstance.h"
+#include "../../Player/PlayerStateBase.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "../../Controller/InventoryController.h"
@@ -17,26 +17,28 @@
 
 void UInventoryWidget::OnNextStageClicked()
 {
-	InventoryController = Cast<AInventoryController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	InventoryComponent = InventoryController ? InventoryController->InventoryComponent : nullptr;
-
+    InventoryController = Cast<AInventoryController>(GetOwningPlayer());
+    if (InventoryController)
+    {
+        return;
+    }
+    InventoryComponent = InventoryController->InventoryComponent;
     if (InventoryComponent)
     {
-        InventoryComponent->SaveInventoryToGameInstance();
+        return;
+    }
 
-		// Load the next level
-        // UGameplayStatics::OpenLevel(GetWorld(), FName("TestMap"));
-        UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
-	}
+    InventoryComponent->SaveInventoryToGameInstance();
+    InventoryController->ServerRequestNextStage();
 }
 
 void UInventoryWidget::SpawnItem(bool bIsReroll)
 {
     if (bIsReroll)
     {
-        if (GameInstance && GameInstance->GetPlayerCoin() >= 5)
+        if (PlayerState && PlayerState->GetPlayerCoin() >= 5)
         {
-            GameInstance->DeductCoin(5);
+            PlayerState->DeductCoin(5);
         }
         else
         {
@@ -73,7 +75,7 @@ void UInventoryWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-    GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+    PlayerState = GetOwningPlayer()->GetPlayerState<APlayerStateBase>();
 
     if (NextStageButton)
     {
@@ -99,9 +101,9 @@ void UInventoryWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 
 void UInventoryWidget::UpdatePlayerGoldText()
 {
-    if (GameInstance)
+    if (PlayerState)
     {
-        FText GoldText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(GameInstance->GetPlayerCoin()));
+        FText GoldText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(PlayerState->GetPlayerCoin()));
         PlayerGoldText->SetText(GoldText);
     }
 }

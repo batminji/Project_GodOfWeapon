@@ -7,7 +7,7 @@
 #include "PlayerStatWidget.generated.h"
 
 class UTextBlock;
-class UGodOfWeaponGameInstance;
+class APlayerStateBase;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UPlayerStatWidget : public UUserWidget
@@ -45,5 +45,5 @@ protected:
 
 	void UpdatePlayerStat();
 
-	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
+	TObjectPtr<APlayerStateBase> PlayerState;
 };
