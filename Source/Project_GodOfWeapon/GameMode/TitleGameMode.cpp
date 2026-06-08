@@ -9,14 +9,3 @@ void ATitleGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
-void ATitleGameMode::PostLogin(APlayerController* NewPlayer)
-{
-    Super::PostLogin(NewPlayer);
-
-    ATitleController* TitleController = Cast<ATitleController>(NewPlayer);
-    if (TitleController)
-    {
-        TitleController->ClientShowTitleUI();
-    }
-}

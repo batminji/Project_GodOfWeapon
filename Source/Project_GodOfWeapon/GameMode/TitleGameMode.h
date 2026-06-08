@@ -13,5 +13,4 @@ class PROJECT_GODOFWEAPON_API ATitleGameMode : public AGameModeBase
 	
 protected:
 	virtual void BeginPlay() override;
-	virtual void PostLogin(APlayerController* NewPlayer) override;
 };

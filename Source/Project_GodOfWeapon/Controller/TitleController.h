@@ -27,26 +27,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CallCameraMoveFinished();
 
-	UFUNCTION(Client, Reliable)
-	void ClientShowTitleUI();
+	void ShowTitleUI();
 
-	UFUNCTION(Client, Reliable)
-	void ClientShowCustomUI();
+	void ShowCustomUI();
 
-	UFUNCTION(Client, Reliable)
-	void ClientShowLevelSettingUI();
+	void ShowLevelSettingUI();
 
-	UFUNCTION(Client, Reliable)
-	void ClientRemoveTitleUI();
+	void RemoveTitleUI();
 
-	UFUNCTION(Client, Reliable)
-	void ClientRemoveCustomUI();
+	void RemoveCustomUI();
 
-	UFUNCTION(Client, Reliable)
-	void ClientRemoveLevelSettingUI();
+	void RemoveLevelSettingUI();
 
-	UFUNCTION(Server, Reliable)
-	void ServerRequestStartGame();
+	void RequestStartGame();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Widget")
 	TSubclassOf<UTitleWidget> TitleWidgetClass;

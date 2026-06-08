@@ -26,8 +26,7 @@ void ATitleController::BeginPlay()
 		SetViewTarget(TitleCamera);
 	}
 
-	SetInputMode(FInputModeUIOnly());
-	bShowMouseCursor = true;
+	ShowTitleUI();
 }
 
 void ATitleController::MoveCamera()
@@ -44,54 +43,68 @@ void ATitleController::MoveCamera()
 
 void ATitleController::CallCameraMoveFinished()
 {
-	ClientShowCustomUI();
+	ShowCustomUI();
 }
 
-void ATitleController::ClientShowTitleUI_Implementation()
+void ATitleController::ShowTitleUI()
 {
-	TitleWidget = CreateAndShowWidget<UTitleWidget>(TitleWidgetClass);
-	if (TitleWidget)
+	if (TitleWidgetClass)
 	{
-		TitleWidget->OnGameStart.AddDynamic(this, &ATitleController::HandleGameStart);
+		TitleWidget = CreateAndShowWidget<UTitleWidget>(TitleWidgetClass);
+		if (TitleWidget)
+		{
+			TitleWidget->OnGameStart.AddDynamic(this, &ATitleController::HandleGameStart);
+
+			SetInputMode(FInputModeUIOnly());
+			bShowMouseCursor = true;
+		}
 	}
 }
 
-void ATitleController::ClientShowCustomUI_Implementation()
+void ATitleController::ShowCustomUI()
 {
-	CustomWidget = CreateAndShowWidget<UCustomWidget>(CustomWidgetClass);
-	if (CustomWidget)
+	if (CustomWidgetClass)
 	{
-		CustomWidget->OnCustomFinished.AddDynamic(this, &ATitleController::HandleCustomFinished);
+		CustomWidget = CreateAndShowWidget<UCustomWidget>(CustomWidgetClass);
+		if (CustomWidget)
+		{
+			CustomWidget->OnCustomFinished.AddDynamic(this, &ATitleController::HandleCustomFinished);
+		}
 	}
 }
 
-void ATitleController::ClientShowLevelSettingUI_Implementation()
+void ATitleController::ShowLevelSettingUI()
 {
-	LevelSettingWidget = CreateAndShowWidget<ULevelSettingWidget>(LevelSettingWidgetClass);
-	if (LevelSettingWidget)
+	if (LevelSettingWidgetClass)
 	{
-		LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleController::HandleEntry);
+
+		LevelSettingWidget = CreateAndShowWidget<ULevelSettingWidget>(LevelSettingWidgetClass);
+		if (LevelSettingWidget)
+		{
+			LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleController::HandleEntry);
+		}
 	}
 }
 
-void ATitleController::ClientRemoveTitleUI_Implementation()
+void ATitleController::RemoveTitleUI()
 {
 	RemoveWidget(TitleWidget);
 }
 
-void ATitleController::ClientRemoveCustomUI_Implementation()
+void ATitleController::RemoveCustomUI()
 {
 	RemoveWidget(CustomWidget);
 }
 
-void ATitleController::ClientRemoveLevelSettingUI_Implementation()
+void ATitleController::RemoveLevelSettingUI()
 {
 	RemoveWidget(LevelSettingWidget);
 }
 
-void ATitleController::ServerRequestStartGame_Implementation()
+void ATitleController::RequestStartGame()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap?listen"));
+	// 추후 Lobby Map으로 변경
+	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
 }
 
 AActor* ATitleController::GetCameraByTag(const FName& InTag)
@@ -117,7 +130,7 @@ void ATitleController::OnTimerDelayEnded()
 
 void ATitleController::HandleGameStart()
 {
-	ClientRemoveTitleUI();
+	RemoveTitleUI();
 	MoveCamera();
 }
 
@@ -128,8 +141,11 @@ void ATitleController::HandleCustomFinished(FCustomData InCustomData)
 	{
 		GameInstance->UpdatePlayerCustomData(InCustomData);
 	}
-	ClientRemoveCustomUI();
-	ClientShowLevelSettingUI();
+	RemoveCustomUI();
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
+
+	// ShowLevelSettingUI();
 }
 
 void ATitleController::HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty)
@@ -160,7 +176,7 @@ void ATitleController::HandleEntry(const FSavedItemData& InItemData, EDifficulty
 			break;
 		}
 	}
-	ClientRemoveLevelSettingUI();
+	RemoveLevelSettingUI();
 
-	ServerRequestStartGame();
+	RequestStartGame();
 }
