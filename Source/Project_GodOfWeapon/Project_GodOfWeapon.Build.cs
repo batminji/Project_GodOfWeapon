@@ -13,7 +13,7 @@ public class Project_GodOfWeapon : ModuleRules
 			"Slate", "SlateCore", "UMG" , 
 			"EnhancedInput", 
 			"Niagara",
-			"OnlineSubsystem", "OnlineSubsystemUtils"});
+			"OnlineSubsystem", "OnlineSubsystemNull", "OnlineSubsystemUtils"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

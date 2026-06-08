@@ -4,10 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "Enums/StageEnums.h"
 #include "Structs/PlayerStructs.h"
 #include "Structs/ItemStructs.h"
 #include "GodOfWeaponGameInstance.generated.h"
+
+class FOnlineSessionSearch;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionSearchCompleted, bool, bSuccess);
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UGodOfWeaponGameInstance : public UGameInstance
@@ -15,10 +20,19 @@ class PROJECT_GODOFWEAPON_API UGodOfWeaponGameInstance : public UGameInstance
 	GENERATED_BODY()
 	
 public:
-	UGodOfWeaponGameInstance();
+	virtual void Init() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void UpdatePlayerCustomData(const FCustomData& InCustomData);
+
+	// Session
+	void CreateServerSession(FName SessionName, int32 MaxPlayers);
+	void FindServerSessions();
+
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSessionSearchCompleted OnSessionSearchCompleted;
 
 	// Gettters
 	TArray<FSavedItemData>& GetInventoryData() { return InventoryData; }
@@ -45,6 +59,12 @@ public:
 	void SetIsVictory(const bool bInIsVictory) { bIsVictory = bInIsVictory; }
 
 protected:
+	// Session
+	IOnlineSessionPtr SessionInterface;
+
+	void OnCreateSessionComplete(FName SessionName, bool bSuccess);
+	void OnFindSessionsComplete(bool bSuccess);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stage Data")
 	float LevelMultiplier = 0.0f;
 

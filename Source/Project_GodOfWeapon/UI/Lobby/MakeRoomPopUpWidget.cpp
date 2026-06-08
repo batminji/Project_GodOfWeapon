@@ -4,6 +4,7 @@
 #include "MakeRoomPopUpWidget.h"
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
+#include "../../GodOfWeaponGameInstance.h"
 
 void UMakeRoomPopUpWidget::NativeConstruct()
 {
@@ -20,8 +21,19 @@ void UMakeRoomPopUpWidget::NativeConstruct()
 
 void UMakeRoomPopUpWidget::OnCancleButtonClicked()
 {
+	RemoveFromParent();
 }
 
 void UMakeRoomPopUpWidget::OnConfirmButtonClicked()
 {
+	FName RoomName = FName(*RoomNameEditableText->GetText().ToString());
+
+	int32 MaxPlayers = FCString::Atoi(*NumOfPeopleEditableText->GetText().ToString());
+
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		RemoveFromParent();
+		GameInstance->CreateServerSession(RoomName, MaxPlayers);
+	}
 }

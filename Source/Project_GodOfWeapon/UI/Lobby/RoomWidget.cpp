@@ -15,6 +15,20 @@ void URoomWidget::NativeConstruct()
 	}
 }
 
+void URoomWidget::SetRoomInfo(const FString& InRoomName, int32 InCurrentPlayers, int32 InMaxPlayers)
+{
+	if (RoomNameTextBox)
+	{
+		RoomNameTextBox->SetText(FText::FromString(InRoomName));
+	}
+
+	if (RoomNumOfPeopleTextBox)
+	{
+		FString PeopleString = FString::Printf(TEXT("%d/%d"), InCurrentPlayers, InMaxPlayers);
+		RoomNumOfPeopleTextBox->SetText(FText::FromString(PeopleString));
+	}
+}
+
 void URoomWidget::OnJoinClicked()
 {
 }

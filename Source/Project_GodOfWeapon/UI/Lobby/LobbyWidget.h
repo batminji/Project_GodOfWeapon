@@ -8,6 +8,8 @@
 
 class UButton;
 class UWrapBox;
+class URoomWidget;
+class UMakeRoomPopUpWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ULobbyWidget : public UUserWidget
@@ -29,8 +31,14 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWrapBox> RoomWrapBox;
 
-	// UFUNCTION()
-	// void UpdateRoomList();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby")
+	TSubclassOf<URoomWidget> RoomWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby")
+	TSubclassOf<UMakeRoomPopUpWidget> MakeRoomPopUpWidgetClass;
+
+	UFUNCTION()
+	void UpdateRoomList(bool bSuccess);
 
 	void OnMakeRoomClicked();
 	void OnSingleGameClicked();

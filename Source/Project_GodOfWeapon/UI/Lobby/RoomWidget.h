@@ -17,6 +17,8 @@ class PROJECT_GODOFWEAPON_API URoomWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
+	void SetRoomInfo(const FString& InRoomName, int32 InCurrentPlayers, int32 InMaxPlayers);
+
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> RoomNameTextBox;
 
