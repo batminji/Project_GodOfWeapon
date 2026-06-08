@@ -33,7 +33,8 @@ void UMakeRoomPopUpWidget::OnConfirmButtonClicked()
 	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
-		RemoveFromParent();
 		GameInstance->CreateServerSession(RoomName, MaxPlayers);
 	}
+
+	RemoveFromParent();
 }

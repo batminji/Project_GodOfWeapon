@@ -104,7 +104,7 @@ void ATitleController::RemoveLevelSettingUI()
 void ATitleController::RequestStartGame()
 {
 	// 추후 Lobby Map으로 변경
-	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
+	UGameplayStatics::OpenLevel(GetWorld(), FName("LobbyMap"));
 }
 
 AActor* ATitleController::GetCameraByTag(const FName& InTag)
@@ -143,7 +143,7 @@ void ATitleController::HandleCustomFinished(FCustomData InCustomData)
 	}
 	RemoveCustomUI();
 
-	UGameplayStatics::OpenLevel(GetWorld(), FName("InGameMap"));
+	UGameplayStatics::OpenLevel(GetWorld(), FName("LobbyMap"));
 
 	// ShowLevelSettingUI();
 }

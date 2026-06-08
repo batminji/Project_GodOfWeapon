@@ -28,6 +28,13 @@ void ULobbyWidget::NativeConstruct()
 	{
 		RefreshButton->OnClicked.AddDynamic(this, &ULobbyWidget::OnRefreshClicked);
 	}
+
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->OnSessionSearchCompleted.RemoveDynamic(this, &ULobbyWidget::UpdateRoomList);
+		GameInstance->OnSessionSearchCompleted.AddDynamic(this, &ULobbyWidget::UpdateRoomList);
+	}
 }
 
 void ULobbyWidget::UpdateRoomList(bool bSuccess)
@@ -56,6 +63,7 @@ void ULobbyWidget::UpdateRoomList(bool bSuccess)
 				int32 CurrentPlayers = Result.Session.SessionSettings.NumPublicConnections - Result.Session.NumOpenPublicConnections;
 				int32 MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
 
+				UE_LOG(LogTemp, Log, TEXT("Found session: %s, Current Players: %d, Max Players: %d"), *RoomNameStr, CurrentPlayers, MaxPlayers);
 				RoomWidget->SetRoomInfo(RoomNameStr, CurrentPlayers, MaxPlayers);
 
 				RoomWrapBox->AddChildToWrapBox(RoomWidget);
@@ -69,7 +77,7 @@ void ULobbyWidget::OnMakeRoomClicked()
 	if (MakeRoomPopUpWidgetClass)
 	{
 		UMakeRoomPopUpWidget* MakeRoomPopUp = CreateWidget<UMakeRoomPopUpWidget>(this, MakeRoomPopUpWidgetClass);
-		if(MakeRoomPopUp)
+		if (MakeRoomPopUp)
 		{
 			MakeRoomPopUp->AddToViewport();
 		}

@@ -40,7 +40,12 @@ public:
 	UFUNCTION()
 	void UpdateRoomList(bool bSuccess);
 
+	UFUNCTION()
 	void OnMakeRoomClicked();
+
+	UFUNCTION()
 	void OnSingleGameClicked();
+
+	UFUNCTION()
 	void OnRefreshClicked();
 };

@@ -28,5 +28,6 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> JoinButton;
 
+	UFUNCTION()
 	void OnJoinClicked();
 };

@@ -29,6 +29,9 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> ConfirmButton;
 
+	UFUNCTION()
 	void OnCancleButtonClicked();
+
+	UFUNCTION()
 	void OnConfirmButtonClicked();
 };
