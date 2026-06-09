@@ -14,6 +14,7 @@ class PROJECT_GODOFWEAPON_API ARoomController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	ARoomController();
 	virtual void BeginPlay() override;
 
 protected:
@@ -21,4 +22,6 @@ protected:
 	TSubclassOf<class URoomHUDWidget> RoomHUDWidgetClass;
 
 	void ShowRoomHUD();
+
+	class AActor* GetCameraByTag(const FName& InTag);
 };

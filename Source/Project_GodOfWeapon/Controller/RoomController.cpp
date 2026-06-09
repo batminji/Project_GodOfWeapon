@@ -2,16 +2,31 @@
 
 
 #include "RoomController.h"
+#include "Kismet/GameplayStatics.h"
 #include "../UI/Room/RoomHUDWidget.h"
+#include "Camera/CameraActor.h"
+
+ARoomController::ARoomController()
+{
+	bAutoManageActiveCameraTarget = false;
+}
 
 void ARoomController::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if(IsLocalController())
+
+	AActor* MainCamera = GetCameraByTag(TEXT("MainCamera"));
+	if (MainCamera)
 	{
-		ShowRoomHUD();
+		SetViewTarget(MainCamera);
 	}
+	
+	if(!IsLocalController())
+	{
+		return;
+	}
+
+	ShowRoomHUD();
 }
 
 void ARoomController::ShowRoomHUD()
@@ -26,4 +41,20 @@ void ARoomController::ShowRoomHUD()
 			bShowMouseCursor = true;
 		}
 	}
+}
+
+AActor* ARoomController::GetCameraByTag(const FName& InTag)
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundActors);
+
+	for (AActor* Actor : FoundActors)
+	{
+		if (Actor->ActorHasTag(InTag))
+		{
+			return Actor;
+		}
+	}
+
+	return nullptr;
 }
