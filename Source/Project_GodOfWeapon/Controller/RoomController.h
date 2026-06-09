@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "../Structs/PlayerStructs.h"
 #include "RoomController.generated.h"
 
 class URoomHUDWidget;
@@ -15,7 +16,11 @@ class PROJECT_GODOFWEAPON_API ARoomController : public APlayerController
 	
 public:
 	ARoomController();
+
 	virtual void BeginPlay() override;
+
+	UFUNCTION(Server, Reliable)
+	void ServerSendCustomData(const FCustomData& InCustomData);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")

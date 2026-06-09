@@ -9,6 +9,8 @@
 #include "Structs/ItemStructs.h"
 #include "GodOfWeaponGameInstance.generated.h"
 
+class UDataTable;
+
 UCLASS()
 class PROJECT_GODOFWEAPON_API UGodOfWeaponGameInstance : public UGameInstance
 {

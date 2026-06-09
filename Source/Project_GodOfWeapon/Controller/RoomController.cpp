@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "../UI/Room/RoomHUDWidget.h"
 #include "Camera/CameraActor.h"
+#include "../Player/RoomCharacter.h"
+#include "../GodOfWeaponGameInstance.h"
 
 ARoomController::ARoomController()
 {
@@ -27,6 +29,23 @@ void ARoomController::BeginPlay()
 	}
 
 	ShowRoomHUD();
+
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if(GameInstance)
+	{
+		FCustomData CustomData = GameInstance->GetPlayerCustomData();
+		ServerSendCustomData(CustomData);
+	}
+}
+
+void ARoomController::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
+{
+	ARoomCharacter* RoomCharacter = Cast<ARoomCharacter>(GetPawn());
+
+	if (RoomCharacter)
+	{
+		RoomCharacter->UpdatePlayerCustom(InCustomData);
+	}
 }
 
 void ARoomController::ShowRoomHUD()
