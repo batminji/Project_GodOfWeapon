@@ -34,6 +34,8 @@ void ARoomController::BeginPlay()
 	if(GameInstance)
 	{
 		FCustomData CustomData = GameInstance->GetPlayerCustomData();
+		UE_LOG(LogTemp, Log, TEXT("Player Custom Data - Head: %d, Chest: %d, Hands: %d, Legs: %d, Foot: %d"), 
+			CustomData.HeadNumber, CustomData.ChestNumber, CustomData.HandsNumber, CustomData.LegsNumber, CustomData.FootNumber);
 		ServerSendCustomData(CustomData);
 	}
 }

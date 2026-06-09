@@ -32,7 +32,7 @@ void ARoomGameMode::PostLogin(APlayerController* NewPlayer)
 		ARoomCharacter* NewRoomCharacter = GetWorld()->SpawnActor<ARoomCharacter>(RoomCharacterClass, SpawnLocation, SpawnRotation, SpawnParams);
 		if(NewRoomCharacter)
 		{
-			NewPlayer->Possess(NewRoomCharacter);
+			// NewPlayer->Possess(NewRoomCharacter);
 		}
 	}
 }
