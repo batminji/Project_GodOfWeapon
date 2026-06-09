@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "FindSessionsCallbackProxy.h"
 #include "LobbyWidget.generated.h"
 
 class UButton;
@@ -19,33 +20,36 @@ class PROJECT_GODOFWEAPON_API ULobbyWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(meta = (BindWidget))
+	virtual bool Initialize() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UButton> MakeRoomButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UButton> SingleGameButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UButton> RefreshButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UWrapBox> RoomWrapBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby")
-	TSubclassOf<URoomWidget> RoomWidgetClass;
+	TSubclassOf<URoomWidget> SessionItemWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby")
 	TSubclassOf<UMakeRoomPopUpWidget> MakeRoomPopUpWidgetClass;
 
-	UFUNCTION()
-	void UpdateRoomList(bool bSuccess);
+	UFUNCTION(BlueprintCallable)
+	void SetInfo();
 
-	UFUNCTION()
-	void OnMakeRoomClicked();
+	UFUNCTION(BlueprintCallable)
+	void RefreshList();
 
-	UFUNCTION()
-	void OnSingleGameClicked();
+protected:
+	UPROPERTY(BlueprintReadWrite)
+	TArray<TObjectPtr<URoomWidget>> SessionItemWidgets;
 
-	UFUNCTION()
-	void OnRefreshClicked();
+	UPROPERTY(BlueprintReadWrite)
+	TArray<FBlueprintSessionResult> SessionResults;
 };

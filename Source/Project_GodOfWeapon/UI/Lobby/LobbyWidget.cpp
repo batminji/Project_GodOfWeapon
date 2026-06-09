@@ -6,95 +6,65 @@
 #include "Components/WrapBox.h"
 #include "RoomWidget.h"
 #include "MakeRoomPopUpWidget.h"
-#include "OnlineSessionSettings.h"
-#include "Interfaces/OnlineSessionInterface.h"
-#include "../../GodOfWeaponGameInstance.h"
 
 void ULobbyWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if (MakeRoomButton)
-	{
-		MakeRoomButton->OnClicked.AddDynamic(this, &ULobbyWidget::OnMakeRoomClicked);
-	}
-
-	if(SingleGameButton)
-	{
-		SingleGameButton->OnClicked.AddDynamic(this, &ULobbyWidget::OnSingleGameClicked);
-	}
-
-	if(RefreshButton)
-	{
-		RefreshButton->OnClicked.AddDynamic(this, &ULobbyWidget::OnRefreshClicked);
-	}
-
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
-	if (GameInstance)
-	{
-		GameInstance->OnSessionSearchCompleted.RemoveDynamic(this, &ULobbyWidget::UpdateRoomList);
-		GameInstance->OnSessionSearchCompleted.AddDynamic(this, &ULobbyWidget::UpdateRoomList);
-	}
 }
 
-void ULobbyWidget::UpdateRoomList(bool bSuccess)
+bool ULobbyWidget::Initialize()
 {
-	if (!bSuccess)
+	if (!Super::Initialize())
+	{
+		return false;
+	}
+
+	SetInfo();
+
+	return true;
+}
+
+void ULobbyWidget::SetInfo()
+{
+	if (!SessionItemWidgetClass)
 	{
 		return;
 	}
 
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
-	if (!GameInstance || !GameInstance->SessionSearch)
-	{
-		return;
-	}
+	SessionItemWidgets.Empty();
 
-	for (const FOnlineSessionSearchResult& Result : GameInstance->SessionSearch->SearchResults)
+	for (int i = 0; i < 10; ++i)
 	{
-		if (Result.IsValid() && RoomWidgetClass)
+		URoomWidget* ChildWidget = CreateWidget<URoomWidget>(GetWorld(), SessionItemWidgetClass);
+		if (ChildWidget)
 		{
-			URoomWidget* RoomWidget = CreateWidget<URoomWidget>(this, RoomWidgetClass);
-			if (RoomWidget)
-			{
-				FString RoomNameStr;
-				Result.Session.SessionSettings.Get(FName("ROOM_NAME"), RoomNameStr);
-
-				int32 CurrentPlayers = Result.Session.SessionSettings.NumPublicConnections - Result.Session.NumOpenPublicConnections;
-				int32 MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
-
-				UE_LOG(LogTemp, Log, TEXT("Found session: %s, Current Players: %d, Max Players: %d"), *RoomNameStr, CurrentPlayers, MaxPlayers);
-				RoomWidget->SetRoomInfo(RoomNameStr, CurrentPlayers, MaxPlayers);
-
-				RoomWrapBox->AddChildToWrapBox(RoomWidget);
-			}
+			RoomWrapBox->AddChildToWrapBox(ChildWidget);
+			SessionItemWidgets.Add(ChildWidget);
 		}
 	}
+
+	RefreshList();
 }
 
-void ULobbyWidget::OnMakeRoomClicked()
+void ULobbyWidget::RefreshList()
 {
-	if (MakeRoomPopUpWidgetClass)
+	const int32 SessionLength = SessionResults.Num();
+	UE_LOG(LogTemp, Warning, TEXT("SessionResults Length: %d"), SessionLength);
+
+	for (int32 i = 0; i < SessionItemWidgets.Num(); ++i)
 	{
-		UMakeRoomPopUpWidget* MakeRoomPopUp = CreateWidget<UMakeRoomPopUpWidget>(this, MakeRoomPopUpWidgetClass);
-		if (MakeRoomPopUp)
+		const int32 Index = i;
+
+		if (Index < SessionLength)
 		{
-			MakeRoomPopUp->AddToViewport();
+			SessionItemWidgets[Index]->SetVisibility(ESlateVisibility::Visible);
+			FBlueprintSessionResult Result = SessionResults[Index];
+			SessionItemWidgets[Index]->SetInfo(Result);
+			UE_LOG(LogTemp, Warning, TEXT("Session Name: %s"), *Result.OnlineResult.Session.GetSessionIdStr());
 		}
-	}
-}
-
-void ULobbyWidget::OnSingleGameClicked()
-{
-}
-
-void ULobbyWidget::OnRefreshClicked()
-{
-	RoomWrapBox->ClearChildren();
-
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
-	if (GameInstance)
-	{
-		GameInstance->FindServerSessions();
+		else
+		{
+			SessionItemWidgets[Index]->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 }

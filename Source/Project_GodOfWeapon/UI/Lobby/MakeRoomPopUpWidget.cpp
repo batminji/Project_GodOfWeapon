@@ -5,36 +5,45 @@
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "../../GodOfWeaponGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 void UMakeRoomPopUpWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	if (CancleButton)
-	{
-		CancleButton->OnClicked.AddDynamic(this, &UMakeRoomPopUpWidget::OnCancleButtonClicked);
-	}
-	if (ConfirmButton)
-	{
-		ConfirmButton->OnClicked.AddDynamic(this, &UMakeRoomPopUpWidget::OnConfirmButtonClicked);
-	}
 }
 
-void UMakeRoomPopUpWidget::OnCancleButtonClicked()
-{
-	RemoveFromParent();
-}
-
-void UMakeRoomPopUpWidget::OnConfirmButtonClicked()
-{
-	FName RoomName = FName(*RoomNameEditableText->GetText().ToString());
-
-	int32 MaxPlayers = FCString::Atoi(*NumOfPeopleEditableText->GetText().ToString());
-
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
-	if (GameInstance)
-	{
-		GameInstance->CreateServerSession(RoomName, MaxPlayers);
-	}
-
-	RemoveFromParent();
-}
+//void UMakeRoomPopUpWidget::OnCancleButtonClicked()
+//{
+//	RemoveFromParent();
+//}
+//
+//void UMakeRoomPopUpWidget::OnConfirmButtonClicked()
+//{
+//	FName RoomName = FName(*RoomNameEditableText->GetText().ToString());
+//
+//	int32 MaxPlayers = FCString::Atoi(*NumOfPeopleEditableText->GetText().ToString());
+//
+//	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+//	if (GameInstance)
+//	{
+//		GameInstance->CreateServerSession(RoomName, MaxPlayers);
+//	}
+//
+//	// RemoveFromParent();
+//}
+//
+//void UMakeRoomPopUpWidget::OnSessionCreateCompleted(bool bSuccess)
+//{
+//	RemoveFromParent();
+//
+//	if (bSuccess)
+//	{
+//		RemoveFromParent();
+//
+//		UGameplayStatics::OpenLevel(GetWorld(), FName("RoomMap"), true, TEXT("listen"));
+//	}
+//	else
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("Create Room Fail"));
+//	}
+//}

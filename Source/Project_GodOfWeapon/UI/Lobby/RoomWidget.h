@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "FindSessionsCallbackProxy.h"
 #include "RoomWidget.generated.h"
 
 class UTextBlock;
@@ -17,17 +18,22 @@ class PROJECT_GODOFWEAPON_API URoomWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	void SetRoomInfo(const FString& InRoomName, int32 InCurrentPlayers, int32 InMaxPlayers);
+	UFUNCTION(BlueprintCallable)
+	void SetInfo(FBlueprintSessionResult InSessionResult);
 
-	UPROPERTY(meta = (BindWidget))
+	UFUNCTION(BlueprintCallable)
+	void RefreshUI();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UTextBlock> RoomNameTextBox;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UTextBlock> RoomNumOfPeopleTextBox;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UButton> JoinButton;
 
-	UFUNCTION()
-	void OnJoinClicked();
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	FBlueprintSessionResult SessionResult;
 };

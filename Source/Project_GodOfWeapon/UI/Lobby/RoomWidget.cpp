@@ -8,27 +8,23 @@
 void URoomWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if(JoinButton)
-	{
-		JoinButton->OnClicked.AddDynamic(this, &URoomWidget::OnJoinClicked);
-	}
 }
 
-void URoomWidget::SetRoomInfo(const FString& InRoomName, int32 InCurrentPlayers, int32 InMaxPlayers)
+void URoomWidget::SetInfo(FBlueprintSessionResult InSessionResult)
 {
-	if (RoomNameTextBox)
-	{
-		RoomNameTextBox->SetText(FText::FromString(InRoomName));
-	}
-
-	if (RoomNumOfPeopleTextBox)
-	{
-		FString PeopleString = FString::Printf(TEXT("%d/%d"), InCurrentPlayers, InMaxPlayers);
-		RoomNumOfPeopleTextBox->SetText(FText::FromString(PeopleString));
-	}
+	SessionResult = InSessionResult;
+	RefreshUI();
 }
 
-void URoomWidget::OnJoinClicked()
+void URoomWidget::RefreshUI()
 {
+	FString SessionName;
+	SessionResult.OnlineResult.Session.SessionSettings.Get("SESSION_NAME", OUT SessionName);
+
+	const int32 CurrentPlayerCount = SessionResult.OnlineResult.Session.SessionSettings.NumPublicConnections - SessionResult.OnlineResult.Session.NumOpenPublicConnections;
+	const int32 MaxPlayers = SessionResult.OnlineResult.Session.SessionSettings.NumPublicConnections;
+	FString PlayerCountString = FString::Printf(TEXT("%d/%d"), CurrentPlayerCount, MaxPlayers);
+
+	RoomNameTextBox->SetText(FText::FromString(SessionName));
+	RoomNumOfPeopleTextBox->SetText(FText::FromString(PlayerCountString));
 }

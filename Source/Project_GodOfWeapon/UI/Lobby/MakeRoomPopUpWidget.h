@@ -17,21 +17,15 @@ class PROJECT_GODOFWEAPON_API UMakeRoomPopUpWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UEditableTextBox> RoomNameEditableText;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UEditableTextBox> NumOfPeopleEditableText;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UButton> CancleButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UButton> ConfirmButton;
-
-	UFUNCTION()
-	void OnCancleButtonClicked();
-
-	UFUNCTION()
-	void OnConfirmButtonClicked();
 };
