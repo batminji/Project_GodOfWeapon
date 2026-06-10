@@ -8,6 +8,11 @@
 #include "../Player/RoomCharacter.h"
 #include "../Controller/RoomController.h"
 
+ARoomGameMode::ARoomGameMode()
+{
+	bUseSeamlessTravel = true;
+}
+
 void ARoomGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);

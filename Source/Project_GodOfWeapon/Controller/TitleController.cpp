@@ -81,7 +81,7 @@ void ATitleController::ShowLevelSettingUI()
 		LevelSettingWidget = CreateAndShowWidget<ULevelSettingWidget>(LevelSettingWidgetClass);
 		if (LevelSettingWidget)
 		{
-			LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleController::HandleEntry);
+			// LevelSettingWidget->OnStartButtonClicked.AddDynamic(this, &ATitleController::HandleEntry);
 		}
 	}
 }

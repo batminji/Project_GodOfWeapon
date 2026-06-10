@@ -10,6 +10,8 @@
 
 class UButton;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStartButtonClickedSignature, const FSavedItemData&, OutStartItemData, EDifficulty, OutLevel);
+
 UCLASS()
 class PROJECT_GODOFWEAPON_API URoomHUDWidget : public UUserWidget
 {
@@ -21,6 +23,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UButton> StartButton;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnStartButtonClickedSignature OnStartButtonClicked;
+
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	void CallStartButtonClicked();
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Player")

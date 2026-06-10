@@ -14,6 +14,8 @@ class PROJECT_GODOFWEAPON_API ARoomGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	ARoomGameMode();
+
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 	AActor* FindSpawnSpotByTag(const FName& InTag);

@@ -28,10 +28,10 @@ void ULevelSettingWidget::CallStartButtonClicked()
 		break;
 	}
 
-	if (OnStartButtonClicked.IsBound())
-	{
-		OnStartButtonClicked.Broadcast(*OutItemData, PlayerStartLevel);
-	}
+	// if (OnStartButtonClicked.IsBound())
+	// {
+	// 	OnStartButtonClicked.Broadcast(*OutItemData, PlayerStartLevel);
+	// }
 }
 
 void ULevelSettingWidget::NativeConstruct()

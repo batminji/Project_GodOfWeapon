@@ -4,6 +4,7 @@
 #include "RoomController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+
 #include "../UI/Room/RoomHUDWidget.h"
 #include "Camera/CameraActor.h"
 #include "../Player/RoomCharacter.h"
@@ -42,8 +43,44 @@ void ARoomController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 void ARoomController::SetMyRoomCharacter(ARoomCharacter* InCharacter)
 {
 	MyRoomCharacter = InCharacter;
+}
 
-	TrySendCustomData();
+void ARoomController::HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty)
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->GetInventoryData().Add(InItemData);
+		GameInstance->SetDifficulty(InDifficulty);
+		switch (InDifficulty)
+		{
+		case EDifficulty::Easy:
+		{
+			GameInstance->SetLevelMultiplier(0.8f);
+		}
+		break;
+		case EDifficulty::Normal:
+		{
+			GameInstance->SetLevelMultiplier(1.0f);
+		}
+		break;
+		case EDifficulty::Hard:
+		{
+			GameInstance->SetLevelMultiplier(1.5f);
+		}
+		break;
+		default:
+			break;
+		}
+	}
+
+	// Game Start
+	ServerStartGame();
+}
+
+void ARoomController::ServerStartGame_Implementation()
+{
+	GetWorld()->ServerTravel(TEXT("/Game/Maps/InGameMap?listen"));
 }
 
 void ARoomController::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
@@ -63,6 +100,7 @@ void ARoomController::ShowRoomHUD()
 		if (RoomHUD)
 		{
 			RoomHUD->AddToViewport();
+			RoomHUD->OnStartButtonClicked.AddDynamic(this, &ARoomController::HandleEntry);
 			SetInputMode(FInputModeGameAndUI());
 			bShowMouseCursor = true;
 		}

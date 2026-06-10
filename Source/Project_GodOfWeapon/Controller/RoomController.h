@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "../Structs/PlayerStructs.h"
+#include "../Enums/StageEnums.h"
+#include "../Structs/ItemStructs.h"
 #include "RoomController.generated.h"
 
 class URoomHUDWidget;
@@ -26,6 +28,12 @@ public:
 	void ServerSendCustomData(const FCustomData& InCustomData);
 
 	void SetMyRoomCharacter(ARoomCharacter* InCharacter);
+
+	UFUNCTION()
+	void HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+
+	UFUNCTION(Server, Reliable)
+	void ServerStartGame();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")

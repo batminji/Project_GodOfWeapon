@@ -8,7 +8,7 @@
 #include "../../Enums/StageEnums.h"
 #include "LevelSettingWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStartButtonClickedSignature, const FSavedItemData&, OutStartItemData, EDifficulty, OutLevel);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStartButtonClickedSignature, const FSavedItemData&, OutStartItemData, EDifficulty, OutLevel);
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ULevelSettingWidget : public UUserWidget
@@ -16,8 +16,8 @@ class PROJECT_GODOFWEAPON_API ULevelSettingWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintAssignable)
-	FOnStartButtonClickedSignature OnStartButtonClicked;
+	// UPROPERTY(BlueprintAssignable)
+	// FOnStartButtonClickedSignature OnStartButtonClicked;
 
 	UFUNCTION(BlueprintCallable, Category = "Events")
 	void CallStartButtonClicked();
