@@ -79,15 +79,6 @@ void AInGameMode::BeginPlay()
 
 		WaveManagerComp->StartGame();
 	}
-
-	if (InGameMainWidgetClass)
-	{
-		InGameMainWidget = CreateWidget<UUserWidget>(GetWorld(), InGameMainWidgetClass);
-		if (InGameMainWidget)
-		{
-			InGameMainWidget->AddToViewport();
-		}
-	}
 }
 
 void AInGameMode::Init()

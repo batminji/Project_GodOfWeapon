@@ -4,6 +4,17 @@
 #include "InGameController.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "Blueprint/UserWidget.h"
+
+void AInGameController::BeginPlay()
+{
+	Super::BeginPlay();
+
+    if(IsLocalPlayerController())
+    {
+        ShowInGameMainWidget();
+	}
+}
 
 void AInGameController::OnPossess(APawn* InPawn)
 {
@@ -41,6 +52,18 @@ void AInGameController::OnUnPossess()
         if (Subsystem)
         {
             Subsystem->ClearAllMappings();
+        }
+    }
+}
+
+void AInGameController::ShowInGameMainWidget()
+{
+    if (InGameMainWidgetClass)
+    {
+        InGameMainWidget = CreateWidget<UUserWidget>(GetWorld(), InGameMainWidgetClass);
+        if (InGameMainWidget)
+        {
+            InGameMainWidget->AddToViewport();
         }
     }
 }
