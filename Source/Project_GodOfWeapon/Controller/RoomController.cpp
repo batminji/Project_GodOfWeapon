@@ -3,6 +3,7 @@
 
 #include "RoomController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 #include "../UI/Room/RoomHUDWidget.h"
 #include "Camera/CameraActor.h"
 #include "../Player/RoomCharacter.h"
@@ -29,24 +30,28 @@ void ARoomController::BeginPlay()
 	}
 
 	ShowRoomHUD();
+}
 
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
-	if(GameInstance)
-	{
-		FCustomData CustomData = GameInstance->GetPlayerCustomData();
-		UE_LOG(LogTemp, Log, TEXT("Player Custom Data - Head: %d, Chest: %d, Hands: %d, Legs: %d, Foot: %d"), 
-			CustomData.HeadNumber, CustomData.ChestNumber, CustomData.HandsNumber, CustomData.LegsNumber, CustomData.FootNumber);
-		ServerSendCustomData(CustomData);
-	}
+void ARoomController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ARoomController, MyRoomCharacter);
+}
+
+void ARoomController::SetMyRoomCharacter(ARoomCharacter* InCharacter)
+{
+	MyRoomCharacter = InCharacter;
+
+	TrySendCustomData();
 }
 
 void ARoomController::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
 {
-	ARoomCharacter* RoomCharacter = Cast<ARoomCharacter>(GetPawn());
-
-	if (RoomCharacter)
+	if (MyRoomCharacter)
 	{
-		RoomCharacter->UpdatePlayerCustom(InCustomData);
+		MyRoomCharacter->CustomData = InCustomData;
+		MyRoomCharacter->UpdatePlayerCustom(InCustomData);
 	}
 }
 
@@ -78,4 +83,23 @@ AActor* ARoomController::GetCameraByTag(const FName& InTag)
 	}
 
 	return nullptr;
+}
+
+void ARoomController::OnRep_MyRoomCharacter()
+{
+	TrySendCustomData();
+}
+
+void ARoomController::TrySendCustomData()
+{
+	if (!IsLocalController() || !MyRoomCharacter)
+	{
+		return;
+	}
+
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		ServerSendCustomData(GameInstance->GetPlayerCustomData());
+	}
 }

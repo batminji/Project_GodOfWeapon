@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "../Player/RoomCharacter.h"
+#include "../Controller/RoomController.h"
 
 void ARoomGameMode::PostLogin(APlayerController* NewPlayer)
 {
@@ -30,9 +31,11 @@ void ARoomGameMode::PostLogin(APlayerController* NewPlayer)
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		ARoomCharacter* NewRoomCharacter = GetWorld()->SpawnActor<ARoomCharacter>(RoomCharacterClass, SpawnLocation, SpawnRotation, SpawnParams);
-		if(NewRoomCharacter)
+		
+		ARoomController* RoomController = Cast<ARoomController>(NewPlayer);
+		if (RoomController && NewRoomCharacter)
 		{
-			// NewPlayer->Possess(NewRoomCharacter);
+			RoomController->SetMyRoomCharacter(NewRoomCharacter);
 		}
 	}
 }

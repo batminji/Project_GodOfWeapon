@@ -8,6 +8,7 @@
 #include "RoomController.generated.h"
 
 class URoomHUDWidget;
+class ARoomCharacter;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ARoomController : public APlayerController
@@ -19,14 +20,27 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UFUNCTION(Server, Reliable)
 	void ServerSendCustomData(const FCustomData& InCustomData);
 
+	void SetMyRoomCharacter(ARoomCharacter* InCharacter);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<class URoomHUDWidget> RoomHUDWidgetClass;
+	TSubclassOf<URoomHUDWidget> RoomHUDWidgetClass;
 
 	void ShowRoomHUD();
 
 	class AActor* GetCameraByTag(const FName& InTag);
+
+private:
+	UPROPERTY(ReplicatedUsing = OnRep_MyRoomCharacter)
+	ARoomCharacter* MyRoomCharacter;
+
+	UFUNCTION()
+	void OnRep_MyRoomCharacter();
+
+	void TrySendCustomData();
 };

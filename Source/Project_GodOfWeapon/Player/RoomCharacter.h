@@ -15,6 +15,8 @@ class PROJECT_GODOFWEAPON_API ARoomCharacter : public ACharacter
 public:
 	ARoomCharacter();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -26,4 +28,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdatePlayerCustom(const FCustomData& InCustomData);
 
+	UPROPERTY(ReplicatedUsing = OnRep_CustomData)
+	FCustomData CustomData;
+
+	UFUNCTION()
+	void OnRep_CustomData();
 };

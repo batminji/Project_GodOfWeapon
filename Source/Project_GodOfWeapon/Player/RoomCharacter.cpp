@@ -2,11 +2,18 @@
 
 
 #include "RoomCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 ARoomCharacter::ARoomCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
+}
 
+void ARoomCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ARoomCharacter, CustomData);
 }
 
 void ARoomCharacter::BeginPlay()
@@ -25,5 +32,10 @@ void ARoomCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ARoomCharacter::OnRep_CustomData()
+{
+	UpdatePlayerCustom(CustomData);
 }
 
