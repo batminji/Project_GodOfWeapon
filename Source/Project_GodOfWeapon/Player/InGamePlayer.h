@@ -20,6 +20,12 @@ public:
 
 	void UpdatePlayerStat(const FPlayerStatStructure& InStat, const int32 InCoinCnt);
 
+	// Custom Data
+	UFUNCTION(Server, Reliable)
+	void ServerSendCustomData(const FCustomData& InCustomData);
+
+	virtual void OnRep_PlayerState() override;
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdatePlayerCustom(const FCustomData& InCustomData); // For Data Table Load
 
@@ -40,6 +46,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void PawnClientRestart() override;
+
+	void TryApplyCustomData();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	FPlayerStatStructure PlayerStat{};

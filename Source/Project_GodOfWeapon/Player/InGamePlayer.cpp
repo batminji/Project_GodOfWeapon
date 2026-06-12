@@ -5,6 +5,7 @@
 #include "InputAction.h"
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "PlayerStateBase.h"
 #include "../GodOfWeaponGameInstance.h"
 
 AInGamePlayer::AInGamePlayer()
@@ -19,6 +20,23 @@ void AInGamePlayer::UpdatePlayerStat(const FPlayerStatStructure& InStat, const i
 	CoinCnt = InCoinCnt;
 }
 
+void AInGamePlayer::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (MyPlayerState)
+	{
+		MyPlayerState->CustomData = InCustomData;
+		UpdatePlayerCustom(InCustomData);
+	}
+}
+
+void AInGamePlayer::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	
+	TryApplyCustomData();
+}
+
 void AInGamePlayer::RecoverPlayerHP()
 {
 	PlayerStat.CurrentHP = FMath::Min(PlayerStat.CurrentHP + PlayerStat.Recovery, PlayerStat.MaxHP);
@@ -26,10 +44,10 @@ void AInGamePlayer::RecoverPlayerHP()
 
 void AInGamePlayer::ClientExpandInventory_Implementation()
 {
-	UGodOfWeaponGameInstance* GI = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
-	if (GI)
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
 	{
-		GI->ExpandInventory();
+		GameInstance->ExpandInventory();
 	}
 }
 
@@ -37,6 +55,26 @@ void AInGamePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AInGamePlayer::PawnClientRestart()
+{
+	Super::PawnClientRestart();
+
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		ServerSendCustomData(GameInstance->GetPlayerCustomData());
+	}
+}
+
+void AInGamePlayer::TryApplyCustomData()
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (MyPlayerState)
+	{
+		UpdatePlayerCustom(MyPlayerState->CustomData);
+	}
 }
 
 void AInGamePlayer::Move(const FInputActionValue& InValue)

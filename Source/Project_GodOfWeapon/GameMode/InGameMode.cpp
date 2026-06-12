@@ -25,33 +25,18 @@ AInGameMode::AInGameMode()
 void AInGameMode::PostLogin(APlayerController* InNewPlayer)
 {
 	Super::PostLogin(InNewPlayer);
-
-	if (!GameInstance)
-	{
-		return;
-	}
-
-	APlayerStateBase* PlayerState = InNewPlayer->GetPlayerState<APlayerStateBase>();
-	if (!PlayerState)
-	{
-		return;
-	}
-
-	PlayerState->CustomData = GameInstance->GetPlayerCustomData();
 }
 
 void AInGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 
-	APlayerStateBase* PlayerState = NewPlayer->GetPlayerState<APlayerStateBase>();
+	APlayerStateBase* MyPlayerState = NewPlayer->GetPlayerState<APlayerStateBase>();
 	AInGamePlayer* Player = Cast<AInGamePlayer>(NewPlayer->GetPawn());
-	if (!PlayerState || !Player) return;
+	if (!MyPlayerState || !Player) return;
 
-	Player->UpdatePlayerStat(PlayerState->PlayerStat, PlayerState->PlayerCoin);
-	Player->UpdatePlayerCustom(PlayerState->CustomData);
-
-	InGamePlayer = Player;
+	Player->UpdatePlayerStat(MyPlayerState->PlayerStat, MyPlayerState->PlayerCoin);
+	// Player->UpdatePlayerCustom(MyPlayerState->CustomData);
 }
 
 void AInGameMode::BeginPlay()

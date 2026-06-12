@@ -3,6 +3,7 @@
 
 #include "PlayerStateBase.h"
 #include "Net/UnrealNetwork.h"
+#include "InGamePlayer.h"
 
 APlayerStateBase::APlayerStateBase()
 {
@@ -60,6 +61,10 @@ void APlayerStateBase::ApplyStatMultiplier(float Multiplier)
 
 void APlayerStateBase::OnReplicate_CustomData()
 {
+	if (AInGamePlayer* Player = Cast<AInGamePlayer>(GetPawn()))
+	{
+		Player->UpdatePlayerCustom(CustomData);
+	}
 }
 
 void APlayerStateBase::OnReplicate_PlayerCoin()
