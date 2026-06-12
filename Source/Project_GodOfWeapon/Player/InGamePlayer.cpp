@@ -14,12 +14,6 @@ AInGamePlayer::AInGamePlayer()
 
 }
 
-void AInGamePlayer::UpdatePlayerStat(const FPlayerStatStructure& InStat, const int32 InCoinCnt)
-{
-	PlayerStat = InStat;
-	CoinCnt = InCoinCnt;
-}
-
 void AInGamePlayer::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
 {
 	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
@@ -39,7 +33,39 @@ void AInGamePlayer::OnRep_PlayerState()
 
 void AInGamePlayer::RecoverPlayerHP()
 {
-	PlayerStat.CurrentHP = FMath::Min(PlayerStat.CurrentHP + PlayerStat.Recovery, PlayerStat.MaxHP);
+	if (!HasAuthority())
+	{
+		return;
+	}
+
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (MyPlayerState)
+	{
+		FPlayerStatStructure& Stat = MyPlayerState->GetPlayerStat();
+		Stat.CurrentHP = FMath::Min(Stat.CurrentHP + Stat.Recovery, Stat.MaxHP);
+	}
+}
+
+FPlayerStatStructure AInGamePlayer::GetCurrentPlayerStat() const
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+
+	if(!MyPlayerState)
+	{
+		return FPlayerStatStructure{};
+	}
+	return MyPlayerState->GetPlayerStat();
+}
+
+int32 AInGamePlayer::GetCoinCnt() const
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+
+	if(!MyPlayerState)
+	{
+		return 0;
+	}
+	return MyPlayerState->GetPlayerCoin();
 }
 
 void AInGamePlayer::ClientExpandInventory_Implementation()

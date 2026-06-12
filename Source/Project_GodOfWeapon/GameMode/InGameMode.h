@@ -68,11 +68,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	TObjectPtr<AInGamePlayer> InGamePlayer;
 
-	// UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Widget")
-	// TSubclassOf<UUserWidget> InGameMainWidgetClass;
-	// 
-	// TObjectPtr<UUserWidget> InGameMainWidget;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Total")
 	int32 TotalDamage = 0;
 

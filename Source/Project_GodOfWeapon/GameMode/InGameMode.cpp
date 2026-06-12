@@ -30,13 +30,6 @@ void AInGameMode::PostLogin(APlayerController* InNewPlayer)
 void AInGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
-
-	APlayerStateBase* MyPlayerState = NewPlayer->GetPlayerState<APlayerStateBase>();
-	AInGamePlayer* Player = Cast<AInGamePlayer>(NewPlayer->GetPawn());
-	if (!MyPlayerState || !Player) return;
-
-	Player->UpdatePlayerStat(MyPlayerState->PlayerStat, MyPlayerState->PlayerCoin);
-	// Player->UpdatePlayerCustom(MyPlayerState->CustomData);
 }
 
 void AInGameMode::BeginPlay()
@@ -44,8 +37,6 @@ void AInGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	Init();
-	// UpdatePlayerStat();
-	// Login 에서 호출할 것
 	SpawnItems();
 
 	AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();

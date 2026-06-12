@@ -18,8 +18,6 @@ class PROJECT_GODOFWEAPON_API AInGamePlayer : public ACharacter
 public:
 	AInGamePlayer();
 
-	void UpdatePlayerStat(const FPlayerStatStructure& InStat, const int32 InCoinCnt);
-
 	// Custom Data
 	UFUNCTION(Server, Reliable)
 	void ServerSendCustomData(const FCustomData& InCustomData);
@@ -36,13 +34,13 @@ public:
 	void ClientExpandInventory();
 
 	// Getters
-	FPlayerStatStructure& GetPlayerStat() { return PlayerStat; }
+	UFUNCTION(BlueprintPure, Category = "Player")
+	FPlayerStatStructure GetCurrentPlayerStat() const;
 
-	int32 GetCoinCnt() const { return CoinCnt; }
+	UFUNCTION(BlueprintPure, Category = "Player")
+	int32 GetCoinCnt() const;
 
 	int32 GetEarnedCoinCnt() const { return EarnedCoinCnt; }
-
-	FPlayerStatStructure GetCurrentPlayerStat() const { return PlayerStat; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -50,12 +48,6 @@ protected:
 	virtual void PawnClientRestart() override;
 
 	void TryApplyCustomData();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	FPlayerStatStructure PlayerStat{};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	int32 CoinCnt{0};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int32 EarnedCoinCnt{ 0 };
