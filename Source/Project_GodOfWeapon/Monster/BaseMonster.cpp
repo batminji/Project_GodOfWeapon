@@ -8,11 +8,28 @@
 #include "../Controller/MonsterAIController.h"
 #include "../GameMode/InGameMode.h"
 #include "../Components/PoolManagerComponent.h"
+#include "Net/UnrealNetwork.h"
 
 ABaseMonster::ABaseMonster()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
+}
 
+void ABaseMonster::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABaseMonster, bIsDead);
+}
+
+void ABaseMonster::MulticastShowDamage_Implementation(int32 InDamage)
+{
+	CreateDamageTextWidget(InDamage);
+}
+
+void ABaseMonster::MulticastOnDied_Implementation()
+{
+	StopAnimMontage();
 }
 
 void ABaseMonster::DisableMonster()
@@ -57,6 +74,11 @@ void ABaseMonster::EndDying()
 {
 	bIsDead = false;
 
+	if (!HasAuthority())
+	{
+		return;
+	}
+
 	if (InGameMode)
 	{
 		InGameMode->PoolManagerComp->ReturnToPool(this);
@@ -65,6 +87,11 @@ void ABaseMonster::EndDying()
 
 void ABaseMonster::DieMonster()
 {
+	if (!HasAuthority())
+	{
+		return;
+	}
+
 	CreateCoinActors(CurrentMonsterStat.Reward);
 
 	bIsDead = true;
@@ -82,18 +109,40 @@ void ABaseMonster::DieMonster()
 	{
 		InGameMode->AddTotalMonsterDefeated(1);
 	}
+
+	MulticastOnDied();
 }
 
 void ABaseMonster::ApplyMonsterDamage(float InDamage)
 {
+	if (!HasAuthority())
+	{
+		return;
+	}
+
 	int32 Damage = FMath::TruncToInt(InDamage);
-	
-	CreateDamageTextWidget(Damage);
+
+	MulticastShowDamage(Damage);
+
 	if (InGameMode)
 	{
 		InGameMode->AddTotalDamage(Damage);
 	}
 	UpdateMonsterHP(Damage);
+}
+
+void ABaseMonster::OnRep_IsDead()
+{
+	if (bIsDead)
+	{
+		SetActorEnableCollision(false);
+		GetCharacterMovement()->StopMovementImmediately();
+		StopAnimMontage();
+	}
+	else
+	{
+		SetActorEnableCollision(true);
+	}
 }
 
 void ABaseMonster::BeginPlay()

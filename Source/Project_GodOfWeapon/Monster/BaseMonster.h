@@ -18,6 +18,14 @@ class PROJECT_GODOFWEAPON_API ABaseMonster : public ACharacter
 public:
 	ABaseMonster();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastShowDamage(int32 InDamage);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastOnDied();
+
 	UFUNCTION(BlueprintCallable, Category = "Monster")
 	void DisableMonster();
 
@@ -46,6 +54,10 @@ public:
 	// Setters
 	void SetBaseMonsterStat(const FMonsterStat& InBaseMonsterStat) { BaseMonsterStat = InBaseMonsterStat; }
 
+	// Replicates
+	UFUNCTION()
+	void OnRep_IsDead();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -69,7 +81,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stats")
 	FMonsterStat CurrentMonsterStat;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(ReplicatedUsing = OnRep_IsDead, VisibleAnywhere, BlueprintReadWrite, Category = "State")
 	bool bIsDead = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "State")
