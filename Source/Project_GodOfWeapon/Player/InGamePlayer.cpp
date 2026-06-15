@@ -24,6 +24,16 @@ void AInGamePlayer::ServerSendCustomData_Implementation(const FCustomData& InCus
 	}
 }
 
+void AInGamePlayer::ServerSendInventory_Implementation(const TArray<FSavedItemData>& InItems)
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (MyPlayerState)
+	{
+		MyPlayerState->InventoryItems = InItems;
+		ApplyInventoryItems(InItems);
+	}
+}
+
 void AInGamePlayer::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
@@ -109,6 +119,7 @@ void AInGamePlayer::PawnClientRestart()
 	if (GameInstance)
 	{
 		ServerSendCustomData(GameInstance->GetPlayerCustomData());
+		ServerSendInventory(GameInstance->GetInventoryData());
 	}
 }
 

@@ -22,10 +22,28 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerSendCustomData(const FCustomData& InCustomData);
 
+	UFUNCTION(Server, Reliable)
+	void ServerSendInventory(const TArray<FSavedItemData>& InItems);
+
 	virtual void OnRep_PlayerState() override;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdatePlayerCustom(const FCustomData& InCustomData); // For Data Table Load
+
+	// Item
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
+	void ApplyInventoryItems(const TArray<FSavedItemData>& InItems);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
+	bool AttachItemToPlayer(
+		TSubclassOf<AActor> InItemBaseActorClass,
+		EItemType InItemType,
+		FItemStat InItemStat,
+		UStaticMesh* InItemMesh,
+		UNiagaraSystem* InItemNiagara,
+		UStaticMesh* InArrowMesh,
+		UNiagaraSystem* InArrowNiagara
+	);
 
 	UFUNCTION(BlueprintCallable, Category = "HP")
 	void RecoverPlayerHP();

@@ -51,17 +51,6 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
 	void SpawnItems();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
-	bool AttachItemToPlayer(
-		TSubclassOf<AActor> InItemBaseActorClass, 
-		EItemType InItemType, 
-		FItemStat InItemStat,
-		UStaticMesh* InItemMesh,
-		UNiagaraSystem* InItemNiagara,
-		UStaticMesh* InArrowMesh,
-		UNiagaraSystem* InArrowNiagara
-	);
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
 

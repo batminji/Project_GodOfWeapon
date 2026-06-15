@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 #include "../Structs/PlayerStructs.h"
+#include "../Structs/ItemStructs.h"
 #include "PlayerStateBase.generated.h"
 
 UCLASS()
@@ -53,9 +54,15 @@ public:
 	UPROPERTY(Replicated, BlueprintReadWrite)
 	int32 TotalDamage = 0;
 
+	UPROPERTY(ReplicatedUsing = OnReplicate_InventoryItems, BlueprintReadWrite)
+	TArray<FSavedItemData> InventoryItems;
+
 	UFUNCTION()
 	void OnReplicate_CustomData();
 
 	UFUNCTION()
 	void OnReplicate_PlayerCoin();
+
+	UFUNCTION()
+	void OnReplicate_InventoryItems();
 };

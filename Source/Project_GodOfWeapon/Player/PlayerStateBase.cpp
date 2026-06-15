@@ -19,6 +19,7 @@ void APlayerStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(APlayerStateBase, PlayerEarnedCoin);
 	DOREPLIFETIME(APlayerStateBase, TotalMonsterDefeated);
 	DOREPLIFETIME(APlayerStateBase, TotalDamage);
+	DOREPLIFETIME(APlayerStateBase, InventoryItems);
 }
 
 void APlayerStateBase::AddCoin(int32 InAmount)
@@ -69,4 +70,12 @@ void APlayerStateBase::OnReplicate_CustomData()
 
 void APlayerStateBase::OnReplicate_PlayerCoin()
 {
+}
+
+void APlayerStateBase::OnReplicate_InventoryItems()
+{
+	if (AInGamePlayer* Player = Cast<AInGamePlayer>(GetPawn()))
+	{
+		Player->ApplyInventoryItems(InventoryItems);
+	}
 }
