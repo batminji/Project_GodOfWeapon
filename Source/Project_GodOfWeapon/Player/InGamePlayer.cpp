@@ -77,6 +77,24 @@ void AInGamePlayer::ClientExpandInventory_Implementation()
 	}
 }
 
+void AInGamePlayer::SetCurrentPlayerStat(const FPlayerStatStructure& InCurrentPlayerStat)
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if(MyPlayerState)
+	{
+		MyPlayerState->PlayerStat = InCurrentPlayerStat;
+	}
+}
+
+void AInGamePlayer::SetCoinCnt(int32 InCoinCnt)
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if(MyPlayerState)
+	{
+		MyPlayerState->PlayerCoin = InCoinCnt;
+	}
+}
+
 void AInGamePlayer::BeginPlay()
 {
 	Super::BeginPlay();

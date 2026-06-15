@@ -42,6 +42,13 @@ public:
 
 	int32 GetEarnedCoinCnt() const { return EarnedCoinCnt; }
 
+	// Setters
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void SetCurrentPlayerStat(const FPlayerStatStructure& InCurrentPlayerStat);
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void SetCoinCnt(int32 InCoinCnt);
+
 protected:
 	virtual void BeginPlay() override;
 
