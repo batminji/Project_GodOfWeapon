@@ -37,7 +37,6 @@ void AInGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	Init();
-	SpawnItems();
 
 	AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
 	if (InGameState && GameInstance)

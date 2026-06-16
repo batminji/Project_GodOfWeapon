@@ -48,9 +48,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void Init();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Item")
-	void SpawnItems();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
 
