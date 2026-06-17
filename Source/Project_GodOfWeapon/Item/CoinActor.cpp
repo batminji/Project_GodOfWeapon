@@ -11,6 +11,9 @@ ACoinActor::ACoinActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
+	SetReplicateMovement(true);
+
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	BoxComponent->SetBoxExtent(FVector(32.0f, 32.0f, 32.0f));
 	RootComponent = BoxComponent;

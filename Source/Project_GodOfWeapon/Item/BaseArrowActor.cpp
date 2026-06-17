@@ -11,6 +11,9 @@ ABaseArrowActor::ABaseArrowActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
+	SetReplicateMovement(true);
+
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	BoxComponent->SetBoxExtent(FVector(100.0f, 10.0f, 10.0f));
 	RootComponent = BoxComponent;
