@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "RoomController.h"
@@ -43,44 +43,17 @@ void ARoomController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 void ARoomController::SetMyRoomCharacter(ARoomCharacter* InCharacter)
 {
 	MyRoomCharacter = InCharacter;
+
+	// 호스트인 경우 OnRep이 자동 호출되지 않으므로 직접 호출
+	if (GetNetMode() == NM_ListenServer && IsLocalController())
+	{
+		TrySendCustomData();
+	}
 }
 
 void ARoomController::HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty)
 {
-	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
-	if (GameInstance)
-	{
-		GameInstance->GetInventoryData().Add(InItemData);
-		GameInstance->SetDifficulty(InDifficulty);
-		switch (InDifficulty)
-		{
-		case EDifficulty::Easy:
-		{
-			GameInstance->SetLevelMultiplier(0.8f);
-		}
-		break;
-		case EDifficulty::Normal:
-		{
-			GameInstance->SetLevelMultiplier(1.0f);
-		}
-		break;
-		case EDifficulty::Hard:
-		{
-			GameInstance->SetLevelMultiplier(1.5f);
-		}
-		break;
-		default:
-			break;
-		}
-	}
-
-	// Game Start
-	ServerStartGame();
-}
-
-void ARoomController::ServerStartGame_Implementation()
-{
-	GetWorld()->ServerTravel(TEXT("/Game/Maps/InGameMap?listen"));
+	ServerStartGameWithData(InItemData, InDifficulty);
 }
 
 void ARoomController::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
@@ -140,4 +113,47 @@ void ARoomController::TrySendCustomData()
 	{
 		ServerSendCustomData(GameInstance->GetPlayerCustomData());
 	}
+}
+
+void ARoomController::ExecuteServerTravel()
+{
+	GetWorld()->ServerTravel(TEXT("/Game/Maps/InGameMap?listen"));
+}
+
+void ARoomController::ClientUpdateGameInstanceData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty)
+{
+	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->GetInventoryData().Add(InItemData);
+		GameInstance->SetDifficulty(InDifficulty);
+
+		switch (InDifficulty)
+		{
+		case EDifficulty::Easy:
+			GameInstance->SetLevelMultiplier(0.8f);
+			break;
+		case EDifficulty::Normal:
+			GameInstance->SetLevelMultiplier(1.0f);
+			break;
+		case EDifficulty::Hard:
+			GameInstance->SetLevelMultiplier(1.5f);
+			break;
+		}
+	}
+}
+
+void ARoomController::ServerStartGameWithData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty)
+{
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		ARoomController* PC = Cast<ARoomController>(It->Get());
+		if (PC)
+		{
+			PC->ClientUpdateGameInstanceData(InItemData, InDifficulty);
+		}
+	}
+
+	FTimerHandle TravelTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TravelTimerHandle, this, &ARoomController::ExecuteServerTravel, 0.2f, false);
 }

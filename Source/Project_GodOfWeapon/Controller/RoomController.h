@@ -29,11 +29,9 @@ public:
 
 	void SetMyRoomCharacter(ARoomCharacter* InCharacter);
 
-	UFUNCTION()
+public:
+	UFUNCTION(BlueprintCallable)
 	void HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty);
-
-	UFUNCTION(Server, Reliable)
-	void ServerStartGame();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
@@ -51,4 +49,13 @@ private:
 	void OnRep_MyRoomCharacter();
 
 	void TrySendCustomData();
+
+protected:
+	UFUNCTION(Server, Reliable)
+	void ServerStartGameWithData(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+
+	UFUNCTION(Client, Reliable)
+	void ClientUpdateGameInstanceData(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+
+	void ExecuteServerTravel();
 };

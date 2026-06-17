@@ -22,8 +22,11 @@ protected:
 
 	virtual void OnUnPossess() override;
 
+	void SetupInputMappingContext();
+
 	void ShowInGameMainWidget();
 
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TSoftObjectPtr<UInputMappingContext> InputMappingContext;
 
