@@ -73,6 +73,7 @@ protected:
 	virtual void PawnClientRestart() override;
 
 	void TryApplyCustomData();
+	void TryApplyInventoryItems();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int32 EarnedCoinCnt{ 0 };

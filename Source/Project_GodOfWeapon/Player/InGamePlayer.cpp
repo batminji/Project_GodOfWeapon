@@ -37,8 +37,9 @@ void AInGamePlayer::ServerSendInventory_Implementation(const TArray<FSavedItemDa
 void AInGamePlayer::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	
+
 	TryApplyCustomData();
+	TryApplyInventoryItems();
 }
 
 void AInGamePlayer::RecoverPlayerHP()
@@ -129,6 +130,15 @@ void AInGamePlayer::TryApplyCustomData()
 	if (MyPlayerState)
 	{
 		UpdatePlayerCustom(MyPlayerState->CustomData);
+	}
+}
+
+void AInGamePlayer::TryApplyInventoryItems()
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (MyPlayerState)
+	{
+		ApplyInventoryItems(MyPlayerState->InventoryItems);
 	}
 }
 

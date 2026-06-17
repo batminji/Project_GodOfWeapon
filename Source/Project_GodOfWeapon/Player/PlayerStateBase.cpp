@@ -4,6 +4,7 @@
 #include "PlayerStateBase.h"
 #include "Net/UnrealNetwork.h"
 #include "InGamePlayer.h"
+#include "EngineUtils.h"
 
 APlayerStateBase::APlayerStateBase()
 {
@@ -62,9 +63,23 @@ void APlayerStateBase::ApplyStatMultiplier(float Multiplier)
 
 void APlayerStateBase::OnReplicate_CustomData()
 {
-	if (AInGamePlayer* Player = Cast<AInGamePlayer>(GetPawn()))
+	AInGamePlayer* TargetPlayer = Cast<AInGamePlayer>(GetPawn());
+
+	if (!TargetPlayer)
 	{
-		Player->UpdatePlayerCustom(CustomData);
+		for (AInGamePlayer* TempPlayer : TActorRange<AInGamePlayer>(GetWorld()))
+		{
+			if (TempPlayer && TempPlayer->GetPlayerState() == this)
+			{
+				TargetPlayer = TempPlayer;
+				break;
+			}
+		}
+	}
+
+	if (TargetPlayer)
+	{
+		TargetPlayer->UpdatePlayerCustom(CustomData);
 	}
 }
 
@@ -74,8 +89,22 @@ void APlayerStateBase::OnReplicate_PlayerCoin()
 
 void APlayerStateBase::OnReplicate_InventoryItems()
 {
-	if (AInGamePlayer* Player = Cast<AInGamePlayer>(GetPawn()))
+	AInGamePlayer* TargetPlayer = Cast<AInGamePlayer>(GetPawn());
+
+	if (!TargetPlayer)
 	{
-		Player->ApplyInventoryItems(InventoryItems);
+		for (AInGamePlayer* TempPlayer : TActorRange<AInGamePlayer>(GetWorld()))
+		{
+			if (TempPlayer && TempPlayer->GetPlayerState() == this)
+			{
+				TargetPlayer = TempPlayer;
+				break;
+			}
+		}
+	}
+
+	if (TargetPlayer)
+	{
+		TargetPlayer->ApplyInventoryItems(InventoryItems);
 	}
 }

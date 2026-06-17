@@ -23,6 +23,9 @@ public:
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastShowDamage(int32 InDamage);
 
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastShowCoin();
+
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastOnDied();
 
@@ -84,7 +87,7 @@ protected:
 	UPROPERTY(ReplicatedUsing = OnRep_IsDead, VisibleAnywhere, BlueprintReadWrite, Category = "State")
 	bool bIsDead = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "State")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = "State")
 	bool bIsSpawning = false;
 
 public:	

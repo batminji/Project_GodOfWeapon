@@ -20,6 +20,12 @@ void ABaseMonster::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABaseMonster, bIsDead);
+	DOREPLIFETIME(ABaseMonster, bIsSpawning);
+}
+
+void ABaseMonster::MulticastShowCoin_Implementation()
+{
+	CreateCoinActors(CurrentMonsterStat.Reward);
 }
 
 void ABaseMonster::MulticastShowDamage_Implementation(int32 InDamage)
@@ -29,6 +35,10 @@ void ABaseMonster::MulticastShowDamage_Implementation(int32 InDamage)
 
 void ABaseMonster::MulticastOnDied_Implementation()
 {
+	bIsDead = true;
+
+	GetCharacterMovement()->StopMovementImmediately();
+	SetActorEnableCollision(false);
 	StopAnimMontage();
 }
 
@@ -37,6 +47,9 @@ void ABaseMonster::DisableMonster()
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
 	PrimaryActorTick.SetTickFunctionEnable(false);
+
+	bIsDead = false;
+	bIsSpawning = false;
 
 	if (AIController)
 	{
@@ -87,13 +100,6 @@ void ABaseMonster::EndDying()
 
 void ABaseMonster::DieMonster()
 {
-	if (!HasAuthority())
-	{
-		return;
-	}
-
-	CreateCoinActors(CurrentMonsterStat.Reward);
-
 	bIsDead = true;
 
 	GetCharacterMovement()->StopMovementImmediately();
@@ -111,6 +117,8 @@ void ABaseMonster::DieMonster()
 	}
 
 	MulticastOnDied();
+
+	MulticastShowCoin();
 }
 
 void ABaseMonster::ApplyMonsterDamage(float InDamage)
