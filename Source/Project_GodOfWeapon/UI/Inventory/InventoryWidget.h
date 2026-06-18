@@ -26,6 +26,13 @@ class PROJECT_GODOFWEAPON_API UInventoryWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION()
+	void OnNextStageClicked();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SpawnItem(bool bIsReroll);
+
+public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UCanvasPanel> CanvasPanel;
 
@@ -53,14 +60,11 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UButton> NextStageButton;
 
-	UFUNCTION()
-	void OnNextStageClicked();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget));
 	TObjectPtr<UTextBlock> PlayerGoldText;
 
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void SpawnItem(bool bIsReroll);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<UTextBlock> LeftTimeText;
 
 protected:
 	virtual void NativeConstruct() override;

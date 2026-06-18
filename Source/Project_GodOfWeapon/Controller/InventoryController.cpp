@@ -4,6 +4,8 @@
 #include "InventoryController.h"
 #include "Blueprint/UserWidget.h"
 #include "../Components/InventoryComponent.h"
+#include "../UI/Inventory/InventoryWidget.h"
+#include "../UI/Item/ItemWidget.h"
 
 AInventoryController::AInventoryController()
 {
@@ -33,7 +35,7 @@ void AInventoryController::CreateInventoryWidget()
 {
 	if (InventoryWidgetClass)
 	{
-		InventoryWidget = CreateWidget<UUserWidget>(this, InventoryWidgetClass);
+		InventoryWidget = CreateWidget<UInventoryWidget>(this, InventoryWidgetClass);
 		if (InventoryWidget)
 		{
 			InventoryWidget->AddToViewport();

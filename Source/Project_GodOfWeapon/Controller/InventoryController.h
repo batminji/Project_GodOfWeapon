@@ -7,6 +7,8 @@
 #include "InventoryController.generated.h"
 
 class UInventoryComponent;
+class UInventoryWidget;
+class UItemWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API AInventoryController : public APlayerController
@@ -25,10 +27,10 @@ public:
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
-	TSubclassOf<UUserWidget> ItemWidgetClass;
+	TSubclassOf<UItemWidget> ItemWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UUserWidget> ItemWidget;
+	TObjectPtr<UItemWidget> ItemWidget;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -36,8 +38,8 @@ protected:
 	void CreateInventoryWidget();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
-	TSubclassOf<UUserWidget> InventoryWidgetClass;
+	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UUserWidget> InventoryWidget;
+	TObjectPtr<UInventoryWidget> InventoryWidget;
 };

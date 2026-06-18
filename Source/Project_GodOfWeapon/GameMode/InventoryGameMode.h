@@ -10,5 +10,10 @@ UCLASS()
 class PROJECT_GODOFWEAPON_API AInventoryGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+	virtual void BeginPlay() override;
 	
+public:
+	FTimerHandle LeftTimerHandle;
 };
