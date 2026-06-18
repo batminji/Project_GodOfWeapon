@@ -164,8 +164,7 @@ void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
 	}
 	else
 	{
-		InGameState->CurrentStage = CurrentStage;
-		InGameState->OnReplicate_CurrentStage();
+		InGameMode->SetCurrentStage(CurrentStage);
 
 		if (CurrentStage % 3 == 0)
 		{

@@ -10,16 +10,25 @@
 #include "../Components/PoolManagerComponent.h"
 #include "../GodOfWeaponGameInstance.h"
 #include "../Player/InGamePlayer.h"
+#include "InGameStateBase.h"
 
 AInGameMode::AInGameMode()
 {
 	bUseSeamlessTravel = true;
+	PrimaryActorTick.bCanEverTick = true;
 
 	GameStateClass = AInGameStateBase::StaticClass();
 	PlayerStateClass = APlayerStateBase::StaticClass();
 
 	WaveManagerComp = CreateDefaultSubobject<UWaveManagerComponent>(TEXT("WaveManagerComp"));
 	PoolManagerComp = CreateDefaultSubobject<UPoolManagerComponent>(TEXT("PoolManagerComp"));
+}
+
+void AInGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	UpdateGameStateLeftTime();
 }
 
 void AInGameMode::PostLogin(APlayerController* InNewPlayer)
@@ -54,9 +63,29 @@ void AInGameMode::BeginPlay()
 
 		WaveManagerComp->StartGame();
 	}
+
+	UpdateGameStateCurrentStage();
 }
 
 void AInGameMode::Init()
 {
 	GameInstance = Cast<UGodOfWeaponGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+}
+
+void AInGameMode::UpdateGameStateLeftTime()
+{
+	AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
+	if (InGameState)
+	{
+		InGameState->LeftTime = LeftTime;
+	}
+}
+
+void AInGameMode::UpdateGameStateCurrentStage()
+{
+	AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
+	if (InGameState)
+	{
+		InGameState->CurrentStage = CurrentStage;
+	}
 }

@@ -14,8 +14,15 @@ class PROJECT_GODOFWEAPON_API AInGameStateBase : public AGameStateBase
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	UFUNCTION(BlueprintPure, BlueprintCallable, Category = "Timer")
+	float GetLeftTime() const { return LeftTime; }
+
+public:
     // Wave Stage
-    UPROPERTY(ReplicatedUsing = OnReplicate_CurrentStage, BlueprintReadWrite)
+    UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
+    float LeftTime = 0.0f;
+
+    UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
     int32 CurrentStage = 1;
 
     UPROPERTY(Replicated, BlueprintReadWrite)
@@ -23,7 +30,4 @@ public:
 
     UPROPERTY(Replicated, BlueprintReadWrite)
     int32 CurrentAliveMonsterCount = 0;
-
-    UFUNCTION()
-    void OnReplicate_CurrentStage();
 };

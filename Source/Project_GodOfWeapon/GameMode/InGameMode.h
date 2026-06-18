@@ -22,6 +22,8 @@ class PROJECT_GODOFWEAPON_API AInGameMode : public AGameModeBase
 public:
 	AInGameMode();
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	virtual void PostLogin(APlayerController* InNewPlayer) override;
 
 	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
@@ -42,12 +44,21 @@ public:
 
 	void AddTotalDamage(int32 InDamage) { TotalDamage += InDamage; }
 
+	UFUNCTION(BlueprintCallable, Category = "Setters")
+	void SetLeftTime(float InTime) { LeftTime = InTime; }
+
+	void SetCurrentStage(int32 InStage) { CurrentStage = InStage; }
+
 protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
 	void Init();
 
+	void UpdateGameStateLeftTime();
+	void UpdateGameStateCurrentStage();
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
 	TObjectPtr<UGodOfWeaponGameInstance> GameInstance;
 
@@ -59,4 +70,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Total")
 	int32 TotalMonsterDefeated = 0;
+
+	float LeftTime = 0.0f;
+
+	int32 CurrentStage = 1;
 };

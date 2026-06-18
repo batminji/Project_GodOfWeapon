@@ -8,11 +8,8 @@ void AInGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+    DOREPLIFETIME(AInGameStateBase, LeftTime);
     DOREPLIFETIME(AInGameStateBase, CurrentStage);
     DOREPLIFETIME(AInGameStateBase, LevelMultiplier);
     DOREPLIFETIME(AInGameStateBase, CurrentAliveMonsterCount);
-}
-
-void AInGameStateBase::OnReplicate_CurrentStage()
-{
 }
