@@ -14,7 +14,12 @@ AInGamePlayer::AInGamePlayer()
 
 }
 
-void AInGamePlayer::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
+bool AInGamePlayer::C2S_SendCustomData_Validate(const FCustomData& InCustomData)
+{
+	return true;
+}
+
+void AInGamePlayer::C2S_SendCustomData_Implementation(const FCustomData& InCustomData)
 {
 	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
 	if (MyPlayerState)
@@ -24,7 +29,12 @@ void AInGamePlayer::ServerSendCustomData_Implementation(const FCustomData& InCus
 	}
 }
 
-void AInGamePlayer::ServerSendInventory_Implementation(const TArray<FSavedItemData>& InItems)
+bool AInGamePlayer::C2S_SendInventory_Validate(const TArray<FSavedItemData>& InItems)
+{
+	return true;
+}
+
+void AInGamePlayer::C2S_SendInventory_Implementation(const TArray<FSavedItemData>& InItems)
 {
 	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
 	if (MyPlayerState)
@@ -119,8 +129,8 @@ void AInGamePlayer::PawnClientRestart()
 	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
-		ServerSendCustomData(GameInstance->GetPlayerCustomData());
-		ServerSendInventory(GameInstance->GetInventoryData());
+		C2S_SendCustomData(GameInstance->GetPlayerCustomData());
+		C2S_SendInventory(GameInstance->GetInventoryData());
 	}
 }
 

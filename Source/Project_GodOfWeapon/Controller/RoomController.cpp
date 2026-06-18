@@ -53,10 +53,15 @@ void ARoomController::SetMyRoomCharacter(ARoomCharacter* InCharacter)
 
 void ARoomController::HandleEntry(const FSavedItemData& InItemData, EDifficulty InDifficulty)
 {
-	ServerStartGameWithData(InItemData, InDifficulty);
+	C2S_StartGameWithData(InItemData, InDifficulty);
 }
 
-void ARoomController::ServerSendCustomData_Implementation(const FCustomData& InCustomData)
+bool ARoomController::C2S_SendCustomData_Validate(const FCustomData& InCustomData)
+{
+	return true;
+}
+
+void ARoomController::C2S_SendCustomData_Implementation(const FCustomData& InCustomData)
 {
 	if (MyRoomCharacter)
 	{
@@ -111,7 +116,7 @@ void ARoomController::TrySendCustomData()
 	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
-		ServerSendCustomData(GameInstance->GetPlayerCustomData());
+		C2S_SendCustomData(GameInstance->GetPlayerCustomData());
 	}
 }
 
@@ -120,7 +125,7 @@ void ARoomController::ExecuteServerTravel()
 	GetWorld()->ServerTravel(TEXT("/Game/Maps/InGameMap?listen"));
 }
 
-void ARoomController::ClientUpdateGameInstanceData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty)
+void ARoomController::S2C_UpdateGameInstanceData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty)
 {
 	UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
 	if (GameInstance)
@@ -143,14 +148,19 @@ void ARoomController::ClientUpdateGameInstanceData_Implementation(const FSavedIt
 	}
 }
 
-void ARoomController::ServerStartGameWithData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty)
+bool ARoomController::C2S_StartGameWithData_Validate(const FSavedItemData& InItemData, EDifficulty InDifficulty)
+{
+	return true;
+}
+
+void ARoomController::C2S_StartGameWithData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty)
 {
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
 		ARoomController* PC = Cast<ARoomController>(It->Get());
 		if (PC)
 		{
-			PC->ClientUpdateGameInstanceData(InItemData, InDifficulty);
+			PC->S2C_UpdateGameInstanceData(InItemData, InDifficulty);
 		}
 	}
 

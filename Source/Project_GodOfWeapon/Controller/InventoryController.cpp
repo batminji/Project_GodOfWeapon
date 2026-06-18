@@ -10,9 +10,14 @@ AInventoryController::AInventoryController()
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 }
 
-void AInventoryController::ServerRequestNextStage_Implementation()
+void AInventoryController::C2S_RequestNextStage_Implementation()
 {
 	GetWorld()->ServerTravel("/Game/Maps/InGameMap?listen");
+}
+
+bool AInventoryController::C2S_RequestNextStage_Validate()
+{
+	return true;
 }
 
 void AInventoryController::BeginPlay()

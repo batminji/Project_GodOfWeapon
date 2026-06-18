@@ -24,8 +24,10 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UFUNCTION(Server, Reliable)
-	void ServerSendCustomData(const FCustomData& InCustomData);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_SendCustomData(const FCustomData& InCustomData);
+	bool C2S_SendCustomData_Validate(const FCustomData& InCustomData);
+	void C2S_SendCustomData_Implementation(const FCustomData& InCustomData);
 
 	void SetMyRoomCharacter(ARoomCharacter* InCharacter);
 
@@ -51,11 +53,14 @@ private:
 	void TrySendCustomData();
 
 protected:
-	UFUNCTION(Server, Reliable)
-	void ServerStartGameWithData(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_StartGameWithData(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+	bool C2S_StartGameWithData_Validate(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+	void C2S_StartGameWithData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty);
 
 	UFUNCTION(Client, Reliable)
-	void ClientUpdateGameInstanceData(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+	void S2C_UpdateGameInstanceData(const FSavedItemData& InItemData, EDifficulty InDifficulty);
+	void S2C_UpdateGameInstanceData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty);
 
 	void ExecuteServerTravel();
 };

@@ -16,8 +16,10 @@ class PROJECT_GODOFWEAPON_API AInventoryController : public APlayerController
 public:
 	AInventoryController();
 
-	UFUNCTION(Server, Reliable)
-	void ServerRequestNextStage();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_RequestNextStage();
+	void C2S_RequestNextStage_Implementation();
+	bool C2S_RequestNextStage_Validate();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;

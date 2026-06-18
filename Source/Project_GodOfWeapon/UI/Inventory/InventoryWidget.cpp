@@ -29,7 +29,7 @@ void UInventoryWidget::OnNextStageClicked()
     }
 
     InventoryComponent->SaveInventoryToGameInstance();
-    InventoryController->ServerRequestNextStage();
+    InventoryController->C2S_RequestNextStage();
 }
 
 void UInventoryWidget::SpawnItem(bool bIsReroll)

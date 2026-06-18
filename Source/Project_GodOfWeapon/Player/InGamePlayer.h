@@ -19,11 +19,15 @@ public:
 	AInGamePlayer();
 
 	// Custom Data
-	UFUNCTION(Server, Reliable)
-	void ServerSendCustomData(const FCustomData& InCustomData);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_SendCustomData(const FCustomData& InCustomData);
+	void C2S_SendCustomData_Implementation(const FCustomData& InCustomData);
+	bool C2S_SendCustomData_Validate(const FCustomData& InCustomData);
 
-	UFUNCTION(Server, Reliable)
-	void ServerSendInventory(const TArray<FSavedItemData>& InItems);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_SendInventory(const TArray<FSavedItemData>& InItems);
+	void C2S_SendInventory_Implementation(const TArray<FSavedItemData>& InItems);
+	bool C2S_SendInventory_Validate(const TArray<FSavedItemData>& InItems);
 
 	virtual void OnRep_PlayerState() override;
 
