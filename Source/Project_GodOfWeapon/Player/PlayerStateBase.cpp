@@ -15,29 +15,42 @@ void APlayerStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(APlayerStateBase, CustomData);
-	DOREPLIFETIME(APlayerStateBase, PlayerStat);
-	DOREPLIFETIME(APlayerStateBase, PlayerCoin);
-	DOREPLIFETIME(APlayerStateBase, PlayerEarnedCoin);
-	DOREPLIFETIME(APlayerStateBase, TotalMonsterDefeated);
-	DOREPLIFETIME(APlayerStateBase, TotalDamage);
 	DOREPLIFETIME(APlayerStateBase, InventoryItems);
+}
+
+void APlayerStateBase::CopyProperties(APlayerState* PlayerState)
+{
+	Super::CopyProperties(PlayerState);
+
+	APlayerStateBase* NewPlayerState = Cast<APlayerStateBase>(PlayerState);
+	if (NewPlayerState)
+	{
+		NewPlayerState->PlayerCoin = this->PlayerCoin;
+		NewPlayerState->PlayerStat = this->PlayerStat;
+		NewPlayerState->PlayerEarnedCoin = this->PlayerEarnedCoin;
+		NewPlayerState->TotalMonsterDefeated = this->TotalMonsterDefeated;
+		NewPlayerState->TotalDamage = this->TotalDamage;
+		NewPlayerState->InventoryItems = this->InventoryItems;
+	}
 }
 
 void APlayerStateBase::AddCoin(int32 InAmount)
 {
-	if (!HasAuthority())
+	if (!GetPawn()->IsLocallyControlled())
 	{
 		return;
 	}
+
 	PlayerCoin += InAmount;
 }
 
 void APlayerStateBase::DeductCoin(int32 InAmount)
 {
-	if (!HasAuthority())
+	if (!GetPawn()->IsLocallyControlled())
 	{
 		return;
 	}
+
 	if (HasEnoughCoin(InAmount))
 	{
 		PlayerCoin -= InAmount;
@@ -46,7 +59,7 @@ void APlayerStateBase::DeductCoin(int32 InAmount)
 
 void APlayerStateBase::ApplyStatMultiplier(float Multiplier)
 {
-	if (!HasAuthority())
+	if (!GetPawn()->IsLocallyControlled())
 	{
 		return;
 	}
@@ -81,10 +94,6 @@ void APlayerStateBase::OnReplicate_CustomData()
 	{
 		TargetPlayer->UpdatePlayerCustom(CustomData);
 	}
-}
-
-void APlayerStateBase::OnReplicate_PlayerCoin()
-{
 }
 
 void APlayerStateBase::OnReplicate_InventoryItems()

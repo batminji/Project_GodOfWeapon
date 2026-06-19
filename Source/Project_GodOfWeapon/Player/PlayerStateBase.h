@@ -18,6 +18,8 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	virtual void CopyProperties(APlayerState* PlayerState) override;
+
 	UFUNCTION(BlueprintPure)
 	bool HasEnoughCoin(int32 InAmount) const { return PlayerCoin >= InAmount; }
 
@@ -42,34 +44,32 @@ public:
 	void SetShortRangeAttackForce(int32 InShortRangeAttackForce) { PlayerStat.ShortRangeAttackForce = InShortRangeAttackForce; }
 	void SetLongRangeAttackForce(int32 InLongRangeAttackForce) { PlayerStat.LongRangeAttackForce = InLongRangeAttackForce; }
 
-	// Replication
-	UPROPERTY(ReplicatedUsing = OnReplicate_CustomData, BlueprintReadWrite)
-	FCustomData CustomData;
-
-	UPROPERTY(Replicated, BlueprintReadWrite)
-	FPlayerStatStructure PlayerStat;
-
-	UPROPERTY(ReplicatedUsing = OnReplicate_PlayerCoin, BlueprintReadWrite)
-	int32 PlayerCoin = 30;
-
-	UPROPERTY(Replicated, BlueprintReadWrite)
-	int32 PlayerEarnedCoin = 0;
-
-	UPROPERTY(Replicated, BlueprintReadWrite)
-	int32 TotalMonsterDefeated = 0;
-
-	UPROPERTY(Replicated, BlueprintReadWrite)
-	int32 TotalDamage = 0;
-
-	UPROPERTY(ReplicatedUsing = OnReplicate_InventoryItems, BlueprintReadWrite)
-	TArray<FSavedItemData> InventoryItems;
-
 	UFUNCTION()
 	void OnReplicate_CustomData();
 
 	UFUNCTION()
-	void OnReplicate_PlayerCoin();
-
-	UFUNCTION()
 	void OnReplicate_InventoryItems();
+
+public:
+	// Replication
+	UPROPERTY(ReplicatedUsing = OnReplicate_CustomData, BlueprintReadWrite)
+	FCustomData CustomData;
+
+	UPROPERTY(BlueprintReadWrite)
+	FPlayerStatStructure PlayerStat;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 PlayerCoin = 30;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 PlayerEarnedCoin = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 TotalMonsterDefeated = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 TotalDamage = 0;
+
+	UPROPERTY(ReplicatedUsing = OnReplicate_InventoryItems, BlueprintReadWrite)
+	TArray<FSavedItemData> InventoryItems;
 };
