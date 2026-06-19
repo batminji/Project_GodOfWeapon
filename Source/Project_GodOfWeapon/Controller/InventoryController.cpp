@@ -6,6 +6,7 @@
 #include "../Components/InventoryComponent.h"
 #include "../UI/Inventory/InventoryWidget.h"
 #include "../UI/Item/ItemWidget.h"
+#include "../UI/LoadingUserWidget.h"
 
 AInventoryController::AInventoryController()
 {
@@ -20,6 +21,23 @@ void AInventoryController::C2S_RequestNextStage_Implementation()
 bool AInventoryController::C2S_RequestNextStage_Validate()
 {
 	return true;
+}
+
+void AInventoryController::S2C_ShowLoadingScreen_Implementation()
+{
+	if (!IsLocalController())
+	{
+		return;
+	}
+
+	if (LoadingScreenWidgetClass)
+	{
+		ULoadingUserWidget* LoadingScreen = CreateWidget<ULoadingUserWidget>(this, LoadingScreenWidgetClass);
+		if (LoadingScreen)
+		{
+			LoadingScreen->AddToViewport();
+		}
+	}
 }
 
 void AInventoryController::BeginPlay()

@@ -3,6 +3,7 @@
 
 #include "InventoryGameMode.h"
 #include "InventoryGameStateBase.h"
+#include "../Controller/InventoryController.h"
 
 void AInventoryGameMode::BeginPlay()
 {
@@ -18,7 +19,10 @@ void AInventoryGameMode::BeginPlay()
 				if (InventoryGameState->GetLeftTime() <= 0)
 				{
 					GetWorld()->GetTimerManager().ClearTimer(LeftTimerHandle);
-					// StartGame();
+					
+					ShowLoadingScreen();
+
+					GetWorld()->GetTimerManager().SetTimer(TravelTimerHandle, this, &AInventoryGameMode::ExecuteServerTravel, 0.2f, false);
 				}
 				InventoryGameState->SetLeftTime(InventoryGameState->GetLeftTime() - 1);
 			}
@@ -26,4 +30,28 @@ void AInventoryGameMode::BeginPlay()
 		1.0f,
 		true
 	);
+}
+
+void AInventoryGameMode::ShowLoadingScreen()
+{
+	if (!HasAuthority())
+	{
+		return;
+	}
+
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		AInventoryController* PlayerController = Cast<AInventoryController>(*It);
+		if (PlayerController)
+		{
+			PlayerController->S2C_ShowLoadingScreen();
+		}
+	}
+}
+
+void AInventoryGameMode::ExecuteServerTravel()
+{
+	GetWorld()->GetTimerManager().ClearTimer(TravelTimerHandle);
+
+	GetWorld()->ServerTravel("/Game/Maps/InGameMap?listen");
 }

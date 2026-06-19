@@ -9,6 +9,7 @@
 class UInventoryComponent;
 class UInventoryWidget;
 class UItemWidget;
+class ULoadingUserWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API AInventoryController : public APlayerController
@@ -23,6 +24,11 @@ public:
 	void C2S_RequestNextStage_Implementation();
 	bool C2S_RequestNextStage_Validate();
 
+	UFUNCTION(Client, Reliable)
+	void S2C_ShowLoadingScreen();
+	void S2C_ShowLoadingScreen_Implementation();
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 
@@ -37,9 +43,13 @@ protected:
 
 	void CreateInventoryWidget();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
 
 	UPROPERTY()
 	TObjectPtr<UInventoryWidget> InventoryWidget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<ULoadingUserWidget> LoadingScreenWidgetClass;
 };

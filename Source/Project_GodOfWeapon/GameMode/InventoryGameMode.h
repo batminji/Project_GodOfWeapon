@@ -13,7 +13,13 @@ class PROJECT_GODOFWEAPON_API AInventoryGameMode : public AGameModeBase
 
 public:
 	virtual void BeginPlay() override;
+
+	void ShowLoadingScreen();
+
+	void ExecuteServerTravel();
 	
 public:
 	FTimerHandle LeftTimerHandle;
+
+	FTimerHandle TravelTimerHandle;
 };
