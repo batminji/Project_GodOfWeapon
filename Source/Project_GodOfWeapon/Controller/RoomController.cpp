@@ -10,6 +10,8 @@
 #include "../Player/RoomCharacter.h"
 #include "../GodOfWeaponGameInstance.h"
 
+#include "../UI/LoadingUserWidget.h"
+
 ARoomController::ARoomController()
 {
 	bAutoManageActiveCameraTarget = false;
@@ -122,7 +124,43 @@ void ARoomController::TrySendCustomData()
 
 void ARoomController::ExecuteServerTravel()
 {
+	GetWorld()->GetTimerManager().ClearTimer(TravelTimerHandle);
+
 	GetWorld()->ServerTravel(TEXT("/Game/Maps/InGameMap?listen"));
+}
+
+void ARoomController::ShowLoadingScreen()
+{
+	if (!HasAuthority())
+	{
+		return;
+	}
+
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		ARoomController* PlayerController = Cast<ARoomController>(*It);
+		if (PlayerController)
+		{
+			PlayerController->S2C_ShowLoadingScreen();
+		}
+	}
+}
+
+void ARoomController::S2C_ShowLoadingScreen_Implementation()
+{
+	if (!IsLocalPlayerController())
+	{
+		return;
+	}
+
+	if (LoadingScreenWidgetClass)
+	{
+		ULoadingUserWidget* LoadingScreen = CreateWidget<ULoadingUserWidget>(this, LoadingScreenWidgetClass);
+		if (LoadingScreen)
+		{
+			LoadingScreen->AddToViewport();
+		}
+	}
 }
 
 void ARoomController::S2C_UpdateGameInstanceData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty)
@@ -164,6 +202,6 @@ void ARoomController::C2S_StartGameWithData_Implementation(const FSavedItemData&
 		}
 	}
 
-	FTimerHandle TravelTimerHandle;
+	ShowLoadingScreen();
 	GetWorld()->GetTimerManager().SetTimer(TravelTimerHandle, this, &ARoomController::ExecuteServerTravel, 0.2f, false);
 }

@@ -11,6 +11,7 @@
 
 class URoomHUDWidget;
 class ARoomCharacter;
+class ULoadingUserWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API ARoomController : public APlayerController
@@ -63,4 +64,16 @@ protected:
 	void S2C_UpdateGameInstanceData_Implementation(const FSavedItemData& InItemData, EDifficulty InDifficulty);
 
 	void ExecuteServerTravel();
+
+	void ShowLoadingScreen();
+
+	UFUNCTION(Client, Reliable)
+	void S2C_ShowLoadingScreen();
+	void S2C_ShowLoadingScreen_Implementation();
+
+protected:
+	FTimerHandle TravelTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<ULoadingUserWidget> LoadingScreenWidgetClass;
 };
