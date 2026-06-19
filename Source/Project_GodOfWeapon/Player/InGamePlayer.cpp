@@ -54,16 +54,12 @@ void AInGamePlayer::OnRep_PlayerState()
 
 void AInGamePlayer::RecoverPlayerHP()
 {
-	if (!HasAuthority())
-	{
-		return;
-	}
-
 	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
 	if (MyPlayerState)
 	{
-		FPlayerStatStructure& Stat = MyPlayerState->GetPlayerStat();
+		FPlayerStatStructure Stat = MyPlayerState->GetPlayerStat();
 		Stat.CurrentHP = FMath::Min(Stat.CurrentHP + Stat.Recovery, Stat.MaxHP);
+		MyPlayerState->SetCurrentHP(Stat.CurrentHP);
 	}
 }
 

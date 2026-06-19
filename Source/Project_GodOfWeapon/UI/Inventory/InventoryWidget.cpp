@@ -14,6 +14,7 @@
 
 #include "../../Controller/InventoryController.h"
 #include "../../Components/InventoryComponent.h"
+#include "PlayerStatWidget.h"
 
 void UInventoryWidget::OnNextStageClicked()
 {
@@ -68,6 +69,14 @@ void UInventoryWidget::SpawnItem(bool bIsReroll)
                 CurrentSlot->AddChild(NewItem);
             }
         }
+    }
+}
+
+void UInventoryWidget::UpdatePlayerStatWidget(const FPlayerStatStructure& InPlayerStat)
+{
+    if (PlayerStatWidget)
+    {
+        PlayerStatWidget->UpdatePlayerStat(InPlayerStat);
     }
 }
 

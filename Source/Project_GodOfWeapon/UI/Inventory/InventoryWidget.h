@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "../../Structs/PlayerStructs.h"
 #include "InventoryWidget.generated.h"
 
 class UCanvasPanel;
@@ -19,6 +20,7 @@ class UOverlay;
 class APlayerStateBase;
 class AInventoryController;
 class UInventoryComponent;
+class UPlayerStatWidget;
 
 UCLASS()
 class PROJECT_GODOFWEAPON_API UInventoryWidget : public UUserWidget
@@ -31,6 +33,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void SpawnItem(bool bIsReroll);
+
+	void UpdatePlayerStatWidget(const FPlayerStatStructure& InPlayerStat);
 
 public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
@@ -66,10 +70,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UTextBlock> LeftTimeText;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget));
+	TObjectPtr<UPlayerStatWidget> PlayerStatWidget;
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	void UpdatePlayerGoldText();
+
+protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	TObjectPtr<UDataTable> ItemDataTable;
 
@@ -82,5 +92,4 @@ protected:
 	TObjectPtr<AInventoryController> InventoryController;
 	TObjectPtr<UInventoryComponent> InventoryComponent;
 
-	void UpdatePlayerGoldText();
 };

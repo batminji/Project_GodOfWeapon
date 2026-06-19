@@ -32,8 +32,15 @@ public:
 
 	// Getters
 	int32 GetPlayerCoin() const { return PlayerCoin; }
-	FPlayerStatStructure& GetPlayerStat() { return PlayerStat; }
+	FPlayerStatStructure GetPlayerStat() const { return PlayerStat; }
 	FCustomData& GetCustomData() { return CustomData; }
+
+	// Setters
+	void SetCurrentHP(int32 InCurrentHP) { PlayerStat.CurrentHP = InCurrentHP; }
+	void SetRecovery(int32 InRecovery) { PlayerStat.Recovery = InRecovery; }
+	void SetMoveSpeedMultiplier(float InMoveSpeedMultiplier) { PlayerStat.MoveSpeedMultifier = InMoveSpeedMultiplier; }
+	void SetShortRangeAttackForce(int32 InShortRangeAttackForce) { PlayerStat.ShortRangeAttackForce = InShortRangeAttackForce; }
+	void SetLongRangeAttackForce(int32 InLongRangeAttackForce) { PlayerStat.LongRangeAttackForce = InLongRangeAttackForce; }
 
 	// Replication
 	UPROPERTY(ReplicatedUsing = OnReplicate_CustomData, BlueprintReadWrite)

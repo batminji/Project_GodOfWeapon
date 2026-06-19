@@ -5,7 +5,6 @@
 #include "Components/TextBlock.h"
 #include "../../Player/PlayerStateBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "../../Structs/PlayerStructs.h"
 
 void UPlayerStatWidget::NativeConstruct()
 {
@@ -17,40 +16,36 @@ void UPlayerStatWidget::NativeConstruct()
 void UPlayerStatWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	UpdatePlayerStat();
 }
 
-void UPlayerStatWidget::UpdatePlayerStat()
+void UPlayerStatWidget::UpdatePlayerStat(const FPlayerStatStructure& InStat)
 {
 	if (!PlayerState)
 	{
 		return;
 	}
 
-	FPlayerStatStructure& Stat = PlayerState->PlayerStat;
-
-	FString IntString = FString::Printf(TEXT("%d"), Stat.CurrentHP);
+	FString IntString = FString::Printf(TEXT("%d"), InStat.CurrentHP);
 	CurrentHPText->SetText(FText::FromString(IntString));
 
-	IntString = FString::Printf(TEXT("%d"), Stat.MaxHP);
+	IntString = FString::Printf(TEXT("%d"), InStat.MaxHP);
 	MaxHPText->SetText(FText::FromString(IntString));
 
-	IntString = FString::Printf(TEXT("%d"), Stat.ShortRangeAttackForce);
+	IntString = FString::Printf(TEXT("%d"), InStat.ShortRangeAttackForce);
 	ShortAttackForceText->SetText(FText::FromString(IntString));
 
-	IntString = FString::Printf(TEXT("%d"), Stat.LongRangeAttackForce);
+	IntString = FString::Printf(TEXT("%d"), InStat.LongRangeAttackForce);
 	LongAttackForceText->SetText(FText::FromString(IntString));
 
-	FString FloatString = FString::Printf(TEXT("%.1f"), Stat.AttackSpeedMultifier);
+	FString FloatString = FString::Printf(TEXT("%.1f"), InStat.AttackSpeedMultifier);
 	AttackSpeedText->SetText(FText::FromString(FloatString));
 
-	FloatString = FString::Printf(TEXT("%.1f"), Stat.MoveSpeedMultifier);
+	FloatString = FString::Printf(TEXT("%.1f"), InStat.MoveSpeedMultifier);
 	MoveSpeedText->SetText(FText::FromString(FloatString));
 
-	FloatString = FString::Printf(TEXT("%.1f"), Stat.AttackRangeMultifier);
+	FloatString = FString::Printf(TEXT("%.1f"), InStat.AttackRangeMultifier);
 	AttackRangeText->SetText(FText::FromString(FloatString));
 
-	IntString = FString::Printf(TEXT("%d"), Stat.Recovery);
+	IntString = FString::Printf(TEXT("%d"), InStat.Recovery);
 	RecoverText->SetText(FText::FromString(IntString));
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "../../Structs/PlayerStructs.h"
 #include "PlayerStatWidget.generated.h"
 
 class UTextBlock;
@@ -13,6 +14,9 @@ UCLASS()
 class PROJECT_GODOFWEAPON_API UPlayerStatWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	void UpdatePlayerStat(const FPlayerStatStructure& InStat);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -42,8 +46,6 @@ protected:
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
-	void UpdatePlayerStat();
 
 	TObjectPtr<APlayerStateBase> PlayerState;
 };

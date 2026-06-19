@@ -158,19 +158,19 @@ void UInventoryGridWidget::ApplyConsumeItem(APlayerStateBase* PlayerState, FName
 {
 	if (ItemID == FName("Consume01"))
 	{
-		PlayerState->GetPlayerStat().Recovery += 5;
+		PlayerState->SetRecovery(PlayerState->GetPlayerStat().Recovery + 5);
 	}
 	else if (ItemID == FName("Consume02"))
 	{
-		PlayerState->GetPlayerStat().MoveSpeedMultifier += 0.2f;
+		PlayerState->SetMoveSpeedMultiplier(PlayerState->GetPlayerStat().MoveSpeedMultifier + 0.2f);
 	}
 	else if(ItemID == FName("Consume03"))
 	{
-		PlayerState->GetPlayerStat().ShortRangeAttackForce += 10.0f;
+		PlayerState->SetShortRangeAttackForce(PlayerState->GetPlayerStat().ShortRangeAttackForce + 10.0f);
 	}
 	else if (ItemID == FName("Consume04"))
 	{
-		PlayerState->GetPlayerStat().LongRangeAttackForce += 10.0f;
+		PlayerState->SetLongRangeAttackForce(PlayerState->GetPlayerStat().LongRangeAttackForce + 10.0f);
 	}
 }
 

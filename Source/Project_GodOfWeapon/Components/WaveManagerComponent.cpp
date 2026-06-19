@@ -116,7 +116,6 @@ void UWaveManagerComponent::SetGameMode()
 
 void UWaveManagerComponent::UpdatePlayerStatForNextStage(AInGameStateBase* InGameState)
 {
-	// Player State Áý°è
 	for (APlayerState* PS : InGameState->PlayerArray)
 	{
 		APlayerStateBase* TempPlayerState = Cast<APlayerStateBase>(PS);

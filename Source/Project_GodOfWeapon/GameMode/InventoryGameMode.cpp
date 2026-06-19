@@ -24,6 +24,7 @@ void AInventoryGameMode::BeginPlay()
 
 					GetWorld()->GetTimerManager().SetTimer(TravelTimerHandle, this, &AInventoryGameMode::ExecuteServerTravel, 0.2f, false);
 				}
+				UE_LOG(LogTemp, Log, TEXT("Left Time: %d"), InventoryGameState->GetLeftTime());
 				InventoryGameState->SetLeftTime(InventoryGameState->GetLeftTime() - 1);
 			}
 		},

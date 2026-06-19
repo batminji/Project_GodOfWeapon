@@ -7,6 +7,7 @@
 #include "../UI/Inventory/InventoryWidget.h"
 #include "../UI/Item/ItemWidget.h"
 #include "../UI/LoadingUserWidget.h"
+#include "../Player/PlayerStateBase.h"
 
 AInventoryController::AInventoryController()
 {
@@ -44,9 +45,26 @@ void AInventoryController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InventoryComponent->ItemWidgets.SetNum(InventoryComponent->Columns * InventoryComponent->Rows);
-
+	if (!IsLocalPlayerController())
+	{
+		return;
+	}
+	
+	if (InventoryComponent)
+	{
+		InventoryComponent->ItemWidgets.SetNum(InventoryComponent->Columns * InventoryComponent->Rows);
+	}
 	CreateInventoryWidget();
+}
+
+void AInventoryController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (!IsLocalPlayerController())
+	{
+		return;
+	}
+	UpdatePlayerStatWidget();
 }
 
 void AInventoryController::CreateInventoryWidget()
@@ -59,6 +77,20 @@ void AInventoryController::CreateInventoryWidget()
 			InventoryWidget->AddToViewport();
 			SetInputMode(FInputModeUIOnly());
 			bShowMouseCursor = true;
+
+			UpdatePlayerStatWidget();
 		}
 	}
+}
+
+void AInventoryController::UpdatePlayerStatWidget()
+{
+	if (InventoryWidget)
+	{
+		APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+		if (MyPlayerState)
+		{
+			InventoryWidget->UpdatePlayerStatWidget(MyPlayerState->GetPlayerStat());
+		}
+	}	
 }
