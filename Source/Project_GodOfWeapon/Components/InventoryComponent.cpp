@@ -10,6 +10,7 @@
 
 #include "../UI/Item/ItemWidget.h"
 #include "../UI/Inventory/InventoryGridWidget.h"
+#include "../Player/PlayerStateBase.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -215,6 +216,15 @@ void UInventoryComponent::SaveInventoryToGameInstance()
 			// UE_LOG(LogTemp, Warning, TEXT("Saving item %s at index %d with rotation %s"), *Data.ItemRowName.ToString(), Data.TopLeftIndex, Data.bIsRotated ? TEXT("true") : TEXT("false"));
 
 			GameInstance->GetInventoryData().Add(Data);
+		}
+	}
+
+	if (AController* MyController = Cast<AController>(GetOwner()))
+	{
+		if (APlayerStateBase* MyPlayerState = MyController->GetPlayerState<APlayerStateBase>())
+		{
+			GameInstance->SavedPlayerStat = MyPlayerState->GetPlayerStat();
+			GameInstance->SavedPlayerGold = MyPlayerState->GetPlayerCoin();
 		}
 	}
 }

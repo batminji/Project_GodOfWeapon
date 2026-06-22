@@ -11,6 +11,7 @@
 #include "../GodOfWeaponGameInstance.h"
 #include "../Player/InGamePlayer.h"
 #include "InGameStateBase.h"
+#include "../Controller/InGameController.h"
 
 AInGameMode::AInGameMode()
 {
@@ -87,5 +88,34 @@ void AInGameMode::UpdateGameStateCurrentStage()
 	if (InGameState)
 	{
 		InGameState->CurrentStage = CurrentStage;
+	}
+}
+
+void AInGameMode::OnPlayerSaveCompleted(AInGameController* PlayerController)
+{
+	if (!PlayerController || SavedPlayers.Contains(PlayerController))
+	{
+		return;
+	}
+
+	SavedPlayers.Add(PlayerController);
+
+	if (SavedPlayers.Num() >= GetNumPlayers())
+	{
+		GetWorld()->ServerTravel("/Game/Maps/InventoryMap?listen");
+	}
+}
+
+void AInGameMode::StartSaveSequence()
+{
+	SavedPlayers.Empty();
+
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		AInGameController* InGameController = Cast<AInGameController>(*It);
+		if (InGameController)
+		{
+			InGameController->S2C_SavePlayerStateToInstance();
+		}
 	}
 }

@@ -106,11 +106,22 @@ void UInventoryWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
     Super::NativeTick(MyGeometry, InDeltaTime);
 
     UpdatePlayerGoldText();
+    if(PlayerState)
+    {
+        UpdatePlayerStatWidget(PlayerState->GetPlayerStat());
+	}
 }
 
 void UInventoryWidget::UpdatePlayerGoldText()
 {
-    if (PlayerState)
+    if (!PlayerState)
+    {
+        if (APlayerController* PC = GetOwningPlayer())
+        {
+            PlayerState = PC->GetPlayerState<APlayerStateBase>();
+        }
+    }
+    if (PlayerState && PlayerGoldText)
     {
         FText GoldText = FText::Format(FText::FromString("{0} G"), FText::AsNumber(PlayerState->GetPlayerCoin()));
         PlayerGoldText->SetText(GoldText);

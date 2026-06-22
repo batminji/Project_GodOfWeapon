@@ -45,20 +45,27 @@ public:
 	void SetLongRangeAttackForce(int32 InLongRangeAttackForce) { PlayerStat.LongRangeAttackForce = InLongRangeAttackForce; }
 
 	UFUNCTION()
-	void OnReplicate_CustomData();
+	void OnRep_CustomData();
 
 	UFUNCTION()
-	void OnReplicate_InventoryItems();
+	void OnRep_PlayerStat();
+
+	UFUNCTION()
+	void OnRep_InventoryItems();
+
+	void Server_UpdateStat(FPlayerStatStructure InPlayerStat);
+
+	void Server_UpdateCoin(int32 InCoin);
 
 public:
 	// Replication
-	UPROPERTY(ReplicatedUsing = OnReplicate_CustomData, BlueprintReadWrite)
+	UPROPERTY(ReplicatedUsing = OnRep_CustomData, BlueprintReadWrite)
 	FCustomData CustomData;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(ReplicatedUsing = OnRep_PlayerStat, BlueprintReadWrite)
 	FPlayerStatStructure PlayerStat;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Replicated)
 	int32 PlayerCoin = 30;
 
 	UPROPERTY(BlueprintReadWrite)
@@ -70,6 +77,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int32 TotalDamage = 0;
 
-	UPROPERTY(ReplicatedUsing = OnReplicate_InventoryItems, BlueprintReadWrite)
+	UPROPERTY(ReplicatedUsing = OnRep_InventoryItems, BlueprintReadWrite)
 	TArray<FSavedItemData> InventoryItems;
 };

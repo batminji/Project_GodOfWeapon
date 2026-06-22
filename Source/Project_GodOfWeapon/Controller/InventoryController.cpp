@@ -9,6 +9,7 @@
 #include "../UI/LoadingUserWidget.h"
 #include "../Player/PlayerStateBase.h"
 #include "../GameMode/InventoryGameMode.h"
+#include "../GodOfWeaponGameInstance.h"
 
 AInventoryController::AInventoryController()
 {
@@ -71,6 +72,23 @@ bool AInventoryController::C2S_NotifySaveFinished_Validate()
 	return true;
 }
 
+void AInventoryController::C2S_RequestLoadPlayerState_Implementation(FPlayerStatStructure InPlayerStat, int32 InPlayerCoin)
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (MyPlayerState)
+	{
+		MyPlayerState->Server_UpdateStat(InPlayerStat);
+		MyPlayerState->Server_UpdateCoin(InPlayerCoin);
+
+		UpdatePlayerStatWidget();
+	}
+}
+
+bool AInventoryController::C2S_RequestLoadPlayerState_Validate(FPlayerStatStructure InPlayerStat, int32 InPlayerCoin)
+{
+	return true;
+}
+
 void AInventoryController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -85,6 +103,11 @@ void AInventoryController::BeginPlay()
 		InventoryComponent->ItemWidgets.SetNum(InventoryComponent->Columns * InventoryComponent->Rows);
 	}
 	CreateInventoryWidget();
+
+	if (UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance()))
+	{
+		C2S_RequestLoadPlayerState(GameInstance->SavedPlayerStat, GameInstance->SavedPlayerGold);
+	}
 }
 
 void AInventoryController::Tick(float DeltaTime)
@@ -94,6 +117,13 @@ void AInventoryController::Tick(float DeltaTime)
 	{
 		return;
 	}
+	// UpdatePlayerStatWidget();
+}
+
+void AInventoryController::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
 	UpdatePlayerStatWidget();
 }
 
@@ -120,6 +150,7 @@ void AInventoryController::UpdatePlayerStatWidget()
 		APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
 		if (MyPlayerState)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("health: %d, coin: %d"), MyPlayerState->GetPlayerStat().CurrentHP, MyPlayerState->GetPlayerCoin());
 			InventoryWidget->UpdatePlayerStatWidget(MyPlayerState->GetPlayerStat());
 		}
 	}	

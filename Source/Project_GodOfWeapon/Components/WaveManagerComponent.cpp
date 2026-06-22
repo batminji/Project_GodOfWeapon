@@ -170,7 +170,7 @@ void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
 			LevelUpAllPlayers(InGameState);
 		}
 
-		GetWorld()->ServerTravel("/Game/Maps/InventoryMap?listen");
+		InGameMode->StartSaveSequence();
 	}
 }
 

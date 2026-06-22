@@ -90,4 +90,11 @@ public:
 
 public:
 	void ExpandInventory();
+
+public:
+	UPROPERTY()
+	FPlayerStatStructure SavedPlayerStat;
+
+	UPROPERTY()
+	int32 SavedPlayerGold;
 };

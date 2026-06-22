@@ -37,6 +37,11 @@ public:
 	void C2S_NotifySaveFinished_Implementation();
 	bool C2S_NotifySaveFinished_Validate();
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_RequestLoadPlayerState(FPlayerStatStructure InPlayerStat, int32 InPlayerCoin);
+	void C2S_RequestLoadPlayerState_Implementation(FPlayerStatStructure InPlayerStat, int32 InPlayerCoin);
+	bool C2S_RequestLoadPlayerState_Validate(FPlayerStatStructure InPlayerStat, int32 InPlayerCoin);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;
@@ -51,6 +56,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void OnRep_PlayerState() override;
 
 	void CreateInventoryWidget();
 

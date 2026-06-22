@@ -16,6 +16,8 @@ void APlayerStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	DOREPLIFETIME(APlayerStateBase, CustomData);
 	DOREPLIFETIME(APlayerStateBase, InventoryItems);
+	DOREPLIFETIME(APlayerStateBase, PlayerStat);
+	DOREPLIFETIME(APlayerStateBase, PlayerCoin);
 }
 
 void APlayerStateBase::CopyProperties(APlayerState* PlayerState)
@@ -36,7 +38,7 @@ void APlayerStateBase::CopyProperties(APlayerState* PlayerState)
 
 void APlayerStateBase::AddCoin(int32 InAmount)
 {
-	if (!GetPawn()->IsLocallyControlled())
+	if (!HasAuthority())
 	{
 		return;
 	}
@@ -46,7 +48,7 @@ void APlayerStateBase::AddCoin(int32 InAmount)
 
 void APlayerStateBase::DeductCoin(int32 InAmount)
 {
-	if (!GetPawn()->IsLocallyControlled())
+	if (!HasAuthority())
 	{
 		return;
 	}
@@ -59,7 +61,7 @@ void APlayerStateBase::DeductCoin(int32 InAmount)
 
 void APlayerStateBase::ApplyStatMultiplier(float Multiplier)
 {
-	if (!GetPawn()->IsLocallyControlled())
+	if (!HasAuthority())
 	{
 		return;
 	}
@@ -74,7 +76,7 @@ void APlayerStateBase::ApplyStatMultiplier(float Multiplier)
 	PlayerStat.Recovery = static_cast<int32>(PlayerStat.Recovery * Multiplier);
 }
 
-void APlayerStateBase::OnReplicate_CustomData()
+void APlayerStateBase::OnRep_CustomData()
 {
 	AInGamePlayer* TargetPlayer = Cast<AInGamePlayer>(GetPawn());
 
@@ -96,7 +98,27 @@ void APlayerStateBase::OnReplicate_CustomData()
 	}
 }
 
-void APlayerStateBase::OnReplicate_InventoryItems()
+void APlayerStateBase::OnRep_PlayerStat()
+{
+	AInGamePlayer* TargetPlayer = Cast<AInGamePlayer>(GetPawn());
+	if (!TargetPlayer)
+	{
+		for (AInGamePlayer* TempPlayer : TActorRange<AInGamePlayer>(GetWorld()))
+		{
+			if (TempPlayer && TempPlayer->GetPlayerState() == this)
+			{
+				TargetPlayer = TempPlayer;
+				break;
+			}
+		}
+	}
+	if (TargetPlayer)
+	{
+		TargetPlayer->SetCurrentPlayerStat(PlayerStat);
+	}
+}
+
+void APlayerStateBase::OnRep_InventoryItems()
 {
 	AInGamePlayer* TargetPlayer = Cast<AInGamePlayer>(GetPawn());
 
@@ -115,5 +137,22 @@ void APlayerStateBase::OnReplicate_InventoryItems()
 	if (TargetPlayer)
 	{
 		TargetPlayer->ApplyInventoryItems(InventoryItems);
+	}
+}
+
+void APlayerStateBase::Server_UpdateStat(FPlayerStatStructure InPlayerStat)
+{
+	if (HasAuthority())
+	{
+		PlayerStat = InPlayerStat;
+		OnRep_PlayerStat();
+	}
+}
+
+void APlayerStateBase::Server_UpdateCoin(int32 InCoin)
+{
+	if (HasAuthority())
+	{
+		PlayerCoin = InCoin;
 	}
 }

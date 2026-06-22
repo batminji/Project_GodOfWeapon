@@ -74,4 +74,13 @@ protected:
 	float LeftTime = 0.0f;
 
 	int32 CurrentStage = 1;
+
+protected:
+	UPROPERTY()
+	TArray<class AInGameController*> SavedPlayers;
+
+public:
+	void OnPlayerSaveCompleted(class AInGameController* PlayerController);
+
+	void StartSaveSequence();
 };

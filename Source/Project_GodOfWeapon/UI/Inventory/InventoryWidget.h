@@ -64,13 +64,13 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<UButton> NextStageButton;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UTextBlock> PlayerGoldText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UTextBlock> LeftTimeText;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget));
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UPlayerStatWidget> PlayerStatWidget;
 
 protected:
