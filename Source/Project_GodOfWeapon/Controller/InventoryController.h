@@ -28,6 +28,15 @@ public:
 	void S2C_ShowLoadingScreen();
 	void S2C_ShowLoadingScreen_Implementation();
 
+	UFUNCTION(Client, Reliable)
+	void S2C_UpdatePlayerInventory();
+	void S2C_UpdatePlayerInventory_Implementation();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_NotifySaveFinished();
+	void C2S_NotifySaveFinished_Implementation();
+	bool C2S_NotifySaveFinished_Validate();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;

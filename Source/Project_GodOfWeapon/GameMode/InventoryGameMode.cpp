@@ -22,7 +22,16 @@ void AInventoryGameMode::BeginPlay()
 					
 					ShowLoadingScreen();
 
-					GetWorld()->GetTimerManager().SetTimer(TravelTimerHandle, this, &AInventoryGameMode::ExecuteServerTravel, 0.2f, false);
+					SavedPlayers.Empty();
+
+					for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+					{
+						AInventoryController* PlayerController = Cast<AInventoryController>(*It);
+						if (PlayerController)
+						{
+							PlayerController->S2C_UpdatePlayerInventory();
+						}
+					}
 				}
 				UE_LOG(LogTemp, Log, TEXT("Left Time: %d"), InventoryGameState->GetLeftTime());
 				InventoryGameState->SetLeftTime(InventoryGameState->GetLeftTime() - 1);
@@ -52,7 +61,20 @@ void AInventoryGameMode::ShowLoadingScreen()
 
 void AInventoryGameMode::ExecuteServerTravel()
 {
-	GetWorld()->GetTimerManager().ClearTimer(TravelTimerHandle);
-
 	GetWorld()->ServerTravel("/Game/Maps/InGameMap?listen");
+}
+
+void AInventoryGameMode::OnPlayerSaveCompleted(AInventoryController* PlayerController)
+{
+	if (!PlayerController || SavedPlayers.Contains(PlayerController))
+	{
+		return;
+	}
+
+	SavedPlayers.Add(PlayerController);
+
+	if (SavedPlayers.Num() >= GetNumPlayers())
+	{
+		ExecuteServerTravel();
+	}
 }

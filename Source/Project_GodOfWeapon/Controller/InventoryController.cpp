@@ -8,6 +8,7 @@
 #include "../UI/Item/ItemWidget.h"
 #include "../UI/LoadingUserWidget.h"
 #include "../Player/PlayerStateBase.h"
+#include "../GameMode/InventoryGameMode.h"
 
 AInventoryController::AInventoryController()
 {
@@ -39,6 +40,35 @@ void AInventoryController::S2C_ShowLoadingScreen_Implementation()
 			LoadingScreen->AddToViewport();
 		}
 	}
+}
+
+void AInventoryController::S2C_UpdatePlayerInventory_Implementation()
+{
+	if(!IsLocalController())
+	{
+		return;
+	}
+
+	InventoryComponent->SaveInventoryToGameInstance();
+
+	C2S_NotifySaveFinished();
+}
+
+void AInventoryController::C2S_NotifySaveFinished_Implementation()
+{
+	if (HasAuthority())
+	{
+		AInventoryGameMode* GameMode = Cast<AInventoryGameMode>(GetWorld()->GetAuthGameMode());
+		if (GameMode)
+		{
+			GameMode->OnPlayerSaveCompleted(this);
+		}
+	}
+}
+
+bool AInventoryController::C2S_NotifySaveFinished_Validate()
+{
+	return true;
 }
 
 void AInventoryController::BeginPlay()

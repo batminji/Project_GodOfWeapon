@@ -17,9 +17,13 @@ public:
 	void ShowLoadingScreen();
 
 	void ExecuteServerTravel();
+
+	void OnPlayerSaveCompleted(class AInventoryController* PlayerController);
 	
 public:
 	FTimerHandle LeftTimerHandle;
 
-	FTimerHandle TravelTimerHandle;
+protected:
+	UPROPERTY()
+	TArray<class AInventoryController*> SavedPlayers;
 };
