@@ -20,11 +20,6 @@ void UPlayerStatWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 
 void UPlayerStatWidget::UpdatePlayerStat(const FPlayerStatStructure& InStat)
 {
-	if (!PlayerState)
-	{
-		return;
-	}
-
 	FString IntString = FString::Printf(TEXT("%d"), InStat.CurrentHP);
 	CurrentHPText->SetText(FText::FromString(IntString));
 

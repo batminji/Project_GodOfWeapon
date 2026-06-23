@@ -110,7 +110,13 @@ void UInventoryWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
     UpdatePlayerGoldText();
     if(PlayerState)
     {
-        UpdatePlayerStatWidget(PlayerState->GetPlayerStat());
+        /*UE_LOG(LogTemp, Warning, TEXT("[WidgetTick] HP=%d Coin=%d PS=%p StatWidget=%p"),
+            PlayerState->GetPlayerStat().CurrentHP,
+            PlayerState->GetPlayerCoin(),
+            PlayerState.Get(),
+            PlayerStatWidget.Get());*/
+
+        UInventoryWidget::UpdatePlayerStatWidget(PlayerState->GetPlayerStat());
 	}
 }
 

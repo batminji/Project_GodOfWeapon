@@ -131,7 +131,7 @@ void AInventoryController::Tick(float DeltaTime)
 	{
 		return;
 	}
-	// UpdatePlayerStatWidget();
+	UpdatePlayerStatWidget();
 }
 
 void AInventoryController::OnRep_PlayerState()
@@ -185,7 +185,6 @@ void AInventoryController::UpdatePlayerStatWidget()
 		APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
 		if (MyPlayerState)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("health: %d, coin: %d"), MyPlayerState->GetPlayerStat().CurrentHP, MyPlayerState->GetPlayerCoin());
 			InventoryWidget->UpdatePlayerStatWidget(MyPlayerState->GetPlayerStat());
 		}
 	}	
