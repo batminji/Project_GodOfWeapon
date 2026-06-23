@@ -38,11 +38,31 @@ public:
 	FCustomData& GetCustomData() { return CustomData; }
 
 	// Setters
-	void SetCurrentHP(int32 InCurrentHP) { PlayerStat.CurrentHP = InCurrentHP; }
-	void SetRecovery(int32 InRecovery) { PlayerStat.Recovery = InRecovery; }
-	void SetMoveSpeedMultiplier(float InMoveSpeedMultiplier) { PlayerStat.MoveSpeedMultifier = InMoveSpeedMultiplier; }
-	void SetShortRangeAttackForce(int32 InShortRangeAttackForce) { PlayerStat.ShortRangeAttackForce = InShortRangeAttackForce; }
-	void SetLongRangeAttackForce(int32 InLongRangeAttackForce) { PlayerStat.LongRangeAttackForce = InLongRangeAttackForce; }
+	void SetCurrentHP(int32 InCurrentHP) 
+	{ 
+		if (!HasAuthority()) return; 
+		PlayerStat.CurrentHP = InCurrentHP; 
+	}
+	void SetRecovery(int32 InRecovery) 
+	{ 
+		if (!HasAuthority()) return; 
+		PlayerStat.Recovery = InRecovery; 
+	}
+	void SetMoveSpeedMultiplier(float InMoveSpeedMultiplier) 
+	{ 
+		if (!HasAuthority()) return;
+		PlayerStat.MoveSpeedMultifier = InMoveSpeedMultiplier; 
+	}
+	void SetShortRangeAttackForce(int32 InShortRangeAttackForce) 
+	{ 
+		if (!HasAuthority()) return;
+		PlayerStat.ShortRangeAttackForce = InShortRangeAttackForce; 
+	}
+	void SetLongRangeAttackForce(int32 InLongRangeAttackForce) 
+	{ 
+		if (!HasAuthority()) return; 
+		PlayerStat.LongRangeAttackForce = InLongRangeAttackForce; 
+	}
 
 	UFUNCTION()
 	void OnRep_CustomData();
@@ -56,6 +76,8 @@ public:
 	void Server_UpdateStat(FPlayerStatStructure InPlayerStat);
 
 	void Server_UpdateCoin(int32 InCoin);
+
+	void ApplyConsumeEffect(FName ItemID);
 
 public:
 	// Replication

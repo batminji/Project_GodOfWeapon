@@ -42,6 +42,18 @@ public:
 	void C2S_RequestLoadPlayerState_Implementation(FPlayerStatStructure InPlayerStat, int32 InPlayerCoin);
 	bool C2S_RequestLoadPlayerState_Validate(FPlayerStatStructure InPlayerStat, int32 InPlayerCoin);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_PurchaseReroll();
+	void C2S_PurchaseReroll_Implementation();
+	bool C2S_PurchaseReroll_Validate();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void C2S_PurchaseItem(FName ItemID, int32 Price, EItemType Type);
+	void C2S_PurchaseItem_Implementation(FName ItemID, int32 Price, EItemType Type);
+	bool C2S_PurchaseItem_Validate(FName ItemID, int32 Price, EItemType Type);
+
+	void UpdatePlayerStatWidget();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> InventoryComponent;
@@ -60,8 +72,6 @@ protected:
 	virtual void OnRep_PlayerState() override;
 
 	void CreateInventoryWidget();
-
-	void UpdatePlayerStatWidget();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")

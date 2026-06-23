@@ -5,6 +5,7 @@
 #include "Net/UnrealNetwork.h"
 #include "InGamePlayer.h"
 #include "EngineUtils.h"
+#include "../Controller/InventoryController.h"
 
 APlayerStateBase::APlayerStateBase()
 {
@@ -100,21 +101,14 @@ void APlayerStateBase::OnRep_CustomData()
 
 void APlayerStateBase::OnRep_PlayerStat()
 {
-	AInGamePlayer* TargetPlayer = Cast<AInGamePlayer>(GetPawn());
-	if (!TargetPlayer)
+	if (AInGamePlayer* InGamePawn = Cast<AInGamePlayer>(GetPawn()))
 	{
-		for (AInGamePlayer* TempPlayer : TActorRange<AInGamePlayer>(GetWorld()))
-		{
-			if (TempPlayer && TempPlayer->GetPlayerState() == this)
-			{
-				TargetPlayer = TempPlayer;
-				break;
-			}
-		}
+		InGamePawn->SetCurrentPlayerStat(PlayerStat);
 	}
-	if (TargetPlayer)
+
+	if (AInventoryController* IC = Cast<AInventoryController>(GetPlayerController()))
 	{
-		TargetPlayer->SetCurrentPlayerStat(PlayerStat);
+		IC->UpdatePlayerStatWidget();
 	}
 }
 
@@ -145,7 +139,6 @@ void APlayerStateBase::Server_UpdateStat(FPlayerStatStructure InPlayerStat)
 	if (HasAuthority())
 	{
 		PlayerStat = InPlayerStat;
-		OnRep_PlayerStat();
 	}
 }
 
@@ -154,5 +147,26 @@ void APlayerStateBase::Server_UpdateCoin(int32 InCoin)
 	if (HasAuthority())
 	{
 		PlayerCoin = InCoin;
+	}
+}
+
+void APlayerStateBase::ApplyConsumeEffect(FName ItemID)
+{
+	if (!HasAuthority()) return;
+	if (ItemID == FName("Consume01"))
+	{
+		SetRecovery(PlayerStat.Recovery + 5);
+	}
+	else if (ItemID == FName("Consume02"))
+	{
+		SetMoveSpeedMultiplier(PlayerStat.MoveSpeedMultifier + 0.2f);
+	}
+	else if (ItemID == FName("Consume03"))
+	{
+		SetShortRangeAttackForce(PlayerStat.ShortRangeAttackForce + 10.0f);
+	}
+	else if (ItemID == FName("Consume04"))
+	{
+		SetLongRangeAttackForce(PlayerStat.LongRangeAttackForce + 10.0f);
 	}
 }

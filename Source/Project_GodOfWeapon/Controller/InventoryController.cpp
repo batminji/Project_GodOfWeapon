@@ -89,6 +89,20 @@ bool AInventoryController::C2S_RequestLoadPlayerState_Validate(FPlayerStatStruct
 	return true;
 }
 
+void AInventoryController::C2S_PurchaseReroll_Implementation()
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (MyPlayerState && MyPlayerState->HasEnoughCoin(5))
+	{
+		MyPlayerState->DeductCoin(5);
+	}
+}
+
+bool AInventoryController::C2S_PurchaseReroll_Validate()
+{
+	return true;
+}
+
 void AInventoryController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -141,6 +155,27 @@ void AInventoryController::CreateInventoryWidget()
 			UpdatePlayerStatWidget();
 		}
 	}
+}
+
+void AInventoryController::C2S_PurchaseItem_Implementation(FName ItemID, int32 Price, EItemType Type)
+{
+	APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
+	if (!MyPlayerState || !MyPlayerState->HasEnoughCoin(Price))
+	{
+		return;
+	}
+
+	MyPlayerState->DeductCoin(Price);
+
+	if (Type == EItemType::Consume)
+	{
+		MyPlayerState->ApplyConsumeEffect(ItemID);
+	}
+}
+
+bool AInventoryController::C2S_PurchaseItem_Validate(FName ItemID, int32 Price, EItemType Type)
+{
+	return true;
 }
 
 void AInventoryController::UpdatePlayerStatWidget()

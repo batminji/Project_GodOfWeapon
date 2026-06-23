@@ -39,11 +39,13 @@ void UInventoryWidget::SpawnItem(bool bIsReroll)
     {
         if (PlayerState && PlayerState->GetPlayerCoin() >= 5)
         {
-            PlayerState->DeductCoin(5);
+            if (InventoryController)
+            {
+				InventoryController->C2S_PurchaseReroll();
+            }
         }
         else
         {
-            // Not enough money to spawn an item
             return;
         }
     }

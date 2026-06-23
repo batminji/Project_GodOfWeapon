@@ -79,11 +79,7 @@ bool UInventoryGridWidget::NativeOnDrop(const FGeometry& InGeometry, const FDrag
 			{
 				if (IsRoomAvailableForPayload(DroppedItem))
 				{
-					if (DroppedItem->ItemData.Type == EItemType::Consume)
-					{
-						ApplyConsumeItem(PlayerState, DroppedItem->ItemData.ItemID);
-					}
-					PlayerState->DeductCoin(DroppedItem->ItemData.Price);
+					InventoryController->C2S_PurchaseItem(DroppedItem->ItemData.ItemID, DroppedItem->ItemData.Price, DroppedItem->ItemData.Type);
 					DroppedItem->bIsFromShop = false;
 
 					InventoryComponent->RefreshAllItems();
