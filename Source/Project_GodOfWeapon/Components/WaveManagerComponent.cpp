@@ -139,6 +139,7 @@ void UWaveManagerComponent::UpdatePlayerStatForNextStage(AInGameStateBase* InGam
 void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
 {
 	CurrentStage++;
+	InGameState->CurrentStage = CurrentStage;
 
 	if (CurrentStage > MaxWaveCount)
 	{
@@ -158,7 +159,7 @@ void UWaveManagerComponent::UpdateStage(AInGameStateBase* InGameState)
 				GameInstance->ResultTotalDamage += PlayerState->TotalDamage;
 				GameInstance->ResultTotalMonsterDefeated += PlayerState->TotalMonsterDefeated;
 			}
-			GetWorld()->ServerTravel("/Game/Maps/EndingMap?listen");
+			// GetWorld()->ServerTravel("/Game/Maps/EndingMap?listen");
 		}
 	}
 	else

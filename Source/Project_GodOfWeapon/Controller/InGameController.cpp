@@ -51,6 +51,17 @@ void AInGameController::S2C_SavePlayerStateToInstance_Implementation()
     UGodOfWeaponGameInstance* GameInstance = Cast<UGodOfWeaponGameInstance>(GetGameInstance());
     APlayerStateBase* MyPlayerState = GetPlayerState<APlayerStateBase>();
 
+    if (HasAuthority())
+    {
+        AInGameMode* InGameMode = Cast<AInGameMode>(GetWorld()->GetAuthGameMode());
+
+        if (GameInstance && InGameMode)
+        {
+			GameInstance->SavedStageNumber = InGameMode->GetCurrentStage();
+        }
+    }
+
+
     if (GameInstance && MyPlayerState)
     {
         GameInstance->SavedPlayerStat = MyPlayerState->GetPlayerStat();

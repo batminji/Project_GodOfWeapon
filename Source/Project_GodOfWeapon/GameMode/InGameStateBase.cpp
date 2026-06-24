@@ -4,6 +4,11 @@
 #include "InGameStateBase.h"
 #include "Net/UnrealNetwork.h"
 
+AInGameStateBase::AInGameStateBase()
+{
+    bReplicates = true;
+}
+
 void AInGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);

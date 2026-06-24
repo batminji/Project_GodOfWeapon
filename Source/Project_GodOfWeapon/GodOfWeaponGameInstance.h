@@ -39,6 +39,8 @@ public:
 
 	bool GetIsVictory() const { return bIsVictory; }
 
+	int32 GetSavedStageNumber() const { return SavedStageNumber; }
+
 	// Setters
 	void SetDifficulty(const EDifficulty InDifficulty) { Difficulty = InDifficulty; }
 
@@ -92,9 +94,12 @@ public:
 	void ExpandInventory();
 
 public:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save")
 	FPlayerStatStructure SavedPlayerStat;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save")
 	int32 SavedPlayerGold;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save")
+	int32 SavedStageNumber = 1;
 };

@@ -84,10 +84,15 @@ void AInGameMode::UpdateGameStateLeftTime()
 
 void AInGameMode::UpdateGameStateCurrentStage()
 {
-	AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
-	if (InGameState)
+	if (GameInstance)
 	{
-		InGameState->CurrentStage = CurrentStage;
+		CurrentStage = GameInstance->GetSavedStageNumber();
+
+		AInGameStateBase* InGameState = GetGameState<AInGameStateBase>();
+		if (InGameState)
+		{
+			InGameState->CurrentStage = CurrentStage;
+		}
 	}
 }
 

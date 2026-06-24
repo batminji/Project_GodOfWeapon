@@ -39,6 +39,8 @@ public:
 
 	int32 GetTotalMonsterDefeated() const { return TotalMonsterDefeated; }
 
+	int32 GetCurrentStage() const { return CurrentStage; }
+
 	// Setters
 	void AddTotalMonsterDefeated(int32 InCount) { TotalMonsterDefeated += InCount; }
 

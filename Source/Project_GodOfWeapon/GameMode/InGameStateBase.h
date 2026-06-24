@@ -12,6 +12,8 @@ class PROJECT_GODOFWEAPON_API AInGameStateBase : public AGameStateBase
 	GENERATED_BODY()
 	
 public:
+    AInGameStateBase();
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintPure, BlueprintCallable, Category = "Timer")
