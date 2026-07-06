@@ -1,9 +1,9 @@
 # ⚔️ God of Weapons
 
-> Unreal Engine 5 | C++ & Blueprint | 1인 개발
+> Unreal Engine 5 | C++ & Blueprint | Listen Server | 1인 개발
 
-## 4월 (싱글 게임 개발 기간)
-## 6월 ~ (멀티 게임 개발 중)
+## 4월 (싱글 플레이 개발 기간)
+## 6월 (멀티 플레이 개발 기간)
 
 <br>
 
@@ -43,7 +43,15 @@
 
 ## 🎬 시연 영상
 
+#### 싱글 플레이 영상
+
 [![시연 영상](https://img.youtube.com/vi/QICtBL-JYYA/0.jpg)](https://www.youtube.com/watch?v=QICtBL-JYYA&t=40s)
+
+> 이미지를 클릭하면 유튜브 영상으로 이동합니다.
+
+#### 멀티 플레이 영상
+
+[![시연 영상](https://img.youtube.com/vi/_2Mg-dwHsNc/0.jpg)](https://www.youtube.com/watch?v=_2Mg-dwHsNc&t=58s)
 
 > 이미지를 클릭하면 유튜브 영상으로 이동합니다.
 
@@ -60,6 +68,9 @@
 ---
 
 ## 🗺️ 게임 플레이 흐름
+
+### 게임 플레이 플로우 차트
+![플로우차트](Images/FlowChart.png)
 
 ### 타이틀 화면
 ![타이틀](Images/Title.png)
@@ -273,9 +284,16 @@ Behavior Tree와 Blackboard를 기반으로 동작하며, 몬스터 종류에 �
 
 <br>
 
-### 게임 인스턴스 기반 데이터 유지
+### 서버 로직 (멀티플레이 전환)
 
-`UGodOfWeaponGameInstance`를 통해 맵 전환 시에도 플레이어 스탯, 인벤토리 데이터, 골드, 누적 처치 수, 누적 데미지가 유지됩니다. 게임 오버 화면에서 이 데이터를 기반으로 스테이지, 처치 수, 총 데미지, 획득 골드 결과를 표시합니다.
+- `UGodOfWeaponGameInstance`에 있던 플레이어 데이터 · 게임 진행 데이터를 `APlayerStateBase` / `AInGameStateBase`로 분리
+- Steam Session 기반 로비 씬 추가 — 방 생성, 방 리스트 동적 갱신, 방 참가 구현
+- 룸 씬 추가 — 호스트만 시작 무기 · 난이도 선택 UI 노출, 모든 플레이어를 동일 카메라로 표시
+- 커스터마이징 · 인벤토리 아이템 데이터를 서버에 저장 후 전 클라이언트로 리플리케이트
+- 몬스터 스폰 / 사망 애니메이션, 스테이지 번호 및 타이머, 플레이어 HP, 아이템 장착 상태 동기화
+- 맵 이동 시 로딩 화면 구현
+- 인벤토리 → 다음 스테이지 전환을 버튼 클릭 방식에서 30초 공용 타이머 방식으로 변경
+- 플레이어 스탯 · 코인 등 저장 데이터가 맵 이동 후에도 유지되도록 저장 · 동기화 로직 수정
 
 <br>
 
